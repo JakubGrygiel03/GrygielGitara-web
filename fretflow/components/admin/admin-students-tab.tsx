@@ -16,6 +16,7 @@ import {
   deleteStudent,
   updateStudent,
 } from "@/app/actions/admin-calendar";
+import { inviteStudentToPortal } from "@/app/actions/student-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -272,6 +273,23 @@ export function AdminStudentsTab({
                     onClick={() => setOpenId(open ? null : student.id)}
                   >
                     {open ? "Zwiń" : "Materiały / notatki"}
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    disabled={isPending}
+                    onClick={() => {
+                      startTransition(async () => {
+                        const result = await inviteStudentToPortal(student.id);
+                        if (!result.ok) {
+                          toast.error(result.message);
+                          return;
+                        }
+                        toast.success(result.message);
+                      });
+                    }}
+                  >
+                    {student.user_id ? "Wyślij link do strefy" : "Zaproś do strefy"}
                   </Button>
                   <Button
                     type="button"

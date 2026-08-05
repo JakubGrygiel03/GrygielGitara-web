@@ -139,6 +139,7 @@ export type Database = {
           default_location: string | null;
           interest_package: string | null;
           notes: string | null;
+          user_id: string | null;
         };
         Insert: {
           id?: string;
@@ -149,6 +150,7 @@ export type Database = {
           default_location?: string | null;
           interest_package?: string | null;
           notes?: string | null;
+          user_id?: string | null;
         };
         Update: {
           id?: string;
@@ -159,6 +161,7 @@ export type Database = {
           default_location?: string | null;
           interest_package?: string | null;
           notes?: string | null;
+          user_id?: string | null;
         };
         Relationships: [];
       };

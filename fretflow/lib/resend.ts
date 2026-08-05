@@ -23,6 +23,34 @@ function getResendClient(): Resend | null {
   return new Resend(apiKey);
 }
 
+/** Generic transactional send (magic link invites, etc.). */
+export async function sendEmail(input: {
+  to: string;
+  subject: string;
+  html: string;
+}): Promise<{ ok: boolean; message?: string }> {
+  const resend = getResendClient();
+  const from = process.env.RESEND_FROM_EMAIL;
+  if (!resend || !from) {
+    return { ok: false, message: "Brak RESEND_API_KEY / RESEND_FROM_EMAIL." };
+  }
+  try {
+    const { error } = await resend.emails.send({
+      from,
+      to: input.to,
+      subject: input.subject,
+      html: input.html,
+    });
+    if (error) return { ok: false, message: error.message };
+    return { ok: true };
+  } catch (error) {
+    return {
+      ok: false,
+      message: error instanceof Error ? error.message : "Resend error",
+    };
+  }
+}
+
 async function loadGuideAttachment(): Promise<
   | { filename: string; content: string }
   | null

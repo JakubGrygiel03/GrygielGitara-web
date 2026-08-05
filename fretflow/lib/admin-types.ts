@@ -36,6 +36,7 @@ export type StudentRow = {
   default_location: string | null;
   interest_package: string | null;
   notes: string | null;
+  user_id: string | null;
 };
 
 export type LessonRow = {

@@ -82,18 +82,39 @@ async function loadAdminData(): Promise<AdminDashboardData> {
   let calendarError: string | null = null;
   let opsError: string | null = null;
 
-  const studentsResult = await supabase
+  const studentsWithAuth = await supabase
     .from("students")
     .select(
-      "id, full_name, email, phone, default_location, interest_package, notes",
+      "id, full_name, email, phone, default_location, interest_package, notes, user_id",
     )
     .order("full_name", { ascending: true });
+
+  const studentsResult = studentsWithAuth.error?.message.includes("user_id")
+    ? await supabase
+        .from("students")
+        .select(
+          "id, full_name, email, phone, default_location, interest_package, notes",
+        )
+        .order("full_name", { ascending: true })
+    : studentsWithAuth;
 
   if (studentsResult.error) {
     calendarError =
       "Kalendarz wymaga migracji SQL: supabase/migrations/20260326_students_lessons.sql";
   } else {
-    students = studentsResult.data ?? [];
+    students = (studentsResult.data ?? []).map((row) => ({
+      id: row.id,
+      full_name: row.full_name,
+      email: row.email,
+      phone: row.phone,
+      default_location: row.default_location,
+      interest_package: row.interest_package,
+      notes: row.notes,
+      user_id:
+        "user_id" in row
+          ? ((row as { user_id?: string | null }).user_id ?? null)
+          : null,
+    }));
 
     const from = new Date();
     from.setDate(from.getDate() - 14);

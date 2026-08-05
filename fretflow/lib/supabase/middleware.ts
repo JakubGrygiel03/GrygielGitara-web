@@ -4,17 +4,21 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getSupabaseEnvOptional } from "@/lib/env";
 import type { Database } from "@/lib/supabase/types";
 
+export type SessionUpdate = {
+  response: NextResponse;
+  supabase: ReturnType<typeof createServerClient<Database>> | null;
+};
+
 /**
  * Refreshes the Auth session cookie on each matched request.
  * Called from root `proxy.ts` (Next.js 16 network boundary).
  */
-export async function updateSession(request: NextRequest): Promise<NextResponse> {
+export async function updateSession(request: NextRequest): Promise<SessionUpdate> {
   let supabaseResponse = NextResponse.next({ request });
 
   const env = getSupabaseEnvOptional();
-  // Allow local UI work before Supabase env is configured.
   if (!env) {
-    return supabaseResponse;
+    return { response: supabaseResponse, supabase: null };
   }
 
   const { url, key } = env;
@@ -45,5 +49,5 @@ export async function updateSession(request: NextRequest): Promise<NextResponse>
   // Validates JWT / rotates refresh token; do not use getSession() here.
   await supabase.auth.getClaims();
 
-  return supabaseResponse;
+  return { response: supabaseResponse, supabase };
 }

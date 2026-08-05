@@ -2,33 +2,46 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { StudentPortal } from "@/components/student-portal";
+import { loadStudentPortalData } from "@/lib/student-portal";
 
 export const metadata: Metadata = {
-  title: "Strefa studenta",
-  description: "Panel kursów i materiałów dla uczniów GrygielGitara — wkrótce.",
+  title: "Strefa ucznia",
+  description:
+    "Materiały, najbliższa lekcja i historia zajęć — panel ucznia GrygielGitara.",
+  robots: { index: false, follow: false },
 };
 
-export default function MojeKursyPage() {
-  return (
-    <section className="mx-auto flex min-h-[50vh] w-full max-w-6xl flex-col justify-center px-4 py-10 sm:min-h-[60vh] sm:px-6 sm:py-16">
-      <p className="text-sm font-semibold uppercase tracking-wider text-sky-600">
-        Strefa studenta
-      </p>
-      <h1 className="mt-2 max-w-xl text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
-        Moje kursy — w przygotowaniu
-      </h1>
-      <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted sm:text-base lg:text-lg">
-        Tu pojawią się zakupione e-booki, kursy wideo i postęp lekcji. Na razie
-        umów lekcję lub zapisz się po darmowy poradnik.
-      </p>
-      <div className="mt-8 flex w-full max-w-md flex-col gap-3 sm:max-w-none sm:flex-row">
-        <Button asChild className="w-full sm:w-auto">
-          <Link href="/rezerwacja">Zarezerwuj lekcję próbną</Link>
-        </Button>
-        <Button asChild variant="secondary" className="w-full sm:w-auto">
-          <Link href="/pobierz-poradnik">Pobierz poradnik PDF</Link>
-        </Button>
-      </div>
-    </section>
-  );
+export default async function MojeKursyPage() {
+  const result = await loadStudentPortalData();
+
+  if (!result.ok) {
+    if (result.reason === "unauthenticated") {
+      return (
+        <section className="mx-auto max-w-lg px-4 py-16 text-center">
+          <p className="text-sm text-muted">Przekierowanie do logowania…</p>
+          <Button asChild className="mt-4">
+            <Link href="/moje-kursy/login">Zaloguj się</Link>
+          </Button>
+        </section>
+      );
+    }
+
+    return (
+      <section className="mx-auto max-w-lg space-y-4 px-4 py-16 text-center">
+        <h1 className="text-2xl font-bold text-slate-900">Brak dostępu</h1>
+        <p className="text-sm leading-relaxed text-muted">{result.message}</p>
+        <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
+          <Button asChild>
+            <Link href="/kontakt">Napisz do nauczyciela</Link>
+          </Button>
+          <Button asChild variant="secondary">
+            <Link href="/moje-kursy/login">Inny e-mail</Link>
+          </Button>
+        </div>
+      </section>
+    );
+  }
+
+  return <StudentPortal data={result.data} />;
 }

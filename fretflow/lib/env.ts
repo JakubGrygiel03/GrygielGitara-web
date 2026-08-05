@@ -1,3 +1,16 @@
+/** Canonical site origin for Auth redirects (no trailing slash). */
+export function getSiteUrl(): string {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (explicit) return explicit.replace(/\/$/, "");
+
+  const vercel = process.env.VERCEL_URL?.trim();
+  if (vercel) {
+    return vercel.startsWith("http") ? vercel.replace(/\/$/, "") : `https://${vercel}`;
+  }
+
+  return "http://localhost:3000";
+}
+
 /**
  * Central place for public Supabase env vars.
  * Prefer PUBLISHABLE_KEY (new dashboard name); fall back to ANON_KEY.
