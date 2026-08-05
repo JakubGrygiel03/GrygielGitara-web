@@ -90,16 +90,7 @@ insert into public.products (
     true,
     false
   )
-on conflict (slug) do update set
-  title = excluded.title,
-  short_description = excluded.short_description,
-  description = excluded.description,
-  price_grosze = excluded.price_grosze,
-  badge = excluded.badge,
-  image_path = excluded.image_path,
-  file_path = excluded.file_path,
-  published = excluded.published,
-  coming_soon = excluded.coming_soon;
+on conflict (slug) do nothing;
 
 -- Ensure seeded products are buyable (not stuck as coming_soon)
 update public.products
@@ -108,4 +99,5 @@ where slug in (
   'start-z-gitara-bez-stresu',
   'setup-gitary-w-domu',
   'rytm-i-timing-na-start'
-);
+)
+and (coming_soon = true or published = false);

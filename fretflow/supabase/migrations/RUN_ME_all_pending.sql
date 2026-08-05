@@ -1,10 +1,21 @@
--- GrygielGitara — wszystkie migracje (bezpieczne do ponownego uruchomienia)
+-- =============================================================================
+-- GrygielGitara — BEZPIECZNY SQL (idempotentny)
 -- Supabase → SQL Editor → New query → wklej CAŁY plik → Run
--- Kolejność: phase1 → students/lessons → admin ops → kolumny pakietów
+--
+-- Co robi:
+--   • tworzy brakujące tabele / kolumny / indeksy
+--   • dopina granty i polityki RLS (drop + create policy)
+--   • seeduje 3 e-booki tylko jeśli slug jeszcze nie istnieje
+--
+-- Czego NIE robi:
+--   • nie kasuje tabel ani wierszy
+--   • nie nadpisuje Twoich uczniów, lekcji, ustawień admina
+--   • nie nadpisuje tytułów/cen e-booków, jeśli już istnieją (tylko dopina brakujące)
+-- =============================================================================
 
--- ========== 20260325_phase1_core ==========
 create extension if not exists "pgcrypto";
 
+-- ========== Phase 1: kontakt / rezerwacje / newsletter ==========
 create table if not exists public.contact_messages (
   id uuid default gen_random_uuid() primary key,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
@@ -71,7 +82,6 @@ drop policy if exists "Allow public to subscribe to newsletter" on public.newsle
 create policy "Allow public to subscribe to newsletter"
   on public.newsletter_subscribers for insert with check (true);
 
--- ========== 20260325_phase1_grants ==========
 grant usage on schema public to anon, authenticated, service_role;
 
 grant insert on table public.contact_messages to anon, authenticated, service_role;
@@ -82,7 +92,7 @@ grant select, update, delete on table public.contact_messages to service_role;
 grant select, update, delete on table public.bookings to service_role;
 grant select, update, delete on table public.newsletter_subscribers to service_role;
 
--- ========== 20260326_students_lessons ==========
+-- ========== Uczniowie / lekcje ==========
 create table if not exists public.students (
   id uuid default gen_random_uuid() primary key,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
@@ -106,21 +116,14 @@ create table if not exists public.lessons (
   series_id uuid
 );
 
-create index if not exists lessons_starts_at_idx on public.lessons (starts_at);
-create index if not exists lessons_student_id_idx on public.lessons (student_id);
-create index if not exists lessons_series_id_idx on public.lessons (series_id);
-create index if not exists lessons_reminder_sent_idx on public.lessons (reminder_sent, starts_at);
-
-alter table public.students enable row level security;
-alter table public.lessons enable row level security;
-
-grant usage on schema public to service_role;
-grant all on table public.students to service_role;
-grant all on table public.lessons to service_role;
-
--- ========== 20260326_students_default_location / recurring_reminders ==========
 alter table public.students
   add column if not exists default_location text;
+
+alter table public.students
+  add column if not exists interest_package text;
+
+alter table public.students
+  add column if not exists user_id uuid;
 
 alter table public.lessons
   add column if not exists series_id uuid;
@@ -128,18 +131,35 @@ alter table public.lessons
 alter table public.lessons
   add column if not exists reminder_sent boolean default false not null;
 
-create index if not exists lessons_series_id_idx on public.lessons (series_id);
-create index if not exists lessons_reminder_sent_idx on public.lessons (reminder_sent, starts_at);
-
--- ========== 20260326_admin_ops ==========
 alter table public.lessons
-  add column if not exists payment_status text default 'unpaid' not null;
+  add column if not exists payment_status text;
 
 alter table public.lessons
   add column if not exists price numeric(10, 2);
 
+alter table public.lessons
+  add column if not exists package_consumed boolean default false not null;
+
+alter table public.bookings
+  add column if not exists interest_package text;
+
+-- Default payment_status for existing rows, then constrain safely
+update public.lessons
+set payment_status = 'unpaid'
+where payment_status is null;
+
+alter table public.lessons
+  alter column payment_status set default 'unpaid';
+
 do $$
 begin
+  begin
+    alter table public.lessons
+      alter column payment_status set not null;
+  exception when others then
+    null;
+  end;
+
   if not exists (
     select 1 from pg_constraint where conname = 'lessons_payment_status_check'
   ) then
@@ -149,6 +169,44 @@ begin
   end if;
 end $$;
 
+-- FK user_id → auth.users (tylko jeśli jeszcze nie ma)
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint where conname = 'students_user_id_fkey'
+  ) then
+    alter table public.students
+      add constraint students_user_id_fkey
+      foreign key (user_id) references auth.users (id) on delete set null;
+  end if;
+
+  if not exists (
+    select 1 from pg_constraint where conname = 'students_user_id_key'
+  ) then
+    alter table public.students
+      add constraint students_user_id_key unique (user_id);
+  end if;
+end $$;
+
+create index if not exists lessons_starts_at_idx on public.lessons (starts_at);
+create index if not exists lessons_student_id_idx on public.lessons (student_id);
+create index if not exists lessons_series_id_idx on public.lessons (series_id);
+create index if not exists lessons_reminder_sent_idx on public.lessons (reminder_sent, starts_at);
+create index if not exists students_user_id_idx on public.students (user_id);
+create index if not exists students_email_lower_idx on public.students (lower(email));
+
+alter table public.students enable row level security;
+alter table public.lessons enable row level security;
+
+grant all on table public.students to service_role;
+grant all on table public.lessons to service_role;
+
+comment on column public.bookings.interest_package is
+  'pack_4_home | single_studio | single_home | single_online';
+comment on column public.students.interest_package is
+  'pack_4_home | single_studio | single_home | single_online';
+
+-- ========== Admin ops ==========
 create table if not exists public.admin_settings (
   key text primary key,
   value jsonb not null,
@@ -222,6 +280,26 @@ create table if not exists public.revenue_entries (
 create index if not exists revenue_entries_occurred_on_idx
   on public.revenue_entries (occurred_on);
 
+-- consumed_package_id requires student_packages to exist
+alter table public.lessons
+  add column if not exists consumed_package_id uuid;
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint where conname = 'lessons_consumed_package_id_fkey'
+  ) then
+    alter table public.lessons
+      add constraint lessons_consumed_package_id_fkey
+      foreign key (consumed_package_id)
+      references public.student_packages(id)
+      on delete set null;
+  end if;
+end $$;
+
+create index if not exists lessons_consumed_package_id_idx
+  on public.lessons (consumed_package_id);
+
 alter table public.admin_settings enable row level security;
 alter table public.service_orders enable row level security;
 alter table public.student_packages enable row level security;
@@ -248,36 +326,7 @@ values
   ('teacher_phone', '""'::jsonb)
 on conflict (key) do nothing;
 
--- ========== booking / student package + lesson consume ==========
-alter table public.bookings
-  add column if not exists interest_package text;
-
-comment on column public.bookings.interest_package is
-  'pack_4_home | single_studio | single_home | single_online';
-
-alter table public.lessons
-  add column if not exists package_consumed boolean default false not null;
-
-alter table public.lessons
-  add column if not exists consumed_package_id uuid references public.student_packages(id) on delete set null;
-
-create index if not exists lessons_consumed_package_id_idx
-  on public.lessons (consumed_package_id);
-
-alter table public.students
-  add column if not exists interest_package text;
-
-comment on column public.students.interest_package is
-  'pack_4_home | single_studio | single_home | single_online';
--- Link students to Supabase Auth + RLS so pupils can read own lessons & materials
-
-alter table public.students
-  add column if not exists user_id uuid unique references auth.users (id) on delete set null;
-
-create index if not exists students_user_id_idx on public.students (user_id);
-create index if not exists students_email_lower_idx on public.students (lower(email));
-
--- Authenticated students: read own profile / lessons / materials
+-- ========== Portal ucznia (Auth + RLS read-own) ==========
 grant select on table public.students to authenticated;
 grant select on table public.lessons to authenticated;
 grant select on table public.student_materials to authenticated;
@@ -335,11 +384,7 @@ create policy "Students read own session notes"
     )
   );
 
-
--- ===== Shop products (20260326_shop_products.sql) =====
-
--- Digital shop: catalog + ownership after Stripe payment
-
+-- ========== Sklep (produkty + uprawnienia po Stripe) ==========
 create table if not exists public.products (
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),
@@ -374,6 +419,8 @@ alter table public.user_entitlements enable row level security;
 
 grant select on table public.products to anon, authenticated;
 grant select on table public.user_entitlements to authenticated;
+grant all on table public.products to service_role;
+grant all on table public.user_entitlements to service_role;
 
 drop policy if exists "Anyone can read published products" on public.products;
 create policy "Anyone can read published products"
@@ -389,7 +436,7 @@ create policy "Users read own entitlements"
   to authenticated
   using (user_id = auth.uid());
 
--- Seed showcase products (idempotent by slug)
+-- Seed tylko brakujących slugów (nie nadpisuje istniejących produktów)
 insert into public.products (
   slug, title, short_description, description, price_grosze, badge,
   image_path, file_path, published, coming_soon
@@ -430,13 +477,18 @@ insert into public.products (
     true,
     false
   )
-on conflict (slug) do update set
-  title = excluded.title,
-  short_description = excluded.short_description,
-  description = excluded.description,
-  price_grosze = excluded.price_grosze,
-  badge = excluded.badge,
-  image_path = excluded.image_path,
-  file_path = excluded.file_path,
-  published = excluded.published,
-  coming_soon = excluded.coming_soon;
+on conflict (slug) do nothing;
+
+-- Jeśli produkt seed był oznaczony „wkrótce”, odblokuj kupno (tylko te 3 slugi)
+update public.products
+set coming_soon = false, published = true
+where slug in (
+  'start-z-gitara-bez-stresu',
+  'setup-gitary-w-domu',
+  'rytm-i-timing-na-start'
+)
+and (coming_soon = true or published = false);
+
+-- =============================================================================
+-- Gotowe. Odśwież /admin i /sklep.
+-- =============================================================================
