@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 
 import { getSiteUrl } from "@/lib/env";
 import { getStripe, isStripeConfigured } from "@/lib/stripe";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import type { ProductRow } from "@/lib/shop";
 
@@ -23,6 +22,14 @@ export async function startProductCheckout(
     };
   }
 
+  if (!productId || productId.startsWith("fallback-")) {
+    return {
+      ok: false,
+      message:
+        "Katalog demo — uruchom SQL sklepu w Supabase (20260326_shop_products.sql), odśwież stronę i spróbuj ponownie.",
+    };
+  }
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -35,16 +42,28 @@ export async function startProductCheckout(
     };
   }
 
-  const admin = createAdminClient();
-  const { data: product, error } = await admin
+  // Published products are readable via RLS (anon/authenticated) — no service role needed.
+  const { data: product, error } = await supabase
     .from("products")
     .select("*")
     .eq("id", productId)
     .eq("published", true)
     .maybeSingle();
 
-  if (error || !product) {
-    return { ok: false, message: "Nie znaleziono produktu." };
+  if (error) {
+    console.error("startProductCheckout product error:", error.message);
+    return {
+      ok: false,
+      message: `Nie udało się wczytać produktu (${error.message}).`,
+    };
+  }
+
+  if (!product) {
+    return {
+      ok: false,
+      message:
+        "Nie znaleziono produktu. Odśwież sklep albo uruchom migrację SQL produktów w Supabase.",
+    };
   }
 
   const typed = product as ProductRow;
@@ -52,7 +71,7 @@ export async function startProductCheckout(
     return { ok: false, message: "Ten produkt jest jeszcze niedostępny." };
   }
 
-  const { data: existing } = await admin
+  const { data: existing } = await supabase
     .from("user_entitlements")
     .select("id")
     .eq("user_id", user.id)
