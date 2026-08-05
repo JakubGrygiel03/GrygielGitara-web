@@ -25,7 +25,7 @@ export const shopProducts: ShopProduct[] = [
       "Pierwsze tygodnie gry: postawa, strojenie i proste melodie bez szkolnego rygoru.",
     image: "/images/shop/ebook-start-cover.svg",
     imageAlt: "Okładka e-booka Start z gitarą bez stresu",
-    status: "coming_soon",
+    status: "available",
   },
   {
     slug: "setup-gitary-w-domu",
@@ -36,7 +36,7 @@ export const shopProducts: ShopProduct[] = [
       "Wymiana strun, czyszczenie i podstawowa regulacja — bez warsztatu.",
     image: "/images/shop/ebook-setup-cover.svg",
     imageAlt: "Okładka e-booka Setup gitary w domu",
-    status: "coming_soon",
+    status: "available",
   },
   {
     slug: "rytm-i-timing-na-start",
@@ -47,7 +47,7 @@ export const shopProducts: ShopProduct[] = [
       "Ćwiczenia rytmiczne, które słychać — metronom bez frustracji.",
     image: "/images/shop/ebook-rytm-cover.svg",
     imageAlt: "Okładka e-booka Rytm i timing na start",
-    status: "coming_soon",
+    status: "available",
   },
 ];
 

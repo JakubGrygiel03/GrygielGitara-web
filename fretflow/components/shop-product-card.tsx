@@ -34,13 +34,23 @@ export function ShopProductCard({
           className="pointer-events-none absolute inset-x-8 top-6 h-px bg-gradient-to-r from-transparent via-sky-200/80 to-transparent"
         />
         <div className="relative aspect-[3/4] w-[42%] max-w-[7.5rem] rotate-[-2deg] shadow-[0_18px_40px_-12px_rgba(15,23,42,0.45)] transition-transform duration-300 ease-out group-hover:rotate-0 group-hover:scale-[1.03] sm:max-w-[8.25rem]">
-          <Image
-            src={product.image}
-            alt={product.imageAlt}
-            fill
-            sizes="8.25rem"
-            className="rounded-sm object-cover"
-          />
+          {product.image.endsWith(".svg") ? (
+            // next/image blocks local SVG by default
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={product.image}
+              alt={product.imageAlt}
+              className="h-full w-full rounded-sm object-cover"
+            />
+          ) : (
+            <Image
+              src={product.image}
+              alt={product.imageAlt}
+              fill
+              sizes="8.25rem"
+              className="rounded-sm object-cover"
+            />
+          )}
         </div>
         <span className="absolute left-3 top-3 rounded-md bg-slate-900/90 px-2 py-1 text-[0.65rem] font-bold uppercase tracking-[0.08em] text-white">
           {product.badge}

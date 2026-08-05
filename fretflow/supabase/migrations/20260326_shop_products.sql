@@ -100,3 +100,12 @@ on conflict (slug) do update set
   file_path = excluded.file_path,
   published = excluded.published,
   coming_soon = excluded.coming_soon;
+
+-- Ensure seeded products are buyable (not stuck as coming_soon)
+update public.products
+set coming_soon = false, published = true
+where slug in (
+  'start-z-gitara-bez-stresu',
+  'setup-gitary-w-domu',
+  'rytm-i-timing-na-start'
+);

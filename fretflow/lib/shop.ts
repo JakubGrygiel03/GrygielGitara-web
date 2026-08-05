@@ -28,8 +28,9 @@ export function resolveProductFileAbsolute(filePath: string): string {
 }
 
 export async function listPublishedProducts(): Promise<ProductRow[]> {
-  const admin = createAdminClient();
-  const { data, error } = await admin
+  // Public read via RLS — do not require service role for the catalog.
+  const supabase = await createClient();
+  const { data, error } = await supabase
     .from("products")
     .select("*")
     .eq("published", true)
@@ -40,8 +41,8 @@ export async function listPublishedProducts(): Promise<ProductRow[]> {
 }
 
 export async function getOwnedProductIds(userId: string): Promise<Set<string>> {
-  const admin = createAdminClient();
-  const { data, error } = await admin
+  const supabase = await createClient();
+  const { data, error } = await supabase
     .from("user_entitlements")
     .select("product_id")
     .eq("user_id", userId);
@@ -63,7 +64,14 @@ export async function loadShopCatalog(): Promise<{
     data: { user },
   } = await supabase.auth.getUser();
 
-  const owned = user ? await getOwnedProductIds(user.id) : new Set<string>();
+  let owned = new Set<string>();
+  if (user) {
+    try {
+      owned = await getOwnedProductIds(user.id);
+    } catch {
+      owned = new Set();
+    }
+  }
 
   return {
     stripeReady,

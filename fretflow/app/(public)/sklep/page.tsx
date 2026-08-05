@@ -83,6 +83,13 @@ export default async function SklepPage({
           </p>
         ) : null}
 
+        {!usedFallback && !stripeReady ? (
+          <p className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+            Brak <code className="font-mono">STRIPE_SECRET_KEY</code> na Vercel —
+            dodaj klucz i zrób Redeploy, wtedy pojawi się „Kup teraz”.
+          </p>
+        ) : null}
+
         <ul className="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
           {items.map((product) => (
             <li key={product.id}>
