@@ -16,33 +16,30 @@ type PageProps = {
 };
 
 /**
- * Success landing: also fulfills entitlement if webhook is delayed (idempotent).
+ * Success landing: fulfills entitlement from Stripe session even if the
+ * browser session cookie was lost after Checkout (idempotent).
  */
 export default async function SklepSukcesPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const sessionId = params.session_id?.trim();
 
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   let message =
-    "Dzięki za zakup. E-book jest w Twoim koncie — możesz go od razu pobrać.";
+    "Dzięki za zakup. E-book jest przypisywany do konta, z którego rozpocząłeś płatność.";
+  let fulfilledOk = false;
 
   if (sessionId && isStripeConfigured()) {
     try {
       const stripe = getStripe();
       const session = await stripe.checkout.sessions.retrieve(sessionId);
-      const supabase = await createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
       const userId = session.metadata?.user_id;
       const productId = session.metadata?.product_id;
 
-      if (
-        session.payment_status === "paid" &&
-        user &&
-        userId === user.id &&
-        productId
-      ) {
+      if (session.payment_status === "paid" && userId && productId) {
         const result = await fulfillShopPurchase({
           userId,
           productId,
@@ -51,19 +48,24 @@ export default async function SklepSukcesPage({ searchParams }: PageProps) {
             session.customer_details?.email ?? session.customer_email,
           amountTotalGrosze: session.amount_total,
         });
+        fulfilledOk = result.ok;
         if (!result.ok) {
           message =
-            "Płatność przyjęta, ale trwa przypisywanie dostępu. Odśwież konto za chwilę albo napisz przez kontakt.";
+            "Płatność przyjęta, ale trwa przypisywanie dostępu. Zaloguj się za chwilę albo napisz przez kontakt.";
         } else {
           message =
-            "Gotowe — e-book jest przypisany do Twojego konta. Sprawdź też skrzynkę mailową (PDF w załączniku).";
+            "Gotowe — e-book jest na koncie używanym przy zakupie. Zaloguj się tym samym e-mailem, żeby pobrać PDF.";
         }
+      } else if (session.payment_status !== "paid") {
+        message = "Płatność nie jest jeszcze potwierdzona. Odśwież za chwilę.";
       }
     } catch {
       message =
-        "Płatność powinna przejść. Jeśli nie widzisz produktu w koncie, odśwież stronę za minutę.";
+        "Płatność powinna przejść. Zaloguj się na konto użyte przy zakupie i sprawdź sekcję Zakupy.";
     }
   }
+
+  const loginHref = `/moje-kursy/login?next=${encodeURIComponent("/moje-kursy#zakupy")}`;
 
   return (
     <section className="mx-auto w-full max-w-lg px-4 py-16 text-center sm:px-6">
@@ -76,14 +78,34 @@ export default async function SklepSukcesPage({ searchParams }: PageProps) {
       <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">
         {message}
       </p>
+      {!user ? (
+        <p className="mt-3 text-sm leading-relaxed text-slate-700">
+          Nie jesteś zalogowany w tej przeglądarce — zaloguj się na konto, z
+          którego kupowałeś.
+        </p>
+      ) : null}
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-        <Button asChild>
-          <Link href="/moje-kursy#zakupy">Zobacz kupiony produkt</Link>
-        </Button>
+        {user ? (
+          <Button asChild>
+            <Link href="/moje-kursy#zakupy">Zobacz kupiony produkt</Link>
+          </Button>
+        ) : (
+          <Button asChild>
+            <Link href={loginHref}>Zaloguj się i pobierz</Link>
+          </Button>
+        )}
         <Button asChild variant="secondary">
-          <Link href="/moje-kursy">Moje konto</Link>
+          <Link href={user ? "/moje-kursy" : loginHref}>Moje konto</Link>
         </Button>
       </div>
+      {fulfilledOk ? (
+        <p className="mt-6 text-xs leading-relaxed text-muted">
+          Mail z PDF wysyłamy przez Resend. Przy adresie{" "}
+          <code className="font-mono">onboarding@resend.dev</code> działa tylko
+          na zweryfikowany e-mail konta Resend — do klientów potrzebna własna
+          domena nadawcy.
+        </p>
+      ) : null}
       <p className="mt-4">
         <Link
           href="/sklep"

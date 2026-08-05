@@ -126,7 +126,7 @@ async function sendPurchaseEmail(input: {
   `;
 
   const resend = new Resend(apiKey);
-  await resend.emails.send({
+  const { error } = await resend.emails.send({
     from,
     to: input.to,
     subject: `Twój zakup: ${input.product.title}`,
@@ -135,4 +135,7 @@ async function sendPurchaseEmail(input: {
       ? [{ filename: attachment.filename, content: attachment.content }]
       : undefined,
   });
+  if (error) {
+    console.error("sendPurchaseEmail Resend error:", error.message);
+  }
 }
