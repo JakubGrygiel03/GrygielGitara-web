@@ -1,91 +1,262 @@
-export type ShopProductOffer = {
-  slug: string;
-  lead: string;
-  forWhom: string[];
-  youGet: string[];
-  topics: string[];
-  formatNote: string;
+/**
+ * Full product offer copy (O-F-E-R-T-A + Why / Blue Ocean).
+ * Edit here when adding a new e-book / course / workshop page.
+ */
+
+export type ShopOfferModule = {
+  title: string;
+  fact: string;
+  why: string;
 };
 
-/**
- * Full offer copy for product detail pages (keyed by slug).
- * DB keeps short_description / description; this is the marketing body.
- */
+export type ShopOfferBonus = {
+  title: string;
+  description: string;
+};
+
+export type ShopProductOffer = {
+  slug: string;
+  subtitle: string;
+  /** WHY — problem + belief + method */
+  whyHook: string;
+  whyBody: string[];
+  /** O — promise in customer language */
+  promise: string;
+  /** Precise audience (non-customers’ pains) */
+  forWhom: string[];
+  /** F — modules with Fact + Po co */
+  modules: ShopOfferModule[];
+  /** E — three floors of benefit */
+  emotionFunctional: string;
+  emotionImage: string;
+  emotionFeeling: string;
+  /** Honest limitation */
+  notForYou: string;
+  /** R — risk reversal */
+  guaranteeTitle: string;
+  guaranteeBody: string;
+  /** T — bonuses */
+  bonusesIntro: string;
+  bonuses: ShopOfferBonus[];
+  /** A — price story (regular vs now); live price still from Stripe/DB */
+  regularValueLabel: string;
+  priceStory: string;
+  ctaNote: string;
+};
+
 export const shopProductOffers: Record<string, ShopProductOffer> = {
   "start-z-gitara-bez-stresu": {
     slug: "start-z-gitara-bez-stresu",
-    lead:
-      "Praktyczny e-book na pierwsze tygodnie z gitarą — bez szkolnego stresu, z konkretnymi krokami które od razu słychać.",
+    subtitle:
+      "Praktyczny poradnik na pierwsze tygodnie z gitarą – bez szkolnego stresu, z konkretnymi krokami, które od razu słychać.",
+    whyHook:
+      "Czy wiesz, dlaczego aż osiemdziesiąt procent osób porzuca gitarę w ciągu pierwszych trzech tygodni?",
+    whyBody: [
+      "Większość samouków popełnia ten sam błąd: odpalają internet, próbują od razu łapać trudne, wielopalcowe akordy i walczyć z twardymi strunami. Efekt? Potworny ból palców, frustracja i poczucie braku talentu.",
+      "Wierzę, że muzyka od pierwszego dnia powinna dawać wolność i czystą radość, a nie kojarzyć się z bólem i zniechęceniem. Dlatego stworzyłem ten e-book.",
+      "Kluczem do sukcesu nie są skomplikowane chwyty, ale zaczerpnięta z rzemiosła lutniczego metoda małych kroków i nauka prostych melodii jednogłosowych. Dzięki temu Twoje dłonie bezboleśnie oswoją się z instrumentem, a Ty usłyszysz muzykę od razu.",
+    ],
+    promise:
+      "Zagraj swoje pierwsze, czyste melodie już w tym tygodniu — bez bólu palców, bez frustracji i bez wkuwania nudnej teorii.",
     forWhom: [
-      "Dla osób które dopiero zaczynają albo wracają do gitary po przerwie",
-      "Dla tych, którzy boją się „źle grać” i odkładają ćwiczenia",
-      "Dla uczniów, którzy chcą jasny plan na start poza lekcjami",
+      "Dla początkujących, którzy chcą postawić pierwsze kroki bezpiecznie, lekko i z uśmiechem na twarzy.",
+      "Dla osób wracających do gry po przerwie, które kiedyś zniechęciły się przez ból dłoni lub zbyt trudne ćwiczenia.",
+      "Dla każdego, kto szuka prostego, kumpelskiego i jasnego planu działania, który można wdrożyć w piętnaście minut dziennie.",
     ],
-    youGet: [
-      "PDF do pobrania od razu po zakupie (konto + e-mail)",
-      "Kolejność ćwiczeń na pierwsze dni i tygodnie",
-      "Proste melodie i nawyki, które budują pewność",
-      "Wskazówki jak ćwiczyć krótko, ale skutecznie",
+    modules: [
+      {
+        title: "Instrukcja ułożenia rąk i ergonomii gry",
+        fact: "Anatomia dłoni na gryfie i rozluźnianie napięć.",
+        why: "Gra staje się lekka, struny przestają boleśnie wrzynać się w palce, a każdy dźwięk zaczyna brzmieć czysto.",
+      },
+      {
+        title: "Strojenie instrumentu bez paniki",
+        fact: "Prosty, 3-minutowy algorytm strojenia z darmową aplikacją.",
+        why: "Twoja gitara zawsze brzmi doskonale, a Ty nie boisz się, że przy kręceniu kluczami zerwiesz strunę.",
+      },
+      {
+        title: "Baza pierwszych, prostych melodii na tabulaturze",
+        fact: "Specjalnie przygotowane, uproszczone zapisy znanych motywów.",
+        why: "Od razu grasz piosenki, które znasz i lubisz, budując pewność siebie przed przejściem do akordów.",
+      },
+      {
+        title: "Trening 15 minut dziennie",
+        fact: "Gotowy harmonogram krótkich ćwiczeń na każdy dzień tygodnia.",
+        why: "Widzisz stały postęp bez konieczności rezygnowania z innych obowiązków i bez poczucia winy.",
+      },
     ],
-    topics: [
-      "Wygodna postawa i trzymanie instrumentu",
-      "Strojenie bez paniki",
-      "Pierwsze dźwięki i proste melodie",
-      "Jak ćwiczyć 10–15 minut dziennie i widzieć postęp",
-      "Czego unikać na starcie (najczęstsze pułapki)",
+    emotionFunctional:
+      "Otrzymujesz czytelny plik PDF z ćwiczeniami i schematami technicznymi — do otwarcia na telefonie, tablecie albo komputerze.",
+    emotionImage:
+      "Wyobraź sobie, że wieczorem bierzesz do ręki gitarę. Otwierasz e-booka, poświęcasz zaledwie piętnaście minut, a Twoje palce bez wysiłku trafiają na właściwe struny. Słyszysz czysty, głęboki dźwięk.",
+    emotionFeeling:
+      "Czujesz tę niesamowitą, dziecięcą radość, gdy z Twojego pokoju zamiast głuchego brzęczenia płynie piękna, rozpoznawalna melodia. Masz poczucie, że w końcu to kontrolujesz — a muzyka staje się Twoim najlepszym sposobem na relaks po ciężkim dniu.",
+    notForYou:
+      "Czego NIE znajdziesz w tym e-booku? To nie jest podręcznik akademicki. Nie ma tu nauki czytania nut, historii muzyki klasycznej ani skomplikowanej teorii. Jeśli Twoim celem jest przygotowanie się do egzaminów w państwowej szkole muzycznej — ten poradnik nie jest dla Ciebie. Stworzyłem go wyłącznie z myślą o czystej, bezstresowej i praktycznej rozrywce w domowym zaciszu.",
+    guaranteeTitle: "14-dniowa gwarancja bezpiecznego startu",
+    guaranteeBody:
+      "Jestem tak pewny tej metody, że biorę całe ryzyko na siebie. Jeśli po przeczytaniu e-booka i wykonaniu ćwiczeń uznasz, że Twoja gra się nie poprawiła lub moje podejście do Ciebie nie trafia — napisz do mnie jeden krótki e-mail. Zwrócę Ci sto procent wpłaconej kwoty bez żadnych pytań i bez żalu. Masz czternaście dni na pełne przetestowanie materiału.",
+    bonusesIntro:
+      "Kupując e-booka dzisiaj, otrzymujesz dwa darmowe dodatki, które rozwiążą Twoje kolejne problemy:",
+    bonuses: [
+      {
+        title: 'Bonus 1 — lutniczy poradnik zakupowy: „Jak kupić swoją pierwszą tanią gitarę i nie dać się naciągnąć”',
+        description:
+          "Przygotowany okiem absolwenta Technikum Budowy Fortepianów. Dowiesz się, na co zwrócić uwagę w sklepie, by nie kupić wadliwego i twardego instrumentu.",
+      },
+      {
+        title: "Bonus 2 — kolekcja wideo na start",
+        description:
+          "Krótkie nagrania z prawidłowym ułożeniem dłoni do ćwiczeń z książki, abyś ćwicząc w domu zawsze miał pewność, że robisz to dobrze.",
+      },
     ],
-    formatNote:
-      "Format: PDF · język polski · dostęp natychmiast po płatności Stripe.",
+    regularValueLabel: "99,00 zł",
+    priceStory:
+      "Regularna wartość e-booka wraz z bonusami to 99,00 zł. Ponieważ jest to oficjalna premiera pierwszego wydania, możesz go odebrać teraz w cenie startowej. Ta promocyjna cena obowiązuje dla pierwszych osób — zależy mi na szczerych opiniach, zanim poradnik wejdzie do sprzedaży w pełnej cenie.",
+    ctaNote:
+      "Po płatności PDF znajdziesz w koncie (Moje kursy → Zakupy) oraz na e-mailu. Zacznij bezstresową przygodę z muzyką już za kilka minut.",
   },
+
   "setup-gitary-w-domu": {
     slug: "setup-gitary-w-domu",
-    lead:
-      "Krótki, konkretny przewodnik po opiece nad gitarą w domu — bez warsztatu i bez przepłacania za proste rzeczy.",
+    subtitle:
+      "Domowa opieka nad gitarą bez warsztatu — wymiana strun, czyszczenie i podstawowa regulacja, które słychać w brzmieniu.",
+    whyHook:
+      "Czy wiesz, dlaczego tyle tanich gitar „źle gra”, zanim jeszcze zdążysz się ich nauczyć?",
+    whyBody: [
+      "Ludzie kupują instrument, odkładają go na bok albo walczą z twardymi strunami i brzęczeniem — a problem często nie leży w talencie, tylko w zaniedbanym setupie i złych nawykach przy wymianie strun.",
+      "Wierzę, że każda gitara zasługuje na podstawową troskę, a Ty — na wiedzę, która chroni Cię przed przepłacaniem za proste rzeczy w serwisie.",
+      "Dlatego ten e-book prowadzi Cię metodą małych, bezpiecznych kroków: co możesz zrobić sam w domu, a kiedy naprawdę warto oddać instrument w ręce fachowca.",
+    ],
+    promise:
+      "Zadbaj o swoją gitarę w domu tak, by grała lżej, czyściej i dłużej — bez strachu, że „coś popsujesz”, i bez niepotrzebnych wizyt w warsztacie.",
     forWhom: [
-      "Dla gitarzystów, którzy chcą sami wymienić struny i zadbać o instrument",
-      "Dla osób, którym gitara „źle gra” przez zaniedbany setup",
-      "Dla uczniów przed serwisem — żeby wiedzieć, co warto zrobić samemu",
+      "Dla osób, które chcą same wymienić struny i nie bać się, że zerwą klucz albo porysują gryf.",
+      "Dla gitarzystów, którym instrument „brzęczy”, jest twardy albo brudny — i czują, że coś jest nie tak, ale nie wiedzą od czego zacząć.",
+      "Dla uczniów przed serwisem: żeby świadomie wiedzieć, co warto zrobić samemu, a za co naprawdę warto zapłacić.",
     ],
-    youGet: [
-      "PDF z checklistą i kolejnością kroków",
-      "Bezpieczna wymiana strun krok po kroku",
-      "Czyszczenie gryfu, korpusu i osprzętu",
-      "Podstawowa regulacja — co możesz, a czego lepiej nie ruszać",
+    modules: [
+      {
+        title: "Wymiana strun krok po kroku",
+        fact: "Kolejność, kierunek nawijania i bezpieczne napięcie — checklista bez zgadywania.",
+        why: "Struny trzymają strojenie dłużej, a Ty nie ryzykujesz uszkodzenia kluczy ani gryfu.",
+      },
+      {
+        title: "Czyszczenie gryfu, korpusu i osprzętu",
+        fact: "Co używać, czego unikać i jak nie zniszczyć lakieru.",
+        why: "Instrument wygląda i brzmi świeżo, a brud nie „zjada” strun ani komfortu gry.",
+      },
+      {
+        title: "Podstawowa regulacja — język lutnika po ludzku",
+        fact: "Wysokość strun, menzura, proste objawy problemów — bez akademickiego żargonu.",
+        why: "Rozumiesz, co słyszysz i czujesz pod palcami, zamiast zgadywać „czy to ja, czy gitara”.",
+      },
+      {
+        title: "Kiedy iść do serwisu",
+        fact: "Lista sygnałów, przy których domowa robótka to za mało.",
+        why: "Oszczędzasz pieniądze na tym, co możesz zrobić sam — i nie marnujesz ich, gdy naprawdę potrzebujesz fachowca.",
+      },
     ],
-    topics: [
-      "Kiedy wymieniać struny i jak dobrać grubość",
-      "Czyszczenie bez ryzyka dla lakieru",
-      "Wysokość strun, menzura — podstawy zrozumienia",
-      "Objawy, przy których warto iść do lutnika / serwisu",
-      "Proste nawyki, które przedłużają życie instrumentu",
+    emotionFunctional:
+      "Dostajesz zwięzły PDF z checklistami i kolejnością działań — do otwarcia przy gitarze na stole.",
+    emotionImage:
+      "Wyobraź sobie sobotnie przedpołudnie: kładziesz gitarę na ręczniku, wymieniasz struny według e-booka, przecierasz gryf. Po kwadransie instrument znów „oddycha”.",
+    emotionFeeling:
+      "Czujesz spokój i kontrolę — nie jesteś już zależny od przypadkowych filmików na YouTube. Twoja gitara jest zadbana, a Ty masz pewność, że robisz to dobrze.",
+    notForYou:
+      "To nie jest kurs profesjonalnego lutnictwa ani zamiennik pełnego setupu w warsztacie. Nie znajdziesz tu frezowania siodełka, prostowania gryfu ani zaawansowanej elektroniki. Jeśli chcesz zostać technikiem — idź w warsztat. Ten poradnik jest dla gracza, który chce bezpiecznie zadbać o instrument w domu.",
+    guaranteeTitle: "14-dniowa gwarancja satysfakcji",
+    guaranteeBody:
+      "Jeśli po przeczytaniu uznasz, że materiał nic Ci nie dał — napisz krótki e-mail. Zwrócę 100% kwoty bez pytań i bez żalu. Masz 14 dni na spokojne sprawdzenie.",
+    bonusesIntro: "Do e-booka dorzucam dodatki, które rozbrajają typowe wymówki:",
+    bonuses: [
+      {
+        title: "Bonus 1 — mini-checklista „przed wyjściem z domu / przed lekcją”",
+        description:
+          "Szybki przegląd: struny, strojenie, luzy, brud — żeby nie grać na „chorej” gitarze.",
+      },
+      {
+        title: "Bonus 2 — lista zakupowa domowego zestawu",
+        description:
+          "Co naprawdę warto mieć w szufladzie (i czego nie kupować „na zapas”).",
+      },
     ],
-    formatNote:
-      "Format: PDF · język polski · dostęp natychmiast po płatności Stripe.",
+    regularValueLabel: "79,00 zł",
+    priceStory:
+      "Wartość poradnika z bonusami to 79,00 zł. Na start sprzedaży możesz wziąć go w cenie premierowej — zależy mi na feedbacku od pierwszych czytelników.",
+    ctaNote:
+      "Po płatności PDF jest w Moje kursy → Zakupy oraz na e-mailu. Możesz zacząć przy gitarze jeszcze dziś.",
   },
+
   "rytm-i-timing-na-start": {
     slug: "rytm-i-timing-na-start",
-    lead:
-      "Ćwiczenia rytmiczne, które naprawdę słychać — metronom bez frustracji, timing bez „sztywnego” grania.",
+    subtitle:
+      "Ćwiczenia rytmiczne, które słychać — metronom bez frustracji i timing bez sztywnego, „robotycznego” grania.",
+    whyHook:
+      "Czy wiesz, dlaczego tyle osób ćwiczy z metronomem… i i tak „ucieka” z rytmu?",
+    whyBody: [
+      "Samoucy często włączają klik na zbyt szybkie tempo, walczą z utworem i kończą z poczuciem, że „nie mają poczucia rytmu”. To nie brak talentu — to zły start.",
+      "Wierzę, że timing to umiejętność, którą da się zbudować małymi, przyjemnymi krokami — tak, żeby muzyka znów sprawiała radość, a nie stres.",
+      "Ten e-book prowadzi Cię od pulsu i prostych podziałów do grania z podkładem — bez sztywności i bez rezygnacji po trzech dniach.",
+    ],
+    promise:
+      "Zagraj równo i pewniej — z metronomem, który pomaga, zamiast frustruje — i przenieś to od razu na proste utwory.",
     forWhom: [
-      "Dla początkujących, którym „ucieka” rytm",
-      "Dla osób ćwiczących z metronomem, ale bez efektu",
-      "Dla uczniów, którzy chcą grać równo do podkładów i z innymi",
+      "Dla początkujących, którym „ucieka” rytm przy najprostszych figurach.",
+      "Dla osób ćwiczących z metronomem, ale bez efektu — bo zaczynają za szybko albo bez planu.",
+      "Dla uczniów, którzy chcą grać równo do podkładów i z innymi, bez spięcia w barkach.",
     ],
-    youGet: [
-      "PDF z progresją ćwiczeń od bardzo prostych",
-      "Sposób pracy z metronomem bez spięcia",
-      "Ćwiczenia, które przenosisz od razu na utwory",
-      "Checklista „czy już gram równo?”",
+    modules: [
+      {
+        title: "Puls i podział — po ludzku",
+        fact: "Jak liczyć i czuć rytm bez szkolnego żargonu.",
+        why: "Przestajesz zgadywać „gdzie jest jedynka” i wiesz, co właściwie ćwiczysz.",
+      },
+      {
+        title: "Metronom bez frustracji",
+        fact: "Protokół startu: wolne tempo, krótkie serie, jasne kryterium sukcesu.",
+        why: "Klik przestaje być wrogiem — staje się lustrem, które pomaga, zamiast karać.",
+      },
+      {
+        title: "Proste rytmy na start",
+        fact: "Figury na prawą / lewą rękę, które od razu słychać w grze.",
+        why: "Budujesz pewność małymi wygranymi, zanim wejdziesz w trudniejsze utwory.",
+      },
+      {
+        title: "Gra z podkładem",
+        fact: "Jak utrzymać tempo przy znanym motywie i nie „płynąć”.",
+        why: "Muzyka zaczyna brzmieć jak zespół — a Ty czujesz, że trzymasz kontrolę.",
+      },
     ],
-    topics: [
-      "Puls, podział i liczenie — po ludzku",
-      "Metronom: jak zacząć wolno i nie zrezygnować",
-      "Proste rytmy na start (prawej / lewej ręki)",
-      "Gry z podkładem i utrzymanie tempa",
-      "Najczęstsze błędy timingowe i jak je łapać",
+    emotionFunctional:
+      "PDF z progresją ćwiczeń i checklistą „czy już gram równo?” — do pracy przy gitarze 10–15 minut dziennie.",
+    emotionImage:
+      "Wyobraź sobie: włączasz metronom, robisz trzy krótkie serie z e-booka, potem ten sam rytm do prostego podkładu. Palce i ucho w końcu „idą razem”.",
+    emotionFeeling:
+      "Zamiast wstydu i spięcia pojawia się spokój: wiesz, że timing da się trenować. Muzyka znów jest zabawą, a nie egzaminem.",
+    notForYou:
+      "To nie jest podręcznik akademickiej rytmiki ani kurs na dyplom w szkole muzycznej. Nie ma tu skomplikowanych polirytmii ani teorii na egzamin. Jeśli szukasz rozrywki i praktycznego timingowego startu w domu — jesteś we właściwym miejscu.",
+    guaranteeTitle: "14-dniowa gwarancja satysfakcji",
+    guaranteeBody:
+      "Przetestuj materiał w spokoju. Jeśli podejście do Ciebie nie trafia — napisz e-mail, zwrócę 100% bez pytań. Masz 14 dni.",
+    bonusesIntro: "Dorzucam turbo-dodatki, które rozbrajają typowe wymówki:",
+    bonuses: [
+      {
+        title: "Bonus 1 — 7-dniowy mini-plan rytmiczny",
+        description:
+          "Gotowy tydzień krótkich sesji, żeby nie myśleć „co dziś ćwiczyć”.",
+      },
+      {
+        title: "Bonus 2 — lista podkładów na start (wolne tempa)",
+        description:
+          "Propozycje utworów / stylów, przy których łatwiej usłyszeć postęp.",
+      },
     ],
-    formatNote:
-      "Format: PDF · język polski · dostęp natychmiast po płatności Stripe.",
+    regularValueLabel: "119,00 zł",
+    priceStory:
+      "Regularna wartość e-booka z bonusami to 119,00 zł. Na premierę możesz wziąć go w cenie startowej — zbieram pierwsze szczere opinie przed pełną ceną.",
+    ctaNote:
+      "Po płatności materiał jest w Moje kursy → Zakupy i na e-mailu. Pierwszą sesję z metronomem możesz zrobić dziś wieczorem.",
   },
 };
 
