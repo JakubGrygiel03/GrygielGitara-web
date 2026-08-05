@@ -1,27 +1,27 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { type EmailOtpType } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
+import { NextResponse, type NextRequest } from "next/server";
 
 import { getSupabaseEnv } from "@/lib/env";
 import type { Database } from "@/lib/supabase/types";
 
-function safeNext(raw: string | null, fallback: string) {
-  if (raw?.startsWith("/") && !raw.startsWith("//")) return raw;
-  return fallback;
-}
-
 /**
- * PKCE email links land here with ?code=...
- * Cookies must be written onto the redirect response.
+ * Handles Supabase email template links:
+ * {{ .SiteURL }}/auth/confirm?token_hash=...&type=recovery&next=/moje-kursy/ustaw-haslo
  */
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
-  const code = searchParams.get("code");
-  const type = searchParams.get("type");
-  const defaultNext =
-    type === "recovery" ? "/moje-kursy/ustaw-haslo" : "/moje-kursy";
-  const next = safeNext(searchParams.get("next"), defaultNext);
+  const token_hash = searchParams.get("token_hash");
+  const type = searchParams.get("type") as EmailOtpType | null;
+  const nextRaw = searchParams.get("next");
+  const next =
+    nextRaw?.startsWith("/") && !nextRaw.startsWith("//")
+      ? nextRaw
+      : type === "recovery"
+        ? "/moje-kursy/ustaw-haslo"
+        : "/moje-kursy";
 
-  if (code) {
+  if (token_hash && type) {
     const { url, key } = getSupabaseEnv();
     const redirect = NextResponse.redirect(new URL(next, origin));
 
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    const { error } = await supabase.auth.verifyOtp({ type, token_hash });
     if (!error) {
       return redirect;
     }

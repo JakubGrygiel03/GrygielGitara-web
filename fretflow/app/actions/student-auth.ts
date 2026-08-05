@@ -1,7 +1,7 @@
 "use server";
 
 import { isAdminAuthenticated } from "@/lib/admin-auth";
-import { getSiteUrl } from "@/lib/env";
+import { getRequestSiteUrl, getSiteUrl } from "@/lib/env";
 import { sendEmail } from "@/lib/resend";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
@@ -329,9 +329,10 @@ export async function requestStudentPasswordReset(
   }
 
   try {
+    const site = await getRequestSiteUrl();
     const supabase = await createClient();
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${getSiteUrl()}/auth/callback?next=/moje-kursy/ustaw-haslo`,
+      redirectTo: `${site}/auth/callback?next=/moje-kursy/ustaw-haslo`,
     });
     if (error) {
       return { ok: false, message: error.message };

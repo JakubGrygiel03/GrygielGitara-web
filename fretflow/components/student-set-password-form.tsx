@@ -2,19 +2,26 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import { setStudentPasswordAfterRecovery } from "@/app/actions/student-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { createClient } from "@/lib/supabase/client";
 
 export function StudentSetPasswordForm() {
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    // Implicit-flow recovery links put tokens in the URL hash
+    const supabase = createClient();
+    void supabase.auth.getSession();
+  }, []);
 
   return (
     <div className="mx-auto w-full max-w-md space-y-6 rounded-2xl border border-sky-100 bg-white p-6 shadow-sm sm:p-8">

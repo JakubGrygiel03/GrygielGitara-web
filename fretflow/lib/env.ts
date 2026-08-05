@@ -1,7 +1,18 @@
 /** Canonical site origin for Auth redirects (no trailing slash). */
 export function getSiteUrl(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  if (explicit) return explicit.replace(/\/$/, "");
+  if (explicit) {
+    const cleaned = explicit.replace(/\/$/, "");
+    // Never ship production Auth redirects to localhost by mistake
+    const onVercel = Boolean(process.env.VERCEL_URL);
+    if (onVercel && cleaned.includes("localhost")) {
+      const vercel = process.env.VERCEL_URL!.trim();
+      return vercel.startsWith("http")
+        ? vercel.replace(/\/$/, "")
+        : `https://${vercel}`;
+    }
+    return cleaned;
+  }
 
   const vercel = process.env.VERCEL_URL?.trim();
   if (vercel) {
@@ -9,6 +20,25 @@ export function getSiteUrl(): string {
   }
 
   return "http://localhost:3000";
+}
+
+/**
+ * Prefer the host of the current request (Vercel domain) over env,
+ * so password-reset emails never point at localhost from production.
+ */
+export async function getRequestSiteUrl(): Promise<string> {
+  try {
+    const { headers } = await import("next/headers");
+    const h = await headers();
+    const host = h.get("x-forwarded-host") ?? h.get("host");
+    const proto = h.get("x-forwarded-proto") ?? "https";
+    if (host && !host.includes("localhost") && !host.startsWith("127.")) {
+      return `${proto}://${host}`.replace(/\/$/, "");
+    }
+  } catch {
+    // outside a request context
+  }
+  return getSiteUrl();
 }
 
 /**
