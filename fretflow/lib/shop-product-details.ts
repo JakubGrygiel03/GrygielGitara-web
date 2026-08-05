@@ -38,9 +38,9 @@ export type ShopProductOffer = {
   /** T — bonuses */
   bonusesIntro: string;
   bonuses: ShopOfferBonus[];
-  /** A — price story (regular vs now); live price still from Stripe/DB */
-  regularValueLabel: string;
+  /** A — honest price reason (1st edition / feedback); live price from DB */
   priceStory: string;
+  editionNote: string;
   ctaNote: string;
   /** Short tip in the post-purchase Resend e-mail */
   purchaseEmailTip: string;
@@ -112,9 +112,9 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
           "Krótkie nagrania z prawidłowym ułożeniem dłoni do ćwiczeń z książki, abyś ćwicząc w domu zawsze miał pewność, że robisz to dobrze.",
       },
     ],
-    regularValueLabel: "99,00 zł",
     priceStory:
-      "Regularna wartość e-booka wraz z bonusami to 99,00 zł. Ponieważ jest to oficjalna premiera pierwszego wydania, możesz go odebrać teraz w cenie startowej. Ta promocyjna cena obowiązuje dla pierwszych osób — zależy mi na szczerych opiniach, zanim poradnik wejdzie do sprzedaży w pełnej cenie.",
+      "To pierwsza wersja tego e-booka. Ustawiam cenę świadomie niżej, bo zależy mi na szczerych opiniach i poprawkach od pierwszych czytelników — nie na sztucznej „promocji do północy”. Kupujesz gotowy materiał PDF z bonusami; w kolejnych wydaniach cena może wzrosnąć, gdy treść będzie dopracowana na podstawie feedbacku.",
+    editionNote: "1. wersja e-booka · cena za feedback i rozwój materiału",
     ctaNote:
       "Po płatności PDF znajdziesz w koncie (Moje kursy → Zakupy) oraz na e-mailu. Zacznij bezstresową przygodę z muzyką już za kilka minut.",
     purchaseEmailTip:
@@ -185,9 +185,9 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
           "Co naprawdę warto mieć w szufladzie (i czego nie kupować „na zapas”).",
       },
     ],
-    regularValueLabel: "79,00 zł",
     priceStory:
-      "Wartość poradnika z bonusami to 79,00 zł. Na start sprzedaży możesz wziąć go w cenie premierowej — zależy mi na feedbacku od pierwszych czytelników.",
+      "To pierwsze wydanie poradnika. Cena jest niższa celowo: zbieram uwagi od osób, które realnie użyją checklisty przy własnej gitarze. Nie ma tu odliczania „było drożej, jest taniej” — jest uczciwa stawka za 1. wersję, z myślą o ulepszeniach w następnych edycjach.",
+    editionNote: "1. wersja poradnika · niższa cena za feedback praktyczny",
     ctaNote:
       "Po płatności PDF jest w Moje kursy → Zakupy oraz na e-mailu. Możesz zacząć przy gitarze jeszcze dziś.",
     purchaseEmailTip:
@@ -258,9 +258,9 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
           "Propozycje utworów / stylów, przy których łatwiej usłyszeć postęp.",
       },
     ],
-    regularValueLabel: "119,00 zł",
     priceStory:
-      "Regularna wartość e-booka z bonusami to 119,00 zł. Na premierę możesz wziąć go w cenie startowej — zbieram pierwsze szczere opinie przed pełną ceną.",
+      "To pierwsza wersja materiału o rytmie. Cenę trzymam niżej, żeby więcej osób mogło przetestować ćwiczenia i powiedzieć, co działa w domu — a co warto dopisać. Bez sztucznych przecen: płacisz za 1. wydanie, a ja inwestuję Twój feedback w kolejne poprawki.",
+    editionNote: "1. wersja e-booka · cena za feedback i rozwój ćwiczeń",
     ctaNote:
       "Po płatności materiał jest w Moje kursy → Zakupy i na e-mailu. Pierwszą sesję z metronomem możesz zrobić dziś wieczorem.",
     purchaseEmailTip:

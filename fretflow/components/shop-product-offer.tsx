@@ -179,13 +179,11 @@ export function ShopProductOfferBody({
         <p className="text-sm leading-relaxed text-slate-700">
           {offer.priceStory}
         </p>
-        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <p className="text-sm text-muted line-through">
-            {offer.regularValueLabel}
-          </p>
+        <div className="space-y-1">
           <p className="text-2xl font-bold tabular-nums text-slate-900">
             {priceLabel}
           </p>
+          <p className="text-sm text-muted">{offer.editionNote}</p>
         </div>
         <ShopProductCta
           product={{ id: productId, owned, comingSoon }}

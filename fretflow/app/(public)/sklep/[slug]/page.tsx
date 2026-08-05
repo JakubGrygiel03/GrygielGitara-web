@@ -137,12 +137,12 @@ export default async function SklepProductPage({ params }: PageProps) {
             </div>
 
             <div className="hidden space-y-3 rounded-2xl border border-slate-200 bg-white p-5 lg:block">
-              <p className="text-sm text-muted line-through">
-                {offer?.regularValueLabel}
-              </p>
               <p className="text-2xl font-bold tabular-nums text-slate-900">
                 {priceLabel}
               </p>
+              {offer ? (
+                <p className="text-sm text-muted">{offer.editionNote}</p>
+              ) : null}
               <ShopProductCta
                 product={{ id: productId, owned, comingSoon }}
                 stripeReady={stripeReady && Boolean(productRow)}
@@ -164,15 +164,13 @@ export default async function SklepProductPage({ params }: PageProps) {
               <p className="max-w-2xl text-[0.975rem] leading-relaxed text-muted sm:text-base">
                 {offer?.subtitle ?? shortDescription}
               </p>
-              <div className="flex flex-wrap items-baseline gap-3 lg:hidden">
-                {offer ? (
-                  <p className="text-sm text-muted line-through">
-                    {offer.regularValueLabel}
-                  </p>
-                ) : null}
+              <div className="space-y-1 lg:hidden">
                 <p className="text-xl font-semibold tabular-nums text-slate-900">
                   {priceLabel}
                 </p>
+                {offer ? (
+                  <p className="text-sm text-muted">{offer.editionNote}</p>
+                ) : null}
               </div>
               <div className="lg:hidden">
                 <ShopProductCta
