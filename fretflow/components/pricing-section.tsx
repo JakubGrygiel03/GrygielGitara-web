@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
 
+import { Reveal } from "@/components/reveal";
 import { Button } from "@/components/ui/button";
 import { lessonPackages } from "@/lib/lesson-packages";
 
@@ -11,8 +12,11 @@ export function PricingSection() {
       <div className="mx-auto max-w-6xl space-y-5 px-4 py-12 sm:space-y-6 sm:px-6 sm:py-16 lg:py-20">
         <div className="space-y-4 sm:space-y-5">
           <div className="grid items-center gap-4 md:grid-cols-2 md:gap-6 lg:gap-8">
-            <div className="flex max-w-xl flex-col space-y-2 sm:space-y-3 md:max-w-none">
-              <p className="text-xs font-semibold uppercase tracking-wide text-sky-600 sm:text-sm sm:tracking-wider">
+            <Reveal
+              variant="scale"
+              className="flex max-w-xl flex-col space-y-2 sm:space-y-3 md:max-w-none"
+            >
+              <p className="text-base font-bold uppercase tracking-wide text-sky-600 sm:text-lg">
                 Cennik i bezpieczny start
               </p>
               <h2 className="text-balance text-[1.375rem] font-bold leading-snug tracking-[-0.015em] text-slate-900 sm:text-3xl lg:text-[2rem] lg:leading-snug">
@@ -42,85 +46,98 @@ export function PricingSection() {
                 dźwięku jak typowe wideokonferencje, a materiały pokazuję na
                 tablecie.
               </p>
-            </div>
+            </Reveal>
 
-            <div className="relative mx-auto aspect-[4/3] w-full max-w-md overflow-hidden rounded-2xl bg-sky-100 md:mx-0 md:max-w-none">
-              <Image
-                src="/images/concert-classical.png"
-                alt="Jakub Grygiel na scenie z gitarą klasyczną"
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover object-[center_22%]"
-              />
-            </div>
+            <Reveal variant="scale" delay={100}>
+              <div className="relative mx-auto aspect-[4/3] w-full max-w-md overflow-hidden rounded-2xl bg-sky-100 md:mx-0 md:max-w-none">
+                <Image
+                  src="/images/concert-classical.png"
+                  alt="Jakub Grygiel na scenie z gitarą klasyczną"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover object-[center_22%]"
+                />
+              </div>
+            </Reveal>
           </div>
 
-          <div className="rounded-xl border border-sky-200 bg-sky-50/90 px-3 py-3 sm:px-4 sm:py-4">
-            <div className="flex gap-2.5 sm:gap-3">
-              <ShieldCheck
-                className="mt-0.5 size-5 shrink-0 text-sky-600 sm:size-6"
-                aria-hidden
-              />
-              <div className="min-w-0 space-y-1">
-                <h3 className="text-sm font-semibold text-slate-900 sm:text-base">
-                  Gwarancja bezpiecznego startu
-                </h3>
-                <p className="text-sm leading-relaxed text-slate-700">
-                  Po pierwszej lekcji decydujesz Ty. Jeśli uznasz, że gitara
-                  albo nasza współpraca to nie to, nie płacisz za te zajęcia.
-                  Całe ryzyko biorę na siebie.
-                </p>
+          <Reveal variant="scale" delay={80}>
+            <div className="rounded-xl border border-sky-200 bg-sky-50/90 px-3 py-3 sm:px-4 sm:py-4">
+              <div className="flex gap-2.5 sm:gap-3">
+                <ShieldCheck
+                  className="mt-0.5 size-5 shrink-0 text-sky-600 sm:size-6"
+                  aria-hidden
+                />
+                <div className="min-w-0 space-y-1">
+                  <h3 className="text-sm font-semibold text-slate-900 sm:text-base">
+                    Gwarancja bezpiecznego startu
+                  </h3>
+                  <p className="text-sm leading-relaxed text-slate-700">
+                    Po pierwszej lekcji decydujesz Ty. Jeśli uznasz, że gitara
+                    albo nasza współpraca to nie to, nie płacisz za te zajęcia.
+                    Całe ryzyko biorę na siebie.
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </Reveal>
         </div>
 
         <ul className="grid gap-3 sm:gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {lessonPackages.map((plan) => (
-            <li
-              key={plan.id}
-              className={
-                plan.highlight
-                  ? "rounded-2xl border-2 border-sky-400 bg-white px-5 py-6 sm:px-6 sm:py-7"
-                  : "rounded-2xl border border-sky-100 bg-white/80 px-5 py-6 sm:px-6 sm:py-7"
-              }
-            >
-              <div className="flex flex-wrap items-center gap-2">
-                {plan.highlight ? (
-                  <span className="rounded-full bg-sky-500 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-white">
-                    Pakiet promocyjny
+          {lessonPackages.map((plan, index) => (
+            <li key={plan.id}>
+              <Reveal
+                delay={index * 70}
+                variant="scale"
+                className={
+                  plan.highlight
+                    ? "h-full rounded-2xl border-2 border-sky-400 bg-white px-5 py-6 transition-shadow duration-300 hover:shadow-md sm:px-6 sm:py-7"
+                    : "h-full rounded-2xl border border-sky-100 bg-white/80 px-5 py-6 transition-shadow duration-300 hover:shadow-md sm:px-6 sm:py-7"
+                }
+              >
+                <div className="flex flex-wrap items-center gap-2">
+                  {plan.highlight ? (
+                    <span className="rounded-full bg-sky-500 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-white">
+                      Pakiet promocyjny
+                    </span>
+                  ) : null}
+                  <span
+                    className={
+                      plan.locationType === "online"
+                        ? "rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800"
+                        : plan.locationType === "student_home"
+                          ? "rounded-full bg-sky-100 px-2.5 py-1 text-xs font-semibold text-sky-800"
+                          : "rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700"
+                    }
+                  >
+                    {plan.location}
                   </span>
-                ) : null}
-                <span
-                  className={
-                    plan.locationType === "online"
-                      ? "rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800"
-                      : plan.locationType === "student_home"
-                        ? "rounded-full bg-sky-100 px-2.5 py-1 text-xs font-semibold text-sky-800"
-                        : "rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700"
-                  }
-                >
-                  {plan.location}
-                </span>
-              </div>
-              <h3 className="mt-3 text-lg font-semibold text-slate-900 sm:text-xl">
-                {plan.name}
-              </h3>
-              <p className="mt-3 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-                {plan.priceLabel}
-              </p>
-              <p className="mt-1 text-sm font-semibold text-slate-800">
-                {plan.perLesson}
-              </p>
-              <p className="mt-2 text-sm font-medium text-sky-700">{plan.note}</p>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                {plan.details}
-              </p>
+                </div>
+                <h3 className="mt-3 text-lg font-semibold text-slate-900 sm:text-xl">
+                  {plan.name}
+                </h3>
+                <p className="mt-3 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+                  {plan.priceLabel}
+                </p>
+                <p className="mt-1 text-sm font-semibold text-slate-800">
+                  {plan.perLesson}
+                </p>
+                <p className="mt-2 text-sm font-medium text-sky-700">
+                  {plan.note}
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-muted">
+                  {plan.details}
+                </p>
+              </Reveal>
             </li>
           ))}
         </ul>
 
-        <div className="mx-auto flex max-w-xl flex-col items-center space-y-3 text-center">
+        <Reveal
+          variant="scale"
+          delay={100}
+          className="mx-auto flex max-w-xl flex-col items-center space-y-3 text-center"
+        >
           <Button asChild size="lg" className="w-full sm:w-auto">
             <Link href="/rezerwacja">Umów bezpłatną lekcję próbną</Link>
           </Button>
@@ -128,7 +145,7 @@ export function PricingSection() {
             W formularzu rezerwacji wybierasz wariant (także online 80 zł). Po
             zgłoszeniu ustalamy termin — online przez Telegram.
           </p>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

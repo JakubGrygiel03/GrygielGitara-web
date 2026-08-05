@@ -14,7 +14,7 @@ export default function PobierzPoradnikPage() {
   return (
     <section className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-16">
       <div className="max-w-2xl">
-        <p className="text-sm font-semibold uppercase tracking-wider text-sky-600">
+        <p className="text-base font-bold uppercase tracking-wide text-sky-600 sm:text-lg">
           Lead magnet
         </p>
         <h1 className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">

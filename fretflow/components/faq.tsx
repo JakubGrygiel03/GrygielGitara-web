@@ -4,6 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Reveal } from "@/components/reveal";
 
 const faqs = [
   {
@@ -32,8 +33,8 @@ export function Faq() {
   return (
     <section id="faq" className="scroll-mt-24">
       <div className="mx-auto max-w-6xl space-y-8 px-4 py-12 sm:space-y-12 sm:px-6 sm:py-16 lg:py-20">
-        <div className="max-w-2xl space-y-3 sm:space-y-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-sky-600 sm:text-sm sm:tracking-wider">
+        <Reveal variant="fade" className="max-w-2xl space-y-3 sm:space-y-4">
+          <p className="text-base font-bold uppercase tracking-wide text-sky-600 sm:text-lg">
             FAQ
           </p>
           <h2 className="text-[1.375rem] font-bold leading-snug tracking-[-0.015em] text-slate-900 sm:text-3xl lg:text-4xl">
@@ -43,9 +44,9 @@ export function Faq() {
             Najczęstsze obawy dotyczą bólu, braku talentu i ryzyka. Tu masz jasne
             odpowiedzi bez szkolnego nadęcia.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="max-w-3xl">
+        <Reveal variant="fade" delay={80} className="max-w-3xl">
           <Accordion type="single" collapsible defaultValue="item-0">
             {faqs.map((item, index) => (
               <AccordionItem key={item.q} value={`item-${index}`}>
@@ -58,7 +59,7 @@ export function Faq() {
               </AccordionItem>
             ))}
           </Accordion>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

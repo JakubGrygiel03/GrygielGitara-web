@@ -44,6 +44,145 @@ body {
   background: color-mix(in srgb, var(--accent) 28%, white);
 }
 
+/* —— Motion: scroll reveal + hero —— */
+.reveal-base {
+  transition:
+    opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform, filter;
+}
+
+.reveal-base.is-in {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.reveal-up.is-out {
+  opacity: 0;
+  transform: translateY(1.2rem);
+}
+
+.reveal-down.is-out {
+  opacity: 0;
+  transform: translateY(-0.85rem);
+}
+
+.reveal-left.is-out {
+  opacity: 0;
+  transform: translateX(-1.35rem);
+}
+
+.reveal-right.is-out {
+  opacity: 0;
+  transform: translateX(1.35rem);
+}
+
+.reveal-scale.is-out {
+  opacity: 0;
+  transform: scale(0.96);
+}
+
+.reveal-blur.is-out {
+  opacity: 0;
+  transform: translateY(0.65rem);
+  filter: blur(6px);
+}
+
+.reveal-fade.is-out {
+  opacity: 0;
+  transform: none;
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-soft-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(0.6rem);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes hero-slide-right {
+  from {
+    opacity: 0;
+    transform: translateX(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes soft-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(1.5%, -1.5%, 0) scale(1.03);
+  }
+}
+
+@keyframes soft-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.hero-animate-item {
+  opacity: 0;
+  animation: hero-rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.hero-animate-brand {
+  opacity: 0;
+  animation: hero-soft-scale 0.95s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.hero-animate-slide {
+  opacity: 0;
+  animation: hero-slide-right 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.hero-animate-fade {
+  opacity: 0;
+  animation: hero-fade 1s ease-out forwards;
+}
+
+.hero-glow {
+  animation:
+    soft-drift 14s ease-in-out infinite,
+    soft-pulse 8s ease-in-out infinite;
+}
+
 /* Mobile-first type rhythm for long Polish copy */
 @media (max-width: 639px) {
   body {
@@ -65,5 +204,24 @@ body {
 
   p {
     text-wrap: pretty;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal-base,
+  .hero-animate-item,
+  .hero-animate-brand,
+  .hero-animate-slide,
+  .hero-animate-fade,
+  .hero-glow {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
   }
 }

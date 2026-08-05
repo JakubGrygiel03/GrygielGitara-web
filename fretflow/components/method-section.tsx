@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import { Reveal } from "@/components/reveal";
 import { cn } from "@/lib/utils";
 
 const reasons = [
@@ -48,9 +49,9 @@ export function MethodSection() {
     <section id="metoda" className="scroll-mt-24">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
         <div className="grid items-start gap-8 lg:grid-cols-2 lg:items-center lg:gap-16">
-          <div className="space-y-5 sm:space-y-6">
+          <Reveal variant="right" className="space-y-5 sm:space-y-6">
             <div className="space-y-2 sm:space-y-3">
-              <p className="text-xs font-semibold uppercase tracking-wide text-sky-600 sm:text-sm sm:tracking-wider">
+              <p className="text-base font-bold uppercase tracking-wide text-sky-600 sm:text-lg">
                 Emocje i efekty
               </p>
               <h2 className="text-[1.375rem] font-bold leading-snug tracking-[-0.015em] text-slate-900 sm:text-3xl lg:text-4xl">
@@ -78,9 +79,11 @@ export function MethodSection() {
                 </li>
               ))}
             </ul>
-          </div>
+          </Reveal>
 
-          <MethodImage className="mx-auto hidden max-w-md lg:mx-0 lg:block lg:max-w-none" />
+          <Reveal variant="right" delay={120}>
+            <MethodImage className="mx-auto hidden max-w-md lg:mx-0 lg:block lg:max-w-none" />
+          </Reveal>
         </div>
       </div>
     </section>
