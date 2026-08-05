@@ -13,19 +13,54 @@ export function SiteHeader() {
 
   useEffect(() => {
     if (!open) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+
+    const scrollY = window.scrollY;
+    const { style } = document.body;
+    const previous = {
+      position: style.position,
+      top: style.top,
+      width: style.width,
+      overflow: style.overflow,
+    };
+
+    style.position = "fixed";
+    style.top = `-${scrollY}px`;
+    style.width = "100%";
+    style.overflow = "hidden";
+
     return () => {
-      document.body.style.overflow = previous;
+      style.position = previous.position;
+      style.top = previous.top;
+      style.width = previous.width;
+      style.overflow = previous.overflow;
+      window.scrollTo(0, scrollY);
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!open) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
   return (
-    <header className="sticky top-0 z-50 border-b border-sky-100/80 bg-white/70 backdrop-blur-md">
+    <header
+      className={cn(
+        "z-50 border-b border-sky-100/80 bg-white/90 backdrop-blur-md",
+        open
+          ? "fixed inset-x-0 top-0"
+          : "sticky top-0",
+      )}
+    >
       <div className="mx-auto flex h-[4.5rem] max-w-6xl items-center justify-between gap-3 px-4 sm:h-20 sm:px-6">
         <Link
           href="/"
-          className="shrink-0 text-2xl font-bold tracking-tight text-slate-900 sm:text-[1.75rem]"
+          className="shrink-0 text-[1.25rem] font-bold leading-none tracking-[-0.02em] text-slate-900 sm:text-[1.75rem]"
           onClick={() => setOpen(false)}
           aria-label="GrygielGitara — strona główna"
         >
@@ -71,28 +106,41 @@ export function SiteHeader() {
         </div>
       </div>
 
+      {/* Fixed overlay — always opens in current viewport, even after scroll */}
+      <div
+        className={cn(
+          "fixed inset-0 z-40 bg-slate-900/25 lg:hidden",
+          open ? "block" : "hidden",
+        )}
+        aria-hidden={!open}
+        onClick={() => setOpen(false)}
+      />
+
       <div
         id="mobile-nav"
+        role="dialog"
+        aria-modal={open}
+        aria-label="Menu"
         className={cn(
-          "max-h-[calc(100dvh-4.5rem)] overflow-y-auto border-t border-sky-100 bg-white sm:max-h-[calc(100dvh-5rem)] lg:hidden",
+          "fixed inset-x-0 top-[4.5rem] bottom-0 z-50 overflow-y-auto border-t border-sky-100 bg-white sm:top-20 lg:hidden",
           open ? "block" : "hidden",
         )}
       >
         <nav
           aria-label="Menu mobilne"
-          className="mx-auto flex max-w-6xl flex-col gap-1.5 px-4 py-5 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-6"
+          className="mx-auto flex max-w-6xl flex-col gap-1.5 px-4 py-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:px-6"
         >
           {mainNavLinks.map((link) => (
             <Link
               key={link.label}
               href={link.href}
               onClick={() => setOpen(false)}
-              className="inline-flex min-h-12 items-center rounded-xl px-3.5 text-xl font-semibold text-slate-800 transition-colors hover:bg-sky-50"
+              className="inline-flex min-h-12 items-center rounded-xl px-3.5 text-base font-semibold text-slate-800 transition-colors hover:bg-sky-50 sm:text-lg"
             >
               {link.label}
             </Link>
           ))}
-          <Button asChild size="lg" className="mt-3 w-full text-lg">
+          <Button asChild size="lg" className="mt-3 w-full text-base">
             <Link href="/rezerwacja" onClick={() => setOpen(false)}>
               Umów lekcję próbną
             </Link>

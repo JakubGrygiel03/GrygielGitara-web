@@ -50,13 +50,13 @@ export function MethodSection() {
         <div className="grid items-start gap-8 lg:grid-cols-2 lg:items-center lg:gap-16">
           <div className="space-y-5 sm:space-y-6">
             <div className="space-y-2 sm:space-y-3">
-              <p className="text-sm font-semibold uppercase tracking-wider text-sky-600">
+              <p className="text-xs font-semibold uppercase tracking-wide text-sky-600 sm:text-sm sm:tracking-wider">
                 Emocje i efekty
               </p>
-              <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
+              <h2 className="text-[1.375rem] font-bold leading-snug tracking-[-0.015em] text-slate-900 sm:text-3xl lg:text-4xl">
                 Dlaczego ta metoda działa?
               </h2>
-              <p className="text-sm leading-relaxed text-muted sm:text-base lg:text-lg">
+              <p className="text-[0.9375rem] leading-relaxed text-muted sm:text-base lg:text-lg">
                 Po około 4 lekcjach wielu uczniów gra już pierwsze melodie ze
                 swojej listy ulubionych piosenek. Nie obiecuję cudów w tydzień,
                 ale daję prosty przekaz, dobre narzędzia i utwory, które

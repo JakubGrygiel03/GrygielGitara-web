@@ -6,13 +6,13 @@ export function AboutSection() {
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
         <div className="grid items-center gap-8 md:grid-cols-2 md:gap-10 lg:gap-16">
           <div className="space-y-3 sm:space-y-4">
-            <p className="text-sm font-semibold uppercase tracking-wider text-sky-600">
+            <p className="text-xs font-semibold uppercase tracking-wide text-sky-600 sm:text-sm sm:tracking-wider">
               Autorska marka
             </p>
-            <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
+            <h2 className="text-[1.375rem] font-bold leading-snug tracking-[-0.015em] text-slate-900 sm:text-3xl lg:text-4xl">
               Pedagog, technik instrumentów i muzyk sceniczny
             </h2>
-            <div className="space-y-4 text-sm leading-relaxed text-muted sm:text-base lg:text-lg">
+            <div className="space-y-4 text-[0.9375rem] leading-relaxed text-muted sm:text-base lg:text-lg">
               <p>
                 Ponad 7 lat nauczania, PSM II stopnia w Kaliszu oraz Technikum
                 Budowy i Strojenia Fortepianów. Na scenie gram z The Medievals.

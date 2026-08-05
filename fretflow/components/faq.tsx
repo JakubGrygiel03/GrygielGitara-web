@@ -33,13 +33,13 @@ export function Faq() {
     <section id="faq" className="scroll-mt-24">
       <div className="mx-auto max-w-6xl space-y-8 px-4 py-12 sm:space-y-12 sm:px-6 sm:py-16 lg:py-20">
         <div className="max-w-2xl space-y-3 sm:space-y-4">
-          <p className="text-sm font-semibold uppercase tracking-wider text-sky-600">
+          <p className="text-xs font-semibold uppercase tracking-wide text-sky-600 sm:text-sm sm:tracking-wider">
             FAQ
           </p>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
+          <h2 className="text-[1.375rem] font-bold leading-snug tracking-[-0.015em] text-slate-900 sm:text-3xl lg:text-4xl">
             Odpowiedzi zanim umówisz pierwszą lekcję
           </h2>
-          <p className="text-sm leading-relaxed text-muted sm:text-base lg:text-lg">
+          <p className="text-[0.9375rem] leading-relaxed text-muted sm:text-base lg:text-lg">
             Najczęstsze obawy dotyczą bólu, braku talentu i ryzyka. Tu masz jasne
             odpowiedzi bez szkolnego nadęcia.
           </p>
@@ -49,7 +49,7 @@ export function Faq() {
           <Accordion type="single" collapsible defaultValue="item-0">
             {faqs.map((item, index) => (
               <AccordionItem key={item.q} value={`item-${index}`}>
-                <AccordionTrigger className="text-sm sm:text-base">
+                <AccordionTrigger className="text-[0.9375rem] leading-snug sm:text-base">
                   {item.q}
                 </AccordionTrigger>
                 <AccordionContent className="text-sm sm:text-base">

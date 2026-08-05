@@ -16,13 +16,13 @@ export function ForumMusicumBand() {
           </div>
 
           <div className="space-y-3 text-center md:space-y-4 md:text-left">
-            <p className="text-sm font-semibold uppercase tracking-wider text-sky-600">
+            <p className="text-xs font-semibold uppercase tracking-wide text-sky-600 sm:text-sm sm:tracking-wider">
               Ciekawostka
             </p>
-            <h2 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl lg:text-3xl">
+            <h2 className="text-[1.25rem] font-semibold leading-snug tracking-[-0.015em] text-slate-900 sm:text-2xl lg:text-3xl">
               Uczysz się od muzyka ze sceny, nie tylko z sali lekcyjnej
             </h2>
-            <p className="text-sm leading-relaxed text-muted sm:text-base lg:text-lg">
+            <p className="text-[0.9375rem] leading-relaxed text-muted sm:text-base lg:text-lg">
               Z zespołem The Medievals gram po całej Polsce – w pałacach,
               zamkach, muzeach oraz na mniejszych i większych scenach. Ostatnio
               mogłem też zagrać koncert w prestiżowym Narodowym Forum Muzyki.

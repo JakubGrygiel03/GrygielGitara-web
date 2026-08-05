@@ -12,10 +12,10 @@ export function PricingSection() {
         <div className="space-y-4 sm:space-y-5">
           <div className="grid items-center gap-4 md:grid-cols-2 md:gap-6 lg:gap-8">
             <div className="flex max-w-xl flex-col space-y-2 sm:space-y-3 md:max-w-none">
-              <p className="text-sm font-semibold uppercase tracking-wider text-sky-600">
+              <p className="text-xs font-semibold uppercase tracking-wide text-sky-600 sm:text-sm sm:tracking-wider">
                 Cennik i bezpieczny start
               </p>
-              <h2 className="text-balance text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-[2rem] lg:leading-snug">
+              <h2 className="text-balance text-[1.375rem] font-bold leading-snug tracking-[-0.015em] text-slate-900 sm:text-3xl lg:text-[2rem] lg:leading-snug">
                 Inwestujesz w lekcję, materiały i spokojny początek
               </h2>
 
@@ -23,7 +23,7 @@ export function PricingSection() {
                 <h3 className="text-base font-semibold text-slate-900 sm:text-lg">
                   Indywidualna lekcja i jasny plan
                 </h3>
-                <p className="text-pretty text-sm leading-relaxed text-muted sm:text-base">
+                <p className="text-pretty text-[0.9375rem] leading-relaxed text-muted sm:text-base">
                   Otrzymujesz mój pełny czas i 100% skupienia. Zapomnij o nudnych
                   ćwiczeniach z przestarzałych podręczników. Choć na pierwszym
                   spotkaniu nie rozpracujemy jeszcze całego, trudnego utworu z
@@ -35,7 +35,7 @@ export function PricingSection() {
                 </p>
               </div>
 
-              <p className="text-pretty text-sm leading-relaxed text-muted sm:text-base">
+              <p className="text-pretty text-[0.9375rem] leading-relaxed text-muted sm:text-base">
                 Przy pierwszej wymianie strun pomagam też wyczyścić gitarę i
                 ogarnąć podstawy opieki nad instrumentem, żeby grało się lżej od
                 startu. Online łączymy się na Telegramie — nie psuje barwy

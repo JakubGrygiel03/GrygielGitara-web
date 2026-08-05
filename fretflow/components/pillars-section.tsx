@@ -31,13 +31,13 @@ export function PillarsSection() {
     <section id="oferta" className="scroll-mt-24 bg-surface">
       <div className="mx-auto max-w-6xl space-y-8 px-4 py-12 sm:space-y-12 sm:px-6 sm:py-16 lg:py-20">
         <div className="max-w-2xl space-y-3 sm:space-y-4">
-          <p className="text-sm font-semibold uppercase tracking-wider text-sky-600">
+          <p className="text-xs font-semibold uppercase tracking-wide text-sky-600 sm:text-sm sm:tracking-wider">
             Fundament oferty
           </p>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
+          <h2 className="text-[1.375rem] font-bold leading-snug tracking-[-0.015em] text-slate-900 sm:text-3xl lg:text-4xl">
             Lekcje, rzemiosło i osobista odpowiedzialność
           </h2>
-          <p className="text-sm leading-relaxed text-muted sm:text-base lg:text-lg">
+          <p className="text-[0.9375rem] leading-relaxed text-muted sm:text-base lg:text-lg">
             Stacjonarnie obok Galerii Forum, z dojazdem w Gdańsku albo online.
             Do tego realne wsparcie przy instrumencie, którego masowe szkoły
             zwykle nie dają.
