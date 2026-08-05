@@ -1,0 +1,521 @@
+# Cursor Context: FretFlow – Modern Guitar Mentorship, E-Commerce & Academy SaaS (Plan Maksimum)
+
+## 🎯 Project Overview (GrygielGitara – Production & Live SaaS)
+
+**Goal:** Build a fully operational, production-ready web platform and business engine for **GrygielGitara** (`grygielgitara.pl`), serving as the central digital hub for Jakub Grygiel (Guitar Educator, Musician, and Certified Instrument Craft Technician in Gdańsk). The system is built to actively handle real-world student onboarding, automate daily business tasks, accept online payments, manage digital delivery, and serve as an enterprise-grade portfolio demonstrating full-stack engineering proficiency.
+
+- **Primary Mission (Commercial & Operational):** Real-world client acquisition (Gdańsk in-person/home lessons & guitar setup service), automated digital product sales (E-books, online courses), streamlined student progress management, and hands-free transactional email workflows.
+- **Brand & Domain:** **GrygielGitara** (`grygielgitara.pl`) – Personal brand combining zero-stress guitar mentorship, craftsmanship/setup services, and automated digital EdTech products.
+- **Target Audience:** Real local guitar students (Gdańsk: studio near Galeria Forum / home visits), online course & e-book customers, active enrolled students in the Student Portal, and software engineering recruiters/technical leads evaluating full-stack TypeScript & SaaS architecture.
+- **Tone & Style:** Innovative, modern, clean, unpretentious (zero-stress, practical approach), lightning-fast, and fully accessible.
+- **Theme & Aesthetic:** Modern & Fresh Light Blue & White (`#0EA5E9` / `#00BFFF` Sky Blue accent, Crisp White `#FFFFFF` background, Slate `#0F172A` text, semi-transparent frosted glass elements).
+- **Language:** Polish (UI Content & Customer Communications), English (Code, Commit Messages, Comments, and Technical Documentation).
+
+---
+
+## 🛠️ Tech Stack & Architecture
+
+- **Framework:** Next.js (App Router, Server Components, Server Actions, Route Handlers)
+- **Language:** TypeScript (Strict Mode Enabled)
+- **Styling:** Tailwind CSS (Mobile-First approach)
+- **UI & Icons:** Shadcn UI + Radix UI Primitives + Lucide React
+- **Animations & UX:** Framer Motion (Scroll animations, micro-interactions, custom video UI)
+- **Database & Auth:** Supabase (PostgreSQL, Row Level Security, Storage for PDF/Video assets, Auth for Admin & Students)
+- **Payments:** Stripe API / Przelewy24 / PayU (Digital products & course access)
+- **Email & Automation:** Resend API (Transactional emails) + MailerLite API (Newsletter & Lead delivery) + Vercel Cron / QStash (Scheduled message automations)
+- **Form Handling:** React Hook Form + Zod (Strict schema validation)
+- **Analytics:** Internal Supabase telemetry / PostHog (Tracking visits, conversions, sales, and leads)
+- **Deployment:** Vercel
+
+---
+
+## 🏗️ Core Architecture & Features (Plan Maksimum)
+
+### 1. Public & Client Experience (Landing, Mentorship & Interactive Booking)
+- **Hero & Lead Magnet:** Interactive cover introducing the zero-stress guitar methodology, 7+ years of teaching experience, classical credentials (PSM II st. w Kaliszu), piano tuning background, and ensemble work (*The Medievals*). Includes an instant PDF Lead Magnet download ("Jak bezstresowo nastroić gitarę w 3 minuty").
+- **Interactive Methodology & Craft Story:** Dynamic scroll-driven visual timeline using Framer Motion (`useScroll`, `useTransform`) highlighting ergonomics, custom video follow-ups, free string maintenance, and non-academic theory.
+- **Interactive Contact Form (`/kontakt` or modal):**
+  - Modern form with React Hook Form + Zod (Topic selection: Gdańsk lessons, Instrument setup, E-book/Course support, General inquiry).
+  - Server Action handling instant Supabase database logging + automated Resend notification email sent to Jakub and confirmation email to the user.
+- **Tokenized Dynamic Consultation / Trial Booking (`/rezerwacja/[token]` or `/rezerwacja`):**
+  - Prospective students book/confirm trial lessons or guitar setup consultations using personalized tokens.
+  - Multi-step form powered by React Hook Form & Zod (Lesson location: Gdańsk home/student home, instrument type, musical goals, favorite songs to learn, zero-risk guarantee confirmation).
+  - Direct submission via **Next.js Server Actions** with immediate optimistic UI updates and toast notifications.
+- **Shop & E-Books (`/sklep`):** Digital catalog for purchasing e-books and video courses with instant payment integration.
+- **Interactive FAQ Accordion:** Common questions (Guitar pain/strings, lessons at home vs. studio near Galeria Forum, materials in price, 1st lesson guarantee).
+
+### 2. Student Portal (`/strefa-studenta` / `/moje-kursy`)
+- **Passwordless Auth:** Frictionless Magic Link login via Supabase Auth.
+- **My Purchased Content:** User dashboard listing owned e-books (PDF download links via Supabase Storage Signed URLs) and unlocked video courses.
+- **Interactive Video Player & Progress Tracker:** Custom video player with lesson navigation, attached tabs/resources download, and lesson completion toggles (`useOptimistic`).
+
+### 3. Automated Messaging & Notification Engine (Future-Proof Architecture)
+- **Event-Driven Emails:** Instant execution on actions (Form submitted, Booking created, Course purchased, Lead magnet downloaded).
+- **Scheduled Reminders (Cron/Queue):** Background tasks for sending upcoming lesson reminders 24h prior or automated follow-up messages after trial sessions.
+
+### 4. Admin Dashboard (`/admin`)
+- **Protected Authentication:** Secured via Next.js Middleware and Supabase Auth.
+- **Analytics & Sales Overview:** Real-time metrics tracking website visits, total sales revenue, e-book conversions, and email newsletter leads.
+- **Booking & Student Management:** Real-time client list with search, status filtering (Confirmed, Pending, Completed), lesson location summary, and CSV export functionality.
+- **Contact Inbox (`/admin/wiadomosci`):** Management panel for incoming contact form inquiries (Read/Unread status, quick reply trigger).
+- **Content & Product Management:** CRUD interface for updating digital products (`products`), e-book files, and lesson videos.
+- **Gallery & Storage Management:** UI for managing photo/video assets via Supabase Storage buckets.
+
+---
+
+## 🎨 Design Guidelines & UX Standards
+
+### Color Palette ("Light Blue & White")
+- **Primary / Accent Blue:** Vibrant Light Blue / Sky Blue (`#0EA5E9` or `#00BFFF`)
+- **Secondary Blue:** Soft Muted Blue (`#BAE6FD` / `#E0F2FE`)
+- **Background & Surfaces:** Crisp Pure White (`#FFFFFF`) & Ultra-light Off-White (`#F8FAFC`)
+- **Frosted Glass (Glassmorphism):** `bg-white/70` with `backdrop-blur-md` for modern cards and sticky headers.
+- **Text:** Dark Slate (`#0F172A`) for WCAG AAA contrast compliance.
+
+### Typography
+- **Headings:** Modern Display / Geometric Sans (e.g., `Plus Jakarta Sans` or `Geist Sans` via `next/font`)
+- **Body:** Clean Sans-serif (e.g., `Inter` or `Geist Sans`)
+
+### Engineering & UX Standards (Portfolio Focus)
+- **Mobile-First Touch Targets:** Minimum interactive target sizes (44x44px).
+- **Accessibility (a11y):** Full keyboard navigation, ARIA attributes, semantic HTML.
+- **Zero Layout Shift:** Image aspect ratio reservations with blur placeholders (`next/image`).
+- **Secure File Access:** Use Supabase signed URLs for paid PDF & video assets.
+- **Type Safety:** End-to-end TypeScript types generated from Supabase DB schema.
+
+---
+
+## 🗄️ Database Schema & Security (Supabase PostgreSQL)
+
+```sql
+-- Enable UUID extension
+create extension if not exists "uuid-ossp";
+
+-- Products (E-books, Online Courses)
+create table products (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  title text not null,
+  slug text unique not null,
+  description text,
+  price_in_cents int not null,
+  type text not null check (type in ('ebook', 'course', 'lesson_package')),
+  file_path text,
+  is_published boolean default false
+);
+
+-- Contact Form Messages
+create table contact_messages (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  sender_name text not null,
+  email text not null,
+  phone text,
+  topic text not null check (topic in ('lessons', 'setup_service', 'shop_support', 'other')),
+  message text not null,
+  is_read boolean default false not null
+);
+
+-- Lesson Bookings & Student Consultation Requests
+create table bookings (
+  id uuid default gen_random_uuid() primary key,
+  token text unique not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  student_name text not null,
+  email text not null,
+  phone text,
+  location_type text check (location_type in ('student_home', 'studio_forum', 'online')),
+  preferred_day text,
+  favorite_song text,
+  has_instrument boolean default true,
+  status text default 'pending' check (status in ('pending', 'confirmed', 'cancelled', 'completed')),
+  message text
+);
+
+-- User Access / Course Entitlements
+create table user_entitlements (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  user_id uuid references auth.users(id) on delete cascade not null,
+  product_id uuid references products(id) on delete cascade not null,
+  unique(user_id, product_id)
+);
+
+-- Course Lessons
+create table course_lessons (
+  id uuid default gen_random_uuid() primary key,
+  product_id uuid references products(id) on delete cascade not null,
+  title text not null,
+  slug text not null,
+  description text,
+  video_url text not null,
+  attachment_path text,
+  order_index int default 0 not null
+);
+
+-- Lesson Progress Tracker
+create table lesson_progress (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references auth.users(id) on delete cascade not null,
+  lesson_id uuid references course_lessons(id) on delete cascade not null,
+  completed boolean default true not null,
+  completed_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  unique(user_id, lesson_id)
+);
+
+-- Email Leads / Newsletter List
+create table newsletter_subscribers (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  email text unique not null,
+  source text default 'tuning_pdf_lead_magnet'
+);
+
+-- Automated Notification Queue / Log
+create table automated_notifications (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  recipient_email text not null,
+  notification_type text not null, -- e.g., 'lesson_reminder_24h', 'post_lesson_video', 'booking_confirmation'
+  scheduled_for timestamp with time zone not null,
+  sent_at timestamp with time zone,
+  status text default 'pending' check (status in ('pending', 'sent', 'failed'))
+);
+
+-- Website Traffic Analytics
+create table page_views (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  path text not null,
+  referrer text
+);
+
+-- Row Level Security (RLS) Configuration
+alter table products enable row level security;
+alter table contact_messages enable row level security;
+alter table bookings enable row level security;
+alter table user_entitlements enable row level security;
+alter table lesson_progress enable row level security;
+alter table newsletter_subscribers enable row level security;
+alter table automated_notifications enable row level security;
+alter table page_views enable row level security;
+
+-- RLS Policies
+create policy "Allow public read published products" on products for select using (is_published = true);
+create policy "Allow public to insert contact messages" on contact_messages for insert with check (true);
+create policy "Allow public to insert bookings" on bookings for insert with check (true);
+create policy "Allow user read own entitlements" on user_entitlements for select using (auth.uid() = user_id);
+create policy "Allow user read own lesson progress" on lesson_progress for select using (auth.uid() = user_id);
+create policy "Allow user update own lesson progress" on lesson_progress for insert with check (auth.uid() = user_id);
+create policy "Allow public to insert page views" on page_views for insert with check (true);
+create policy "Allow public to subscribe to newsletter" on newsletter_subscribers for insert with check (true);
+
+Markdown
+# Cursor Context: FretFlow – Modern Guitar Mentorship, E-Commerce & Academy SaaS (Plan Maksimum)
+
+## 🎯 Project Overview
+**Goal:** Create a production-ready, full-stack educational and e-commerce SaaS platform built for Jakub Grygiel (Guitar Teacher, Musician, and Instrument Craft Technician in Gdańsk). Built from the ground up using **Plan Maksimum** architecture to serve as a high-impact portfolio project showcasing advanced Next.js App Router patterns, real-time database management, fine-grained access control, digital product sales, tokenized client onboarding, interactive contact modules, and automated messaging workflows.
+
+- **Target Audience:** Potential guitar students (Gdańsk stacjonarnie/dojazd), digital product buyers (E-books, online courses), active students, and recruiters/engineers evaluating full-stack TypeScript, UX, and software engineering capabilities.
+- **Tone & Style:** Innovative, modern, clean, unpretentious (zero-stress approach), performant, and fully accessible.
+- **Theme & Aesthetic:** Modern & Fresh Light Blue & White (`#0EA5E9` / `#00BFFF` accent, Crisp White `#FFFFFF`, Slate `#0F172A` text, semi-transparent frosted glass elements).
+- **Language:** Polish (UI Content & Customer Communications), English (Code, Commit Messages, Comments, and Technical Documentation).
+
+---
+
+## 🛠️ Tech Stack & Architecture
+
+- **Framework:** Next.js (App Router, Server Components, Server Actions, Route Handlers)
+- **Language:** TypeScript (Strict Mode Enabled)
+- **Styling:** Tailwind CSS (Mobile-First approach)
+- **UI & Icons:** Shadcn UI + Radix UI Primitives + Lucide React
+- **Animations & UX:** Framer Motion (Scroll animations, micro-interactions, custom video UI)
+- **Database & Auth:** Supabase (PostgreSQL, Row Level Security, Storage for PDF/Video assets, Auth for Admin & Students)
+- **Payments:** Stripe API / Przelewy24 / PayU (Digital products & course access)
+- **Email & Automation:** Resend API (Transactional emails) + MailerLite API (Newsletter & Lead delivery) + Vercel Cron / QStash (Scheduled message automations)
+- **Form Handling:** React Hook Form + Zod (Strict schema validation)
+- **Analytics:** Internal Supabase telemetry / PostHog (Tracking visits, conversions, sales, and leads)
+- **Deployment:** Vercel
+
+---
+
+## 🏗️ Core Architecture & Features (Plan Maksimum)
+
+### 1. Public & Client Experience (Landing, Mentorship & Interactive Booking)
+- **Hero & Lead Magnet:** Interactive cover introducing the zero-stress guitar methodology, 7+ years of teaching experience, classical credentials (PSM II st. w Kaliszu), piano tuning background, and ensemble work (*The Medievals*). Includes an instant PDF Lead Magnet download ("Jak bezstresowo nastroić gitarę w 3 minuty").
+- **Interactive Methodology & Craft Story:** Dynamic scroll-driven visual timeline using Framer Motion (`useScroll`, `useTransform`) highlighting ergonomics, custom video follow-ups, free string maintenance, and non-academic theory.
+- **Interactive Contact Form (`/kontakt` or modal):**
+  - Modern form with React Hook Form + Zod (Topic selection: Gdańsk lessons, Instrument setup, E-book/Course support, General inquiry).
+  - Server Action handling instant Supabase database logging + automated Resend notification email sent to Jakub and confirmation email to the user.
+- **Tokenized Dynamic Consultation / Trial Booking (`/rezerwacja/[token]` or `/rezerwacja`):**
+  - Prospective students book/confirm trial lessons or guitar setup consultations using personalized tokens.
+  - Multi-step form powered by React Hook Form & Zod (Lesson location: Gdańsk home/student home, instrument type, musical goals, favorite songs to learn, zero-risk guarantee confirmation).
+  - Direct submission via **Next.js Server Actions** with immediate optimistic UI updates and toast notifications.
+- **Shop & E-Books (`/sklep`):** Digital catalog for purchasing e-books and video courses with instant payment integration.
+- **Interactive FAQ Accordion:** Common questions (Guitar pain/strings, lessons at home vs. studio near Galeria Forum, materials in price, 1st lesson guarantee).
+
+### 2. Student Portal (`/strefa-studenta` / `/moje-kursy`)
+- **Passwordless Auth:** Frictionless Magic Link login via Supabase Auth.
+- **My Purchased Content:** User dashboard listing owned e-books (PDF download links via Supabase Storage Signed URLs) and unlocked video courses.
+- **Interactive Video Player & Progress Tracker:** Custom video player with lesson navigation, attached tabs/resources download, and lesson completion toggles (`useOptimistic`).
+
+### 3. Automated Messaging & Notification Engine (Future-Proof Architecture)
+- **Event-Driven Emails:** Instant execution on actions (Form submitted, Booking created, Course purchased, Lead magnet downloaded).
+- **Scheduled Reminders (Cron/Queue):** Background tasks for sending upcoming lesson reminders 24h prior or automated follow-up messages after trial sessions.
+
+### 4. Admin Dashboard (`/admin`)
+- **Protected Authentication:** Secured via Next.js Middleware and Supabase Auth.
+- **Analytics & Sales Overview:** Real-time metrics tracking website visits, total sales revenue, e-book conversions, and email newsletter leads.
+- **Booking & Student Management:** Real-time client list with search, status filtering (Confirmed, Pending, Completed), lesson location summary, and CSV export functionality.
+- **Contact Inbox (`/admin/wiadomosci`):** Management panel for incoming contact form inquiries (Read/Unread status, quick reply trigger).
+- **Content & Product Management:** CRUD interface for updating digital products (`products`), e-book files, and lesson videos.
+- **Gallery & Storage Management:** UI for managing photo/video assets via Supabase Storage buckets.
+
+---
+
+## 🎨 Design Guidelines & UX Standards
+
+### Color Palette ("Light Blue & White")
+- **Primary / Accent Blue:** Vibrant Light Blue / Sky Blue (`#0EA5E9` or `#00BFFF`)
+- **Secondary Blue:** Soft Muted Blue (`#BAE6FD` / `#E0F2FE`)
+- **Background & Surfaces:** Crisp Pure White (`#FFFFFF`) & Ultra-light Off-White (`#F8FAFC`)
+- **Frosted Glass (Glassmorphism):** `bg-white/70` with `backdrop-blur-md` for modern cards and sticky headers.
+- **Text:** Dark Slate (`#0F172A`) for WCAG AAA contrast compliance.
+
+### Typography
+- **Headings:** Modern Display / Geometric Sans (e.g., `Plus Jakarta Sans` or `Geist Sans` via `next/font`)
+- **Body:** Clean Sans-serif (e.g., `Inter` or `Geist Sans`)
+
+### Engineering & UX Standards (Portfolio Focus)
+- **Mobile-First Touch Targets:** Minimum interactive target sizes (44x44px).
+- **Accessibility (a11y):** Full keyboard navigation, ARIA attributes, semantic HTML.
+- **Zero Layout Shift:** Image aspect ratio reservations with blur placeholders (`next/image`).
+- **Secure File Access:** Use Supabase signed URLs for paid PDF & video assets.
+- **Type Safety:** End-to-end TypeScript types generated from Supabase DB schema.
+
+---
+
+## 🗄️ Database Schema & Security (Supabase PostgreSQL)
+
+```sql
+-- Enable UUID extension
+create extension if not exists "uuid-ossp";
+
+-- Products (E-books, Online Courses)
+create table products (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  title text not null,
+  slug text unique not null,
+  description text,
+  price_in_cents int not null,
+  type text not null check (type in ('ebook', 'course', 'lesson_package')),
+  file_path text,
+  is_published boolean default false
+);
+
+-- Contact Form Messages
+create table contact_messages (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  sender_name text not null,
+  email text not null,
+  phone text,
+  topic text not null check (topic in ('lessons', 'setup_service', 'shop_support', 'other')),
+  message text not null,
+  is_read boolean default false not null
+);
+
+-- Lesson Bookings & Student Consultation Requests
+create table bookings (
+  id uuid default gen_random_uuid() primary key,
+  token text unique not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  student_name text not null,
+  email text not null,
+  phone text,
+  location_type text check (location_type in ('student_home', 'studio_forum', 'online')),
+  preferred_day text,
+  favorite_song text,
+  has_instrument boolean default true,
+  status text default 'pending' check (status in ('pending', 'confirmed', 'cancelled', 'completed')),
+  message text
+);
+
+-- User Access / Course Entitlements
+create table user_entitlements (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  user_id uuid references auth.users(id) on delete cascade not null,
+  product_id uuid references products(id) on delete cascade not null,
+  unique(user_id, product_id)
+);
+
+-- Course Lessons
+create table course_lessons (
+  id uuid default gen_random_uuid() primary key,
+  product_id uuid references products(id) on delete cascade not null,
+  title text not null,
+  slug text not null,
+  description text,
+  video_url text not null,
+  attachment_path text,
+  order_index int default 0 not null
+);
+
+-- Lesson Progress Tracker
+create table lesson_progress (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references auth.users(id) on delete cascade not null,
+  lesson_id uuid references course_lessons(id) on delete cascade not null,
+  completed boolean default true not null,
+  completed_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  unique(user_id, lesson_id)
+);
+
+-- Email Leads / Newsletter List
+create table newsletter_subscribers (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  email text unique not null,
+  source text default 'tuning_pdf_lead_magnet'
+);
+
+-- Automated Notification Queue / Log
+create table automated_notifications (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  recipient_email text not null,
+  notification_type text not null,
+  scheduled_for timestamp with time zone not null,
+  sent_at timestamp with time zone,
+  status text default 'pending' check (status in ('pending', 'sent', 'failed'))
+);
+
+-- Website Traffic Analytics
+create table page_views (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  path text not null,
+  referrer text
+);
+
+-- Row Level Security (RLS) Configuration
+alter table products enable row level security;
+alter table contact_messages enable row level security;
+alter table bookings enable row level security;
+alter table user_entitlements enable row level security;
+alter table lesson_progress enable row level security;
+alter table newsletter_subscribers enable row level security;
+alter table automated_notifications enable row level security;
+alter table page_views enable row level security;
+
+-- RLS Policies
+create policy "Allow public read published products" on products for select using (is_published = true);
+create policy "Allow public to insert contact messages" on contact_messages for insert with check (true);
+create policy "Allow public to insert bookings" on bookings for insert with check (true);
+create policy "Allow user read own entitlements" on user_entitlements for select using (auth.uid() = user_id);
+create policy "Allow user read own lesson progress" on lesson_progress for select using (auth.uid() = user_id);
+create policy "Allow user update own lesson progress" on lesson_progress for insert with check (auth.uid() = user_id);
+create policy "Allow public to insert page views" on page_views for insert with check (true);
+create policy "Allow public to subscribe to newsletter" on newsletter_subscribers for insert with check (true);
+
+## 📁 Folder Structure
+Plaintext
+├── app/
+│   ├── (public)/
+│   │   ├── layout.tsx                 # Global fonts, metadata, blue-white theme shell
+│   │   ├── page.tsx                   # Main landing page aggregating offer, story, USP, FAQ
+│   │   ├── kontakt/page.tsx           # Contact page with interactive form
+│   │   ├── rezerwacja/[token]/page.tsx # Dynamic tokenized booking/consultation page
+│   │   ├── sklep/
+│   │   │   ├── page.tsx               # Product catalog (E-books & Courses)
+│   │   │   └── [slug]/page.tsx        # Single product sales page
+│   │   └── pobierz-poradnik/page.tsx  # Free Lead Magnet page (PDF tuner download)
+│   ├── (student)/
+│   │   └── moje-kursy/
+│   │       ├── page.tsx               # Authenticated student dashboard listing owned courses
+│   │       └── [courseSlug]/page.tsx  # Interactive video lesson viewer
+│   ├── admin/
+│   │   ├── layout.tsx                 # Admin layout shell with authentication checks
+│   │   ├── login/page.tsx             # Admin login form
+│   │   ├── dashboard/page.tsx         # Analytics summary (visits, revenue, lead counter)
+│   │   ├── wiadomosci/page.tsx        # Contact inbox manager
+│   │   ├── rezerwacje/page.tsx        # Student bookings list & CSV export
+│   │   └── produkty/page.tsx          # Product & lesson CRUD manager
+│   ├── actions/
+│   │   ├── contact.ts                 # Server Action for contact form submission
+│   │   ├── booking.ts                 # Server Action for booking trial lessons
+│   │   ├── leads.ts                   # Server Action for Lead Magnet form
+│   │   ├── checkout.ts                # Stripe/P24 Server Action checkout session
+│   │   └── progress.ts                # Server Action for updating course lesson progress
+│   └── api/
+│       ├── webhooks/stripe/route.ts   # Payment fulfillment webhook
+│       ├── cron/reminders/route.ts    # Scheduled Cron trigger for automated lesson reminders
+│       └── export-bookings/route.ts   # CSV exporter for bookings list
+├── components/
+│   ├── ui/                            # Shadcn UI primitives (Button, Card, Dialog, Accordion)
+│   ├── hero.tsx                       # Hero section with dynamic countdown / lead magnet modal
+│   ├── interactive-story.tsx          # Framer Motion scroll-driven bio & craft narrative
+│   ├── offer-section.tsx              # Gdańsk lesson packages, prices, free service details
+│   ├── contact-form.tsx               # Client contact form with Zod validation
+│   ├── booking-form.tsx               # Client booking form with React Hook Form + Zod
+│   ├── student-video-player.tsx       # Custom course video player & tabs viewer
+│   ├── faq.tsx                        # Accordion FAQ section
+│   └── admin/                         # Dashboard tables, revenue widgets, analytics charts
+├── lib/
+│   ├── supabase/
+│   │   ├── client.ts                  # Browser Supabase client
+│   │   ├── server.ts                  # Server-side Supabase client (Cookies / RSC)
+│   │   └── middleware.ts             # Auth session refresh & route protection
+│   ├── resend.ts                      # Resend email API client & templates
+│   ├── stripe.ts                      # Payment API helper
+│   ├── utils.ts                       # Helpers (cn, date formats, PLN currency)
+│   └── validations/
+│       ├── contact.ts                 # Zod schema definitions for contact form
+│       ├── booking.ts                 # Zod schema definitions for booking form
+│       └── product.ts                 # Zod schema for product management
+├── emails/                            # React Email templates (Confirmation, Reminders, Product Delivery)
+│   ├── contact-notification.tsx
+│   ├── booking-confirmation.tsx
+│   └── ebook-delivery.tsx
+├── middleware.ts                      # Next.js Middleware protecting /admin and /moje-kursy
+└── public/
+    └── og-image.png                   # Custom OpenGraph image for link previews
+
+
+## 🎓 Active Learning & Mentorship Protocol
+
+AI must act not only as a coder, but as an active Senior Tech Lead mentor. Follow these strict interaction rules:
+
+1. **Simple Language Policy:** Explain all technical concepts (like Server Components, Hydration, RLS, Optimistic UI, Webhooks, Signed URLs, Cron jobs) using simple Polish, clear real-world analogies, and step-by-step logic. Think like a mentor explaining concepts to a fast-learning developer.
+2. **Step-by-Step Explanations:** Before generating or editing code, briefly explain (in 2-3 sentences in Polish) WHAT you are going to do and WHY. Avoid academic jargon.
+3. **Trade-off Analysis (Why THIS approach?):** When implementing key architecture patterns, explicitly state in 1-2 sentences why this solution was chosen over simpler/older alternatives (e.g., "We use Resend with Next.js Server Actions instead of traditional SMTP servers because...").
+4. **Code Commenting Standards:** Add concise inline English comments to non-obvious logic, TypeScript utility types, or complex hooks. Explain *why* a method was chosen.
+5. **Concept Checks & "💡 Mentor Notes":** If a new advanced feature is introduced (e.g., `useOptimistic`, `revalidatePath`, Supabase Signed URLs, Cron API routes), add a short "💡 Mentor Note" explaining the concept simply.
+6. **Active Comprehension Check:** At the end of non-trivial code generations, ask ONE brief question to verify if the user understands *why* a specific function or pattern was used.
+7. **Highlight Common Pitfalls:** Point out 1 common mistake developers make with the generated code (e.g., "Be careful: forgetting `use client` here will break interactive React Hook Form components").
+
+---
+
+## 🤖 AI Code Generation & Behavioral Rules
+
+1. **File Size & Single Responsibility:**
+   - Keep files small and modular (aim for 50–150 lines per file, hard limit 200 lines).
+   - Enforce Single Responsibility Principle (SRP): one file = one core task.
+   - If a file exceeds 150 lines, propose how to refactor and split it into smaller modules.
+
+2. **Server vs. Client Components Boundary:**
+   - Keep `page.tsx` and layout files as React Server Components (RSC) whenever possible.
+   - Do NOT mark entire pages with `"use client"`. Extract interactive features (forms, Framer Motion animations) into granular components inside `components/`.
+
+3. **Type Safety & Code Quality:**
+   - Strict TypeScript rules apply. Never use `any` or `@ts-ignore`.
+   - Validate all user input via Zod schemas (`lib/validations/`).
+   - Use explicit return types for Server Actions and critical functions.
+
+4. **Educational & Communication Workflow:**
+   - **Language:** Explain concepts, refactoring reasons, and steps in **Polish**, but write all code, variables, types, and inline comments in **English**.
+   - **Security First:** Protect paid digital products via secure Server Actions and Supabase storage signed URLs. Never expose direct bucket links to paid PDFs or video files.
