@@ -10,6 +10,7 @@ import {
   changeStudentPassword,
   signOutStudent,
 } from "@/app/actions/student-auth";
+import { ShopProductCard } from "@/components/shop-product-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,7 +36,7 @@ export function StudentPortal({ data }: { data: StudentPortalData }) {
   const firstName = data.account.displayName.split(" ")[0] || "Cześć";
 
   return (
-    <div className="mx-auto w-full max-w-3xl space-y-8 px-4 py-10 sm:px-6 sm:py-14">
+    <div className="mx-auto w-full max-w-5xl space-y-8 px-4 py-10 sm:px-6 sm:py-14">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="space-y-1">
           <p className="text-xs font-semibold uppercase tracking-wide text-sky-600">
@@ -184,32 +185,55 @@ export function StudentPortal({ data }: { data: StudentPortalData }) {
         </section>
       )}
 
-      <section
-        id="zakupy"
-        className="scroll-mt-24 space-y-3 rounded-2xl border border-dashed border-slate-200 bg-white p-5"
-      >
-        <h2 className="text-lg font-semibold text-slate-900">Zakupy</h2>
+      <section id="zakupy" className="scroll-mt-24 space-y-4">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div className="space-y-1">
+            <p className="text-xs font-semibold uppercase tracking-wide text-sky-600">
+              Sklep
+            </p>
+            <h2 className="text-lg font-semibold text-slate-900 sm:text-xl">
+              Zakupy
+            </h2>
+            <p className="text-sm text-muted">
+              Twoje e-booki — pobierz PDF w każdej chwili.
+            </p>
+          </div>
+          <Button asChild size="sm" variant="secondary">
+            <Link href="/sklep">Więcej w sklepie</Link>
+          </Button>
+        </div>
         {data.purchases.length === 0 ? (
-          <>
+          <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-5">
             <p className="text-sm leading-relaxed text-muted">
               Nie masz jeszcze zakupionych materiałów. Po płatności w sklepie
               e-booki pojawią się tutaj do pobrania (i na e-mailu).
             </p>
-            <Button asChild size="sm" variant="secondary">
+            <Button asChild size="sm" className="mt-3">
               <Link href="/sklep">Zobacz sklep</Link>
             </Button>
-          </>
+          </div>
         ) : (
-          <ul className="space-y-2">
+          <ul className="grid gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
             {data.purchases.map((item) => (
               <li key={item.productId}>
-                <a
-                  href={`/api/shop/download/${item.productId}`}
-                  className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-900 transition-colors hover:border-sky-200 hover:bg-sky-50"
-                >
-                  <span>{item.title}</span>
-                  <span className="shrink-0 text-sky-700">Pobierz PDF</span>
-                </a>
+                <ShopProductCard
+                  product={{
+                    id: item.productId,
+                    slug: item.productId,
+                    title: item.title,
+                    shortDescription: item.shortDescription,
+                    description: "",
+                    priceLabel: item.priceLabel,
+                    priceGrosze: 0,
+                    badge: item.badge,
+                    image: item.image,
+                    imageAlt: item.imageAlt,
+                    comingSoon: false,
+                    owned: true,
+                  }}
+                  stripeReady
+                  loggedIn
+                />
               </li>
             ))}
           </ul>

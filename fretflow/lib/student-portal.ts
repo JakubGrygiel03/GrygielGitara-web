@@ -45,6 +45,11 @@ export type StudentPortalData = {
   purchases: {
     productId: string;
     title: string;
+    shortDescription: string;
+    priceLabel: string;
+    badge: string;
+    image: string;
+    imageAlt: string;
     purchasedAt: string;
   }[];
 };
@@ -104,6 +109,11 @@ export async function loadStudentPortalData(): Promise<
     purchases = owned.map((item) => ({
       productId: item.productId,
       title: item.title,
+      shortDescription: item.shortDescription,
+      priceLabel: item.priceLabel,
+      badge: item.badge,
+      image: item.image,
+      imageAlt: item.imageAlt,
       purchasedAt: item.purchasedAt,
     }));
   } catch {

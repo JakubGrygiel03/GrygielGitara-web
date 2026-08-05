@@ -93,14 +93,21 @@ export async function loadShopCatalog(): Promise<{
   };
 }
 
-export async function loadOwnedPurchases(userId: string): Promise<
-  {
-    entitlementId: string;
-    productId: string;
-    title: string;
-    purchasedAt: string;
-  }[]
-> {
+export type OwnedPurchase = {
+  entitlementId: string;
+  productId: string;
+  title: string;
+  shortDescription: string;
+  priceLabel: string;
+  badge: string;
+  image: string;
+  imageAlt: string;
+  purchasedAt: string;
+};
+
+export async function loadOwnedPurchases(
+  userId: string,
+): Promise<OwnedPurchase[]> {
   const admin = createAdminClient();
   const { data: entitlements, error } = await admin
     .from("user_entitlements")
@@ -114,17 +121,39 @@ export async function loadOwnedPurchases(userId: string): Promise<
   const productIds = entitlements.map((row) => row.product_id as string);
   const { data: products } = await admin
     .from("products")
-    .select("id, title")
+    .select(
+      "id, title, short_description, price_grosze, badge, image_path, slug",
+    )
     .in("id", productIds);
 
-  const titleById = new Map(
-    (products ?? []).map((p) => [p.id as string, p.title as string]),
+  type ProductMeta = {
+    id: string;
+    title: string;
+    short_description: string;
+    price_grosze: number;
+    badge: string;
+    image_path: string;
+  };
+
+  const byId = new Map(
+    (products ?? []).map((p) => [p.id as string, p as ProductMeta]),
   );
 
-  return entitlements.map((row) => ({
-    entitlementId: row.id as string,
-    productId: row.product_id as string,
-    title: titleById.get(row.product_id as string) ?? "Produkt",
-    purchasedAt: row.created_at as string,
-  }));
+  return entitlements.map((row) => {
+    const product = byId.get(row.product_id as string);
+    const title = product?.title ?? "Produkt";
+    return {
+      entitlementId: row.id as string,
+      productId: row.product_id as string,
+      title,
+      shortDescription: product?.short_description ?? "Twój zakupiony e-book.",
+      priceLabel: product
+        ? formatPricePln(product.price_grosze)
+        : "Opłacone",
+      badge: product?.badge ?? "E-book",
+      image: product?.image_path ?? "/images/shop/start-z-gitara.svg",
+      imageAlt: `Okładka: ${title}`,
+      purchasedAt: row.created_at as string,
+    };
+  });
 }
