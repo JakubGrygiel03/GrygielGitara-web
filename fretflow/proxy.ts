@@ -12,7 +12,9 @@ export async function proxy(request: NextRequest) {
   const isStudentArea =
     path === "/moje-kursy" || path.startsWith("/moje-kursy/");
   const isStudentPublicAuth =
-    path === "/moje-kursy/login" || path === "/moje-kursy/register";
+    path === "/moje-kursy/login" ||
+    path === "/moje-kursy/register" ||
+    path === "/moje-kursy/zapomniane-haslo";
 
   if (isStudentArea && !isStudentPublicAuth && supabase) {
     const {

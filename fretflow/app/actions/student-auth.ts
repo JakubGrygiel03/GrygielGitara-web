@@ -172,6 +172,8 @@ export async function signOutStudent(): Promise<{ ok: boolean }> {
 
 /**
  * Admin: create/reset Auth account with temporary password and e-mail it.
+ * Password is reset only AFTER students.user_id is linked, so a failed link
+ * cannot lock the student out of a previous working password.
  */
 export async function inviteStudentToPortal(
   studentId: string,
@@ -188,7 +190,18 @@ export async function inviteStudentToPortal(
       .eq("id", studentId)
       .maybeSingle();
 
-    if (error || !student) {
+    if (error) {
+      const msg = error.message.toLowerCase();
+      if (msg.includes("user_id") && (msg.includes("column") || msg.includes("schema cache"))) {
+        return {
+          ok: false,
+          message:
+            "Brak kolumny user_id. W Supabase SQL Editor odpal FIX_student_portal_user_id.sql (i sprawdź wynik kontroli).",
+        };
+      }
+      return { ok: false, message: `Błąd odczytu ucznia: ${error.message}` };
+    }
+    if (!student) {
       return { ok: false, message: "Nie znaleziono ucznia." };
     }
 
@@ -196,16 +209,10 @@ export async function inviteStudentToPortal(
     const tempPassword = generateTempPassword(10);
     const loginUrl = `${getSiteUrl()}/moje-kursy/login`;
     let authUserId = student.user_id;
+    let createdFreshUser = false;
 
-    if (authUserId) {
-      const { error: updateError } = await admin.auth.admin.updateUserById(
-        authUserId,
-        { password: tempPassword, email_confirm: true },
-      );
-      if (updateError) {
-        return { ok: false, message: updateError.message };
-      }
-    } else {
+    // 1) Resolve Auth user (create if needed) — do NOT reset password yet
+    if (!authUserId) {
       const { data: created, error: createError } =
         await admin.auth.admin.createUser({
           email,
@@ -226,13 +233,9 @@ export async function inviteStudentToPortal(
           return { ok: false, message: createError.message };
         }
         authUserId = existing.id;
-        const { error: resetError } = await admin.auth.admin.updateUserById(
-          existing.id,
-          { password: tempPassword, email_confirm: true },
-        );
-        if (resetError) return { ok: false, message: resetError.message };
       } else {
         authUserId = created.user?.id ?? null;
+        createdFreshUser = true;
       }
     }
 
@@ -240,17 +243,46 @@ export async function inviteStudentToPortal(
       return { ok: false, message: "Nie udało się utworzyć użytkownika Auth." };
     }
 
-    const { error: linkError } = await admin
-      .from("students")
-      .update({ user_id: authUserId, email })
-      .eq("id", student.id);
-    if (linkError) {
-      return {
-        ok: false,
-        message: linkError.message.includes("user_id")
-          ? "Odpal migrację 20260326_student_portal_auth.sql w Supabase."
-          : `Konto Auth OK, ale powiązanie: ${linkError.message}`,
-      };
+    // 2) Link students.user_id before any password reset on existing accounts
+    if (student.user_id !== authUserId) {
+      await admin
+        .from("students")
+        .update({ user_id: null })
+        .eq("user_id", authUserId)
+        .neq("id", student.id);
+
+      const { error: linkError } = await admin
+        .from("students")
+        .update({ user_id: authUserId, email })
+        .eq("id", student.id);
+      if (linkError) {
+        const msg = linkError.message;
+        const lower = msg.toLowerCase();
+        const hint = createdFreshUser
+          ? ` Konto Auth powstało z hasłem tymczasowym: ${tempPassword}`
+          : " Stare hasło powinno nadal działać — powiązanie nie ruszyło hasła.";
+        if (lower.includes("column") || lower.includes("schema cache")) {
+          return {
+            ok: false,
+            message: `Brak kolumny user_id w API. Odpal FIX_student_portal_user_id.sql.${hint}`,
+          };
+        }
+        return {
+          ok: false,
+          message: `Powiązanie user_id nie wyszło: ${msg}.${hint}`,
+        };
+      }
+    }
+
+    // 3) Reset password only after link OK (skip if we just created with this password)
+    if (!createdFreshUser) {
+      const { error: updateError } = await admin.auth.admin.updateUserById(
+        authUserId,
+        { password: tempPassword, email_confirm: true },
+      );
+      if (updateError) {
+        return { ok: false, message: updateError.message };
+      }
     }
 
     const mail = await sendEmail({
@@ -269,20 +301,83 @@ export async function inviteStudentToPortal(
       `,
     });
 
+    // Always surface temp password in admin toast (mail often fails on Resend sandbox)
     if (!mail.ok) {
       return {
         ok: true,
-        message: `Konto gotowe, ale mail nie poszedł (${mail.message ?? "Resend"}). Hasło tymczasowe: ${tempPassword}`,
+        message: `Konto gotowe, ale mail nie poszedł (${mail.message ?? "Resend"}). Zaloguj się hasłem: ${tempPassword}`,
       };
     }
 
     return {
       ok: true,
-      message: `Wysłano e-mail z hasłem tymczasowym na ${email}.`,
+      message: `Wysłano mail na ${email}. Hasło tymczasowe (skopiuj na wszelki wypadek): ${tempPassword}`,
     };
   } catch (error) {
     console.error("inviteStudentToPortal error:", error);
     return { ok: false, message: "Nie udało się utworzyć konta ucznia." };
+  }
+}
+
+/** Public: send Supabase recovery mail (uses Auth SMTP, not Resend). */
+export async function requestStudentPasswordReset(
+  emailRaw: string,
+): Promise<{ ok: boolean; message: string }> {
+  const email = emailRaw.trim().toLowerCase();
+  if (!email.includes("@")) {
+    return { ok: false, message: "Podaj poprawny e-mail." };
+  }
+
+  try {
+    const supabase = await createClient();
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${getSiteUrl()}/auth/callback?next=/moje-kursy/ustaw-haslo`,
+    });
+    if (error) {
+      return { ok: false, message: error.message };
+    }
+    return {
+      ok: true,
+      message:
+        "Jeśli konto istnieje, wyślemy link do resetu hasła (sprawdź skrzynkę i spam).",
+    };
+  } catch (error) {
+    console.error("requestStudentPasswordReset error:", error);
+    return { ok: false, message: "Nie udało się wysłać linku." };
+  }
+}
+
+/** Logged-in (also recovery session): set new password without old one. */
+export async function setStudentPasswordAfterRecovery(
+  newPassword: string,
+  newPasswordConfirm: string,
+): Promise<{ ok: boolean; message: string }> {
+  if (!isValidPassword(newPassword)) {
+    return { ok: false, message: "Hasło musi mieć co najmniej 8 znaków." };
+  }
+  if (newPassword !== newPasswordConfirm) {
+    return { ok: false, message: "Hasła nie są takie same." };
+  }
+
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      return {
+        ok: false,
+        message: "Sesja wygasła — użyj ponownie linku z maila albo zaloguj się.",
+      };
+    }
+
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) return { ok: false, message: error.message };
+
+    return { ok: true, message: "Hasło ustawione — możesz korzystać z konta." };
+  } catch (error) {
+    console.error("setStudentPasswordAfterRecovery error:", error);
+    return { ok: false, message: "Nie udało się ustawić hasła." };
   }
 }
 

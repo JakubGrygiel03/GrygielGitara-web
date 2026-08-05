@@ -92,15 +92,30 @@ export function StudentLoginForm({
         </Button>
       </form>
 
-      <p className="text-center text-sm text-muted">
-        Nie masz konta?{" "}
-        <Link
-          href="/moje-kursy/register"
-          className="font-semibold text-sky-700 hover:underline"
-        >
-          Załóż konto
-        </Link>
-      </p>
+      <div className="space-y-3 border-t border-sky-100 pt-5">
+        <p className="text-center text-sm text-muted">
+          Zapomniałeś hasła?{" "}
+          <Link
+            href={
+              email.trim()
+                ? `/moje-kursy/zapomniane-haslo?email=${encodeURIComponent(email.trim())}`
+                : "/moje-kursy/zapomniane-haslo"
+            }
+            className="font-semibold text-sky-700 hover:underline"
+          >
+            Zresetuj hasło
+          </Link>
+        </p>
+        <p className="text-center text-sm text-muted">
+          Nie masz konta?{" "}
+          <Link
+            href="/moje-kursy/register"
+            className="font-semibold text-sky-700 hover:underline"
+          >
+            Załóż konto
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

@@ -489,6 +489,9 @@ where slug in (
 )
 and (coming_soon = true or published = false);
 
+-- Odśwież cache PostgREST (API od razu widzi nowe kolumny)
+notify pgrst, 'reload schema';
+
 -- =============================================================================
 -- Gotowe. Odśwież /admin i /sklep.
 -- =============================================================================

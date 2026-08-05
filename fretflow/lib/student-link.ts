@@ -125,12 +125,13 @@ export async function resolveStudentForAuthUser(input: {
       .eq("id", student.id);
 
     if (linkError) {
-      if (linkError.message.includes("user_id")) {
+      const lower = linkError.message.toLowerCase();
+      if (lower.includes("column") || lower.includes("schema cache")) {
         return {
           ok: false,
           reason: "migration",
           message:
-            "Odpal w Supabase SQL: migrations/20260326_student_portal_auth.sql",
+            "Brak kolumny user_id. Odpal w Supabase: FIX_student_portal_user_id.sql",
         };
       }
       return { ok: false, reason: "error", message: linkError.message };
