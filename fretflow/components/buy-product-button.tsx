@@ -26,9 +26,20 @@ export function BuyProductButton({
       disabled={pending}
       onClick={() => {
         startTransition(async () => {
-          const result = await startProductCheckout(productId);
-          if (result && !result.ok) {
-            toast.error(result.message ?? "Nie udało się rozpocząć płatności.");
+          try {
+            const result = await startProductCheckout(productId);
+            if (!result.ok) {
+              toast.error(result.message ?? "Nie udało się rozpocząć płatności.");
+              return;
+            }
+            if (result.url) {
+              window.location.assign(result.url);
+              return;
+            }
+            toast.error("Brak linku do Stripe.");
+          } catch (error) {
+            console.error(error);
+            toast.error("Nie udało się otworzyć płatności. Spróbuj ponownie.");
           }
         });
       }}
