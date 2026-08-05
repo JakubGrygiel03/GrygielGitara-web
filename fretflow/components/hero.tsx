@@ -53,7 +53,7 @@ export function Hero() {
                 size="lg"
                 className="w-full px-5 text-[0.9375rem] leading-snug sm:w-auto sm:text-base"
               >
-                <Link href="/rezerwacja">Umów bezpłatną lekcję próbną</Link>
+                <Link href="/rezerwacja">Umów lekcję próbną</Link>
               </Button>
               <Button
                 asChild

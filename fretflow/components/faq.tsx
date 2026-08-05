@@ -17,7 +17,7 @@ const faqs = [
   },
   {
     q: "Jak działa gwarancja pierwszej lekcji?",
-    a: "Umówimy pierwszą lekcję próbną. Jeśli po niej uznasz, że nie ma chemii albo gitara to nie Twoja bajka, nie płacisz za te zajęcia.",
+    a: "Pierwsza lekcja ma normalną cenę z cennika. Jeśli po niej uznasz, że nie ma chemii albo gitara to nie Twoja bajka, nie płacisz za te zajęcia.",
   },
   {
     q: "Jak wygląda pomoc w doborze gitary?",

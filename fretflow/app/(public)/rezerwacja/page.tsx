@@ -8,7 +8,7 @@ import { getAdminSettings } from "@/lib/admin-settings";
 export const metadata: Metadata = {
   title: "Rezerwacja lekcji próbnej",
   description:
-    "Zarezerwuj bezpłatną lekcję próbną gitary w Gdańsku lub online. Gwarancja pierwszej lekcji.",
+    "Zarezerwuj lekcję próbną gitary w Gdańsku lub online. Gwarancja pierwszej lekcji — nie płacisz, jeśli nie pasuje.",
 };
 
 export default async function RezerwacjaPage() {

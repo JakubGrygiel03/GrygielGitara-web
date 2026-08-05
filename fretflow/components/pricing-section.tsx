@@ -139,11 +139,12 @@ export function PricingSection() {
           className="mx-auto flex max-w-xl flex-col items-center space-y-3 text-center"
         >
           <Button asChild size="lg" className="w-full sm:w-auto">
-            <Link href="/rezerwacja">Umów bezpłatną lekcję próbną</Link>
+            <Link href="/rezerwacja">Umów lekcję próbną</Link>
           </Button>
           <p className="text-sm leading-relaxed text-muted">
-            W formularzu rezerwacji wybierasz wariant (także online 80 zł). Po
-            zgłoszeniu ustalamy termin — online przez Telegram.
+            W formularzu wybierasz wariant i cenę jak wyżej. Pierwsza lekcja z
+            gwarancją — płacisz tylko, jeśli uznasz, że warto kontynuować. Online
+            przez Telegram.
           </p>
         </Reveal>
       </div>
