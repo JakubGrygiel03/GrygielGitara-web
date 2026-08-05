@@ -1,63 +1,187 @@
 "use server";
 
-import { getSiteUrl } from "@/lib/env";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { getSiteUrl } from "@/lib/env";
 import { sendEmail } from "@/lib/resend";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { resolveStudentForAuthUser } from "@/lib/student-link";
+import {
+  generateTempPassword,
+  isValidPassword,
+} from "@/lib/temp-password";
 
-export async function requestStudentMagicLink(
+export async function signInStudent(
   emailRaw: string,
+  password: string,
+): Promise<{ ok: boolean; message: string }> {
+  const email = emailRaw.trim().toLowerCase();
+  if (!email.includes("@") || !password) {
+    return { ok: false, message: "Podaj e-mail i hasło." };
+  }
+
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error || !data.user) {
+      return {
+        ok: false,
+        message: "Błędny e-mail lub hasło. Sprawdź dane albo zarejestruj się.",
+      };
+    }
+
+    const linked = await resolveStudentForAuthUser({
+      userId: data.user.id,
+      email: data.user.email ?? email,
+    });
+    if (!linked.ok) {
+      await supabase.auth.signOut();
+      return { ok: false, message: linked.message };
+    }
+
+    return { ok: true, message: "Zalogowano." };
+  } catch (error) {
+    console.error("signInStudent error:", error);
+    return { ok: false, message: "Nie udało się zalogować." };
+  }
+}
+
+/**
+ * Self-register: only if teacher already added this e-mail as a student.
+ * Creates Auth user + links students.user_id.
+ */
+export async function registerStudent(
+  emailRaw: string,
+  password: string,
+  passwordConfirm: string,
 ): Promise<{ ok: boolean; message: string }> {
   const email = emailRaw.trim().toLowerCase();
   if (!email.includes("@")) {
     return { ok: false, message: "Podaj poprawny e-mail." };
   }
+  if (!isValidPassword(password)) {
+    return { ok: false, message: "Hasło musi mieć co najmniej 8 znaków." };
+  }
+  if (password !== passwordConfirm) {
+    return { ok: false, message: "Hasła nie są takie same." };
+  }
 
   try {
     const admin = createAdminClient();
-    const { data: student } = await admin
+    const { data: student, error: studentError } = await admin
       .from("students")
-      .select("id, email")
-      .ilike("email", email)
+      .select("id, full_name, email, user_id")
+      .eq("email", email)
       .maybeSingle();
 
-    if (!student) {
-      // Same message whether missing — avoid enumerating students
+    if (studentError?.message.includes("user_id")) {
       return {
-        ok: true,
+        ok: false,
         message:
-          "Jeśli ten e-mail jest na liście uczniów, wyślemy link w ciągu chwili. Sprawdź skrzynkę (i spam).",
+          "Odpal migrację 20260326_student_portal_auth.sql w Supabase SQL Editor.",
+      };
+    }
+
+    if (!student) {
+      return {
+        ok: false,
+        message:
+          "Nie ma Cię jeszcze na liście. Najpierw nauczyciel musi Cię dodać (albo wyślij rezerwację).",
+      };
+    }
+    if (student.user_id) {
+      return {
+        ok: false,
+        message:
+          "Konto już istnieje — zaloguj się hasłem (albo poproś nauczyciela o reset).",
       };
     }
 
     const supabase = await createClient();
-    const redirectTo = `${getSiteUrl()}/auth/callback?next=/moje-kursy`;
-    const { error } = await supabase.auth.signInWithOtp({
+    const { data, error } = await supabase.auth.signUp({
       email,
+      password,
       options: {
-        emailRedirectTo: redirectTo,
-        shouldCreateUser: true,
+        data: { full_name: student.full_name },
+        emailRedirectTo: `${getSiteUrl()}/auth/callback?next=/moje-kursy`,
       },
     });
 
     if (error) {
-      console.error("signInWithOtp failed:", error.message);
+      // User may already exist in Auth without link
+      if (error.message.toLowerCase().includes("already")) {
+        return {
+          ok: false,
+          message:
+            "Ten e-mail ma już konto Auth. Zaloguj się albo poproś nauczyciela o nowe hasło tymczasowe.",
+        };
+      }
+      return { ok: false, message: error.message };
+    }
+
+    if (data.user) {
+      await admin
+        .from("students")
+        .update({ user_id: data.user.id })
+        .eq("id", student.id);
+    }
+
+    // If e-mail confirmation is required, session may be null
+    if (!data.session) {
       return {
-        ok: false,
+        ok: true,
         message:
-          "Nie udało się wysłać linku. Sprawdź ustawienia Auth w Supabase (Redirect URLs).",
+          "Konto utworzone. Jeśli Supabase wymaga potwierdzenia e-maila — kliknij link z maila, potem zaloguj się hasłem.",
       };
     }
 
-    return {
-      ok: true,
-      message:
-        "Link do logowania poszedł na maila. Kliknij go na tym samym telefonie/komputerze.",
-    };
+    return { ok: true, message: "Konto gotowe — jesteś zalogowany." };
   } catch (error) {
-    console.error("requestStudentMagicLink error:", error);
-    return { ok: false, message: "Błąd wysyłki. Spróbuj za chwilę." };
+    console.error("registerStudent error:", error);
+    return { ok: false, message: "Rejestracja nie powiodła się." };
+  }
+}
+
+export async function changeStudentPassword(
+  currentPassword: string,
+  newPassword: string,
+  newPasswordConfirm: string,
+): Promise<{ ok: boolean; message: string }> {
+  if (!isValidPassword(newPassword)) {
+    return { ok: false, message: "Nowe hasło musi mieć co najmniej 8 znaków." };
+  }
+  if (newPassword !== newPasswordConfirm) {
+    return { ok: false, message: "Nowe hasła nie są takie same." };
+  }
+
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user?.email) {
+      return { ok: false, message: "Musisz być zalogowany." };
+    }
+
+    const { error: reauthError } = await supabase.auth.signInWithPassword({
+      email: user.email,
+      password: currentPassword,
+    });
+    if (reauthError) {
+      return { ok: false, message: "Obecne hasło jest nieprawidłowe." };
+    }
+
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) return { ok: false, message: error.message };
+
+    return { ok: true, message: "Hasło zmienione." };
+  } catch (error) {
+    console.error("changeStudentPassword error:", error);
+    return { ok: false, message: "Nie udało się zmienić hasła." };
   }
 }
 
@@ -71,7 +195,9 @@ export async function signOutStudent(): Promise<{ ok: boolean }> {
   }
 }
 
-/** Admin: send magic link to an existing student (Supabase Auth e-mail). */
+/**
+ * Admin: create/reset Auth account with temporary password and e-mail it.
+ */
 export async function inviteStudentToPortal(
   studentId: string,
 ): Promise<{ ok: boolean; message: string }> {
@@ -92,74 +218,96 @@ export async function inviteStudentToPortal(
     }
 
     const email = student.email.trim().toLowerCase();
-    const redirectTo = `${getSiteUrl()}/auth/callback?next=/moje-kursy`;
+    const tempPassword = generateTempPassword(10);
+    const loginUrl = `${getSiteUrl()}/moje-kursy/login`;
+    let authUserId = student.user_id;
 
-    const { data: linkData, error: linkError } =
-      await admin.auth.admin.generateLink({
-        type: "magiclink",
-        email,
-        options: { redirectTo },
-      });
-
-    if (linkError || !linkData?.properties?.action_link) {
-      // Fallback: OTP via public client (Supabase sends its own e-mail)
-      const supabase = await createClient();
-      const { error: otpError } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          emailRedirectTo: redirectTo,
-          shouldCreateUser: true,
-        },
-      });
-      if (otpError) {
-        return {
-          ok: false,
-          message: linkError?.message ?? otpError.message,
-        };
+    if (authUserId) {
+      const { error: updateError } = await admin.auth.admin.updateUserById(
+        authUserId,
+        { password: tempPassword, email_confirm: true },
+      );
+      if (updateError) {
+        return { ok: false, message: updateError.message };
       }
+    } else {
+      const { data: created, error: createError } =
+        await admin.auth.admin.createUser({
+          email,
+          password: tempPassword,
+          email_confirm: true,
+          user_metadata: { full_name: student.full_name },
+        });
+
+      if (createError) {
+        const { data: listed } = await admin.auth.admin.listUsers({
+          page: 1,
+          perPage: 200,
+        });
+        const existing = listed?.users?.find(
+          (u) => u.email?.toLowerCase() === email,
+        );
+        if (!existing) {
+          return { ok: false, message: createError.message };
+        }
+        authUserId = existing.id;
+        const { error: resetError } = await admin.auth.admin.updateUserById(
+          existing.id,
+          { password: tempPassword, email_confirm: true },
+        );
+        if (resetError) return { ok: false, message: resetError.message };
+      } else {
+        authUserId = created.user?.id ?? null;
+      }
+    }
+
+    if (!authUserId) {
+      return { ok: false, message: "Nie udało się utworzyć użytkownika Auth." };
+    }
+
+    const { error: linkError } = await admin
+      .from("students")
+      .update({ user_id: authUserId, email })
+      .eq("id", student.id);
+    if (linkError) {
       return {
-        ok: true,
-        message: `Wysłano magic link na ${email} (Supabase Auth).`,
+        ok: false,
+        message: linkError.message.includes("user_id")
+          ? "Odpal migrację 20260326_student_portal_auth.sql w Supabase."
+          : `Konto Auth OK, ale powiązanie: ${linkError.message}`,
       };
     }
 
-    const actionLink = linkData.properties.action_link;
     const mail = await sendEmail({
       to: email,
-      subject: "Twoja strefa ucznia — GrygielGitara",
+      subject: "Twoje konto w strefie ucznia — GrygielGitara",
       html: `
         <p>Cześć ${escapeHtml(student.full_name)},</p>
-        <p>Tu są Twoje materiały, najbliższa lekcja i historia zajęć.</p>
-        <p><a href="${actionLink}">Wejdź do strefy ucznia</a></p>
-        <p>Link działa przez ograniczony czas. Jeśli nie działa — wejdź na
-        <a href="${getSiteUrl()}/moje-kursy/login">${getSiteUrl()}/moje-kursy/login</a>
-        i podaj ten sam e-mail.</p>
+        <p>Nauczyciel przygotował dla Ciebie konto w <strong>strefie ucznia</strong>
+        (materiały, terminy lekcji).</p>
+        <p><strong>Logowanie:</strong><br/>
+        Adres: <a href="${loginUrl}">${loginUrl}</a><br/>
+        E-mail: ${escapeHtml(email)}<br/>
+        Hasło tymczasowe: <code>${escapeHtml(tempPassword)}</code></p>
+        <p>Po zalogowaniu <strong>zmień hasło</strong> w ustawieniach profilu.</p>
         <p>— Jakub, GrygielGitara</p>
       `,
     });
 
     if (!mail.ok) {
-      // Still try Supabase's built-in e-mail
-      const supabase = await createClient();
-      await supabase.auth.signInWithOtp({
-        email,
-        options: { emailRedirectTo: redirectTo, shouldCreateUser: true },
-      });
       return {
         ok: true,
-        message: `Link wygenerowany; wysyłka Resend nie przeszła — spróbuj Supabase Auth mail na ${email}.`,
+        message: `Konto gotowe, ale mail nie poszedł (${mail.message ?? "Resend"}). Hasło tymczasowe: ${tempPassword}`,
       };
     }
 
     return {
       ok: true,
-      message: student.user_id
-        ? `Wysłano link do strefy na ${email}.`
-        : `Wysłano zaproszenie na ${email}. Po pierwszym wejściu konto się powiąże.`,
+      message: `Wysłano e-mail z hasłem tymczasowym na ${email}.`,
     };
   } catch (error) {
     console.error("inviteStudentToPortal error:", error);
-    return { ok: false, message: "Nie udało się wysłać zaproszenia." };
+    return { ok: false, message: "Nie udało się utworzyć konta ucznia." };
   }
 }
 

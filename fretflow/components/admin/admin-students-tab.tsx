@@ -289,7 +289,9 @@ export function AdminStudentsTab({
                       });
                     }}
                   >
-                    {student.user_id ? "Wyślij link do strefy" : "Zaproś do strefy"}
+                    {student.user_id
+                      ? "Nowe hasło tymczasowe"
+                      : "Załóż konto + hasło"}
                   </Button>
                   <Button
                     type="button"

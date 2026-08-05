@@ -5,19 +5,16 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
-import { signInStudent } from "@/app/actions/student-auth";
+import { registerStudent } from "@/app/actions/student-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export function StudentLoginForm({
-  initialError,
-}: {
-  initialError?: string | null;
-}) {
+export function StudentRegisterForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [isPending, startTransition] = useTransition();
 
   return (
@@ -27,26 +24,24 @@ export function StudentLoginForm({
           Strefa ucznia
         </p>
         <h1 className="text-[1.375rem] font-bold leading-snug text-slate-900">
-          Zaloguj się
+          Załóż hasło
         </h1>
         <p className="text-[0.9375rem] leading-relaxed text-muted">
-          E-mail i hasło (to z maila od nauczyciela albo własne po rejestracji).
-          Po pierwszym wejściu warto zmienić hasło tymczasowe.
+          Działa tylko gdy nauczyciel dodał już Twój e-mail do listy uczniów.
+          Ustaw własne hasło (min. 8 znaków).
         </p>
       </div>
-
-      {initialError ? (
-        <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
-          Sesja wygasła — zaloguj się ponownie.
-        </p>
-      ) : null}
 
       <form
         className="space-y-4"
         onSubmit={(event) => {
           event.preventDefault();
           startTransition(async () => {
-            const result = await signInStudent(email, password);
+            const result = await registerStudent(
+              email,
+              password,
+              passwordConfirm,
+            );
             if (!result.ok) {
               toast.error(result.message);
               return;
@@ -58,44 +53,53 @@ export function StudentLoginForm({
         }}
       >
         <div className="space-y-2">
-          <Label htmlFor="student-email">E-mail</Label>
+          <Label htmlFor="reg-email">E-mail u nauczyciela</Label>
           <Input
-            id="student-email"
+            id="reg-email"
             type="email"
             autoComplete="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="jan@email.pl"
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="student-password">Hasło</Label>
+          <Label htmlFor="reg-password">Hasło</Label>
           <Input
-            id="student-password"
+            id="reg-password"
             type="password"
-            autoComplete="current-password"
+            autoComplete="new-password"
             required
+            minLength={8}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="reg-password2">Powtórz hasło</Label>
+          <Input
+            id="reg-password2"
+            type="password"
+            autoComplete="new-password"
+            required
+            minLength={8}
+            value={passwordConfirm}
+            onChange={(e) => setPasswordConfirm(e.target.value)}
           />
         </div>
         <Button type="submit" className="w-full" disabled={isPending}>
-          {isPending ? "Logowanie…" : "Zaloguj"}
+          {isPending ? "Tworzenie…" : "Utwórz konto"}
         </Button>
       </form>
 
       <p className="text-center text-sm text-muted">
-        Nie masz jeszcze hasła?{" "}
+        Masz już hasło?{" "}
         <Link
-          href="/moje-kursy/register"
+          href="/moje-kursy/login"
           className="font-semibold text-sky-700 hover:underline"
         >
-          Zarejestruj się
+          Zaloguj się
         </Link>
-        {" · "}
-        albo poproś nauczyciela o hasło tymczasowe.
       </p>
     </div>
   );

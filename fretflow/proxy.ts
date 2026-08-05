@@ -11,9 +11,10 @@ export async function proxy(request: NextRequest) {
 
   const isStudentArea =
     path === "/moje-kursy" || path.startsWith("/moje-kursy/");
-  const isStudentLogin = path === "/moje-kursy/login";
+  const isStudentPublicAuth =
+    path === "/moje-kursy/login" || path === "/moje-kursy/register";
 
-  if (isStudentArea && !isStudentLogin && supabase) {
+  if (isStudentArea && !isStudentPublicAuth && supabase) {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -30,7 +31,7 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  if (isStudentLogin && supabase) {
+  if (isStudentPublicAuth && supabase) {
     const {
       data: { user },
     } = await supabase.auth.getUser();

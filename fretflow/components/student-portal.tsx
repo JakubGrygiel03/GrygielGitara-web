@@ -2,12 +2,17 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 
-import { signOutStudent } from "@/app/actions/student-auth";
+import {
+  changeStudentPassword,
+  signOutStudent,
+} from "@/app/actions/student-auth";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import type { StudentPortalData } from "@/lib/student-portal";
 
 function formatWhen(iso: string) {
@@ -23,6 +28,9 @@ function formatWhen(iso: string) {
 export function StudentPortal({ data }: { data: StudentPortalData }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
   const activePkg = data.packages.find((p) => p.active);
 
   return (
@@ -153,6 +161,74 @@ export function StudentPortal({ data }: { data: StudentPortalData }) {
             ))}
           </ul>
         )}
+      </section>
+
+      <section className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5">
+        <h2 className="text-lg font-semibold text-slate-900">Hasło konta</h2>
+        <p className="text-sm text-muted">
+          Jeśli dostałeś hasło tymczasowe od nauczyciela — zmień je tutaj na
+          własne.
+        </p>
+        <form
+          className="space-y-3 sm:max-w-md"
+          onSubmit={(event) => {
+            event.preventDefault();
+            startTransition(async () => {
+              const result = await changeStudentPassword(
+                currentPassword,
+                newPassword,
+                newPasswordConfirm,
+              );
+              if (!result.ok) {
+                toast.error(result.message);
+                return;
+              }
+              toast.success(result.message);
+              setCurrentPassword("");
+              setNewPassword("");
+              setNewPasswordConfirm("");
+            });
+          }}
+        >
+          <div className="space-y-1.5">
+            <Label htmlFor="cur-pass">Obecne hasło</Label>
+            <Input
+              id="cur-pass"
+              type="password"
+              autoComplete="current-password"
+              required
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="new-pass">Nowe hasło</Label>
+            <Input
+              id="new-pass"
+              type="password"
+              autoComplete="new-password"
+              required
+              minLength={8}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="new-pass2">Powtórz nowe hasło</Label>
+            <Input
+              id="new-pass2"
+              type="password"
+              autoComplete="new-password"
+              required
+              minLength={8}
+              value={newPasswordConfirm}
+              onChange={(e) => setNewPasswordConfirm(e.target.value)}
+            />
+          </div>
+          <Button type="submit" size="sm" disabled={isPending}>
+            Zmień hasło
+          </Button>
+        </form>
       </section>
 
       <p className="text-center text-sm text-muted">
