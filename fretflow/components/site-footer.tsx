@@ -40,6 +40,12 @@ export function SiteFooter() {
             Rezerwacja
           </Link>
           <Link
+            href="/moje-kursy/login"
+            className="inline-flex min-h-11 items-center hover:text-sky-600"
+          >
+            Strefa ucznia
+          </Link>
+          <Link
             href="/kontakt"
             className="inline-flex min-h-11 items-center hover:text-sky-600"
           >

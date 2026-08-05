@@ -81,12 +81,12 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-1 sm:gap-2">
           <Link
-            href="/moje-kursy"
-            className="inline-flex min-h-12 min-w-12 items-center justify-center rounded-xl text-slate-600 transition-colors hover:bg-sky-50 hover:text-slate-900"
-            aria-label="Strefa studenta"
-            title="Strefa studenta"
+            href="/moje-kursy/login"
+            className="inline-flex min-h-12 items-center gap-1.5 rounded-xl px-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-sky-50 hover:text-slate-900 sm:px-3 sm:text-base"
           >
-            <BookOpen className="size-6" aria-hidden />
+            <BookOpen className="size-5 shrink-0 sm:size-5" aria-hidden />
+            <span className="hidden sm:inline">Strefa ucznia</span>
+            <span className="sm:hidden">Uczeń</span>
           </Link>
 
           <Button asChild size="default" className="hidden text-lg lg:inline-flex">
@@ -140,6 +140,13 @@ export function SiteHeader() {
               {link.label}
             </Link>
           ))}
+          <Link
+            href="/moje-kursy/login"
+            onClick={() => setOpen(false)}
+            className="inline-flex min-h-12 items-center rounded-xl px-3.5 text-base font-semibold text-sky-700 transition-colors hover:bg-sky-50 sm:text-lg"
+          >
+            Strefa ucznia — zaloguj
+          </Link>
           <Button asChild size="lg" className="mt-3 w-full text-base">
             <Link href="/rezerwacja" onClick={() => setOpen(false)}>
               Umów lekcję próbną
