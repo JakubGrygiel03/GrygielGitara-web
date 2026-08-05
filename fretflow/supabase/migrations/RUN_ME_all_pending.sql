@@ -476,16 +476,29 @@ insert into public.products (
     'products/rytm-i-timing-na-start.pdf',
     true,
     false
+  ),
+  (
+    'test-emaila-zakupu',
+    'Test e-maila: Setup gitary',
+    '1 zł w Stripe Test — ten sam mail i PDF co Setup, żeby sprawdzić skrzynkę.',
+    'Produkt testowy. Po teście możesz ustawić published = false.',
+    100,
+    'Test',
+    '/images/shop/ebook-setup-cover.svg',
+    'products/test-emaila-zakupu.pdf',
+    true,
+    false
   )
 on conflict (slug) do nothing;
 
--- Jeśli produkt seed był oznaczony „wkrótce”, odblokuj kupno (tylko te 3 slugi)
+-- Jeśli produkt seed był oznaczony „wkrótce”, odblokuj kupno
 update public.products
 set coming_soon = false, published = true
 where slug in (
   'start-z-gitara-bez-stresu',
   'setup-gitary-w-domu',
-  'rytm-i-timing-na-start'
+  'rytm-i-timing-na-start',
+  'test-emaila-zakupu'
 )
 and (coming_soon = true or published = false);
 

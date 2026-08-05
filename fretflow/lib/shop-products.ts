@@ -39,6 +39,17 @@ export const shopProducts: ShopProduct[] = [
     status: "available",
   },
   {
+    slug: "test-emaila-zakupu",
+    title: "Test e-maila: Setup gitary",
+    priceLabel: "1,00 zł",
+    badge: "Test",
+    shortDescription:
+      "1 zł w Stripe Test — ten sam mail i PDF co Setup, żeby sprawdzić skrzynkę.",
+    image: "/images/shop/ebook-setup-cover.svg",
+    imageAlt: "Produkt testowy e-maila po zakupie",
+    status: "available",
+  },
+  {
     slug: "rytm-i-timing-na-start",
     title: "Rytm i timing na start",
     priceLabel: "59,00 zł",

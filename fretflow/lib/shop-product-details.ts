@@ -194,6 +194,66 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
       "Na start: zanim cokolwiek „regulujesz na czuja”, zrób spokojnie checklistę z e-booka — najpierw struny i czystość, potem ocena, czy coś wymaga serwisu. Małe, bezpieczne kroki chronią instrument i Twój spokój.",
   },
 
+  /** Cheap Stripe test product — same e-mail template as Setup */
+  "test-emaila-zakupu": {
+    slug: "test-emaila-zakupu",
+    subtitle:
+      "Produkt testowy (1 zł w Stripe Test) — ten sam mail i PDF co przy „Setup gitary w domu”, żebyś mógł sprawdzić skrzynkę po zakupie.",
+    whyHook:
+      "Potrzebujesz zobaczyć, jak wygląda prawdziwy e-mail po płatności — bez kupowania pełnej oferty drugi raz?",
+    whyBody: [
+      "Ten produkt istnieje wyłącznie do testów: Stripe w trybie testowym, Resend i załącznik PDF.",
+      "Treść maila i plik są takie same jak przy e-booku Setup gitary w domu — żebyś wiedział dokładnie, co dostaje klient.",
+      "Po teście możesz spokojnie usunąć entitlement w Supabase albo zostawić go w Zakupach jako pamiątkę z sandboxa.",
+    ],
+    promise:
+      "Kup za 1,00 zł (karta testowa 4242…), dostaniesz mail z podziękowaniem, linkiem do Zakupów i PDF w załączniku — dokładnie jak klient.",
+    forWhom: [
+      "Dla Ciebie (właściciela) przy testowaniu Stripe + Resend.",
+      "Nie jest to oferta dla klientów końcowych — w sklepie oznaczony jako Test.",
+    ],
+    modules: [
+      {
+        title: "Ten sam mail co przy Setup",
+        fact: "Szablon Resend z tytułem produktu, tipem i PDF.",
+        why: "Widzisz finalną treść, którą dostanie kupujący Setup.",
+      },
+      {
+        title: "Ten sam PDF (kopia Setup)",
+        fact: "Załącznik products/test-emaila-zakupu.pdf.",
+        why: "Sprawdzasz, czy załącznik przechodzi przez Resend.",
+      },
+    ],
+    emotionFunctional: "Płatność testowa Stripe + jeden e-mail transakcyjny.",
+    emotionImage:
+      "Po Checkout wracasz na sukces, a w skrzynce (zweryfikowany adres Resend) ląduje pełna wiadomość.",
+    emotionFeeling:
+      "Masz pewność, że klient Setup dostanie ten sam standard komunikacji.",
+    notForYou:
+      "To nie jest osobny e-book na sprzedaż. Po testach możesz odpublikować produkt w bazie (published = false).",
+    guaranteeTitle: "Sandbox — bez prawdziwych pieniędzy",
+    guaranteeBody:
+      "Używaj wyłącznie karty testowej Stripe (np. 4242 4242 4242 4242). To nie obciąża prawdziwej karty.",
+    bonusesIntro: "W mailu dostaniesz to samo, co przy Setup:",
+    bonuses: [
+      {
+        title: "PDF w załączniku",
+        description: "Kopia pliku Setup gitary w domu.",
+      },
+      {
+        title: "Link do Zakupów",
+        description: "https://…/moje-kursy#zakupy",
+      },
+    ],
+    priceStory:
+      "1,00 zł w Stripe Test — tylko po to, by odpalić cały pipeline (Checkout → webhook/sukces → entitlement → Resend). To nie jest promocja sprzedażowa.",
+    editionNote: "Produkt testowy · 1 zł · Stripe Test Mode",
+    ctaNote:
+      "Przy checkout użyj e-maila zweryfikowanego w Resend (przy onboarding@resend.dev zwykle tylko Twój adres). Potem sprawdź skrzynkę i spam.",
+    purchaseEmailTip:
+      "Na start: zanim cokolwiek „regulujesz na czuja”, zrób spokojnie checklistę z e-booka — najpierw struny i czystość, potem ocena, czy coś wymaga serwisu. Małe, bezpieczne kroki chronią instrument i Twój spokój.",
+  },
+
   "rytm-i-timing-na-start": {
     slug: "rytm-i-timing-na-start",
     subtitle:
