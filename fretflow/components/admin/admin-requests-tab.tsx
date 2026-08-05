@@ -6,6 +6,7 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 
 import {
+  convertBookingToStudent,
   markContactRead,
   updateBookingInterestPackage,
   updateBookingStatus,
@@ -351,12 +352,41 @@ function BookingCard({
           {booking.message}
         </p>
       ) : null}
-      {!muted ? (
-        <p className="mt-3 text-xs text-muted">
-          Tip: jak dogadasz termin — dodaj ucznia w „Uczniowie” i lekcję w
-          „Lekcje”. Tu ustaw status na „dogadane” albo „załatwione”.
-        </p>
-      ) : null}
+
+      <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+        <Button
+          type="button"
+          size="sm"
+          disabled={busy}
+          onClick={() => {
+            startLocal(async () => {
+              const result = await convertBookingToStudent(booking.id);
+              if (!result.ok) {
+                toast.error(result.message);
+                return;
+              }
+              toast.success(result.message);
+              router.refresh();
+            });
+          }}
+        >
+          Dodaj jako ucznia
+          {booking.interest_package?.startsWith("pack_")
+            ? " + pakiet"
+            : ""}
+        </Button>
+        {!muted ? (
+          <p className="text-xs text-muted sm:max-w-sm">
+            Przepisuje dane do „Uczniowie”, przy pakiecie 4 lekcji zakłada
+            karnet, status → dogadane. Potem ustaw termin w „Lekcje”.
+          </p>
+        ) : (
+          <p className="text-xs text-muted">
+            Możesz dodać ponownie — przy tym samym e-mailu uzupełni istniejącego
+            ucznia.
+          </p>
+        )}
+      </div>
     </li>
   );
 }
