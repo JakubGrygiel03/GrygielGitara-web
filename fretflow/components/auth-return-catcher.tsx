@@ -11,7 +11,10 @@ export function AuthReturnCatcher() {
     const { pathname, search, hash } = window.location;
     if (pathname.startsWith("/auth/")) return;
 
+    // Avoid redirect loops if auth already failed once
     const params = new URLSearchParams(search);
+    if (params.get("error") === "auth") return;
+
     const code = params.get("code");
     if (code) {
       const type = params.get("type");

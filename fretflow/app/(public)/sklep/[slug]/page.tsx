@@ -9,7 +9,6 @@ import { ShopProductOfferBody } from "@/components/shop-product-offer";
 import {
   getOwnedProductIds,
   getPublishedProductBySlug,
-  listPublishedProducts,
 } from "@/lib/shop";
 import { getShopProductOffer } from "@/lib/shop-product-details";
 import { shopProducts as fallbackProducts } from "@/lib/shop-products";
@@ -20,15 +19,8 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export async function generateStaticParams() {
-  try {
-    const products = await listPublishedProducts();
-    if (products.length) {
-      return products.map((p) => ({ slug: p.slug }));
-    }
-  } catch {
-    // fallback below
-  }
+/** Static slugs only — avoid cookies/DB during build (can 500 a deploy). */
+export function generateStaticParams() {
   return fallbackProducts.map((p) => ({ slug: p.slug }));
 }
 
