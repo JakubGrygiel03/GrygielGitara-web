@@ -23,7 +23,7 @@ export default async function SklepSukcesPage({ searchParams }: PageProps) {
   const sessionId = params.session_id?.trim();
 
   let message =
-    "Dzięki za zakup. Produkt powinien pojawić się w sekcji Zakupy w Twoim koncie.";
+    "Dzięki za zakup. E-book jest w Twoim koncie — możesz go od razu pobrać.";
 
   if (sessionId && isStripeConfigured()) {
     try {
@@ -56,12 +56,12 @@ export default async function SklepSukcesPage({ searchParams }: PageProps) {
             "Płatność przyjęta, ale trwa przypisywanie dostępu. Odśwież konto za chwilę albo napisz przez kontakt.";
         } else {
           message =
-            "Gotowe — produkt jest w Twoim koncie. Wysłaliśmy też e-mail z PDF (gdy Resend jest skonfigurowany).";
+            "Gotowe — e-book jest przypisany do Twojego konta. Sprawdź też skrzynkę mailową (PDF w załączniku).";
         }
       }
     } catch {
       message =
-        "Płatność powinna przejść. Jeśli nie widzisz produktu w Zakupach, odśwież stronę za minutę.";
+        "Płatność powinna przejść. Jeśli nie widzisz produktu w koncie, odśwież stronę za minutę.";
     }
   }
 
@@ -78,12 +78,20 @@ export default async function SklepSukcesPage({ searchParams }: PageProps) {
       </p>
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
         <Button asChild>
-          <Link href="/moje-kursy">Przejdź do Zakupów</Link>
+          <Link href="/moje-kursy#zakupy">Zobacz kupiony produkt</Link>
         </Button>
         <Button asChild variant="secondary">
-          <Link href="/sklep">Wróć do sklepu</Link>
+          <Link href="/moje-kursy">Moje konto</Link>
         </Button>
       </div>
+      <p className="mt-4">
+        <Link
+          href="/sklep"
+          className="text-sm font-medium text-sky-700 underline-offset-2 hover:underline"
+        >
+          Wróć do sklepu
+        </Link>
+      </p>
     </section>
   );
 }

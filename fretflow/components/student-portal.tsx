@@ -184,7 +184,10 @@ export function StudentPortal({ data }: { data: StudentPortalData }) {
         </section>
       )}
 
-      <section className="space-y-3 rounded-2xl border border-dashed border-slate-200 bg-white p-5">
+      <section
+        id="zakupy"
+        className="scroll-mt-24 space-y-3 rounded-2xl border border-dashed border-slate-200 bg-white p-5"
+      >
         <h2 className="text-lg font-semibold text-slate-900">Zakupy</h2>
         {data.purchases.length === 0 ? (
           <>
