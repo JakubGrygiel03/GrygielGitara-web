@@ -26,11 +26,16 @@ export type StudentPortalPackage = {
 };
 
 export type StudentPortalData = {
+  isLessonStudent: boolean;
+  account: {
+    email: string;
+    displayName: string;
+  };
   student: {
     id: string;
     full_name: string;
     email: string;
-  };
+  } | null;
   nextLesson: StudentPortalLesson | null;
   pastLessons: StudentPortalLesson[];
   materials: StudentPortalMaterial[];
@@ -38,14 +43,30 @@ export type StudentPortalData = {
   sessionNotes: { id: string; body: string; created_at: string }[];
 };
 
+function accountOnlyData(
+  email: string,
+  displayName: string,
+): StudentPortalData {
+  return {
+    isLessonStudent: false,
+    account: { email, displayName },
+    student: null,
+    nextLesson: null,
+    pastLessons: [],
+    materials: [],
+    packages: [],
+    sessionNotes: [],
+  };
+}
+
 /**
- * Link auth.users → students by e-mail (service role), then load portal data.
+ * Load account portal. Lesson data only when linked to students table.
  */
 export async function loadStudentPortalData(): Promise<
   | { ok: true; data: StudentPortalData }
   | {
       ok: false;
-      reason: "unauthenticated" | "no_student" | "error";
+      reason: "unauthenticated" | "error";
       message: string;
     }
 > {
@@ -62,24 +83,32 @@ export async function loadStudentPortalData(): Promise<
     };
   }
 
+  const email = user.email.trim().toLowerCase();
+  const metaName =
+    typeof user.user_metadata?.full_name === "string"
+      ? user.user_metadata.full_name.trim()
+      : "";
+  const fallbackName = metaName || email.split("@")[0] || "Użytkowniku";
+
   const linked = await resolveStudentForAuthUser({
     userId: user.id,
-    email: user.email,
+    email,
   });
 
   if (!linked.ok) {
-    return {
-      ok: false,
-      reason: linked.reason === "no_student" ? "no_student" : "error",
-      message: linked.message,
-    };
+    if (linked.reason === "no_student") {
+      return {
+        ok: true,
+        data: accountOnlyData(email, fallbackName),
+      };
+    }
+    return { ok: false, reason: "error", message: linked.message };
   }
 
   const student = linked.student;
   const admin = createAdminClient();
   const nowIso = new Date().toISOString();
 
-  // Always load via service role for the linked student (reliable even before RLS).
   const [lu, lp, mats, pkgs, nts] = await Promise.all([
     admin
       .from("lessons")
@@ -117,6 +146,11 @@ export async function loadStudentPortalData(): Promise<
   return {
     ok: true,
     data: {
+      isLessonStudent: true,
+      account: {
+        email: student.email,
+        displayName: student.full_name,
+      },
       student: {
         id: student.id,
         full_name: student.full_name,

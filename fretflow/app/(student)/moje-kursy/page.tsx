@@ -6,9 +6,9 @@ import { StudentPortal } from "@/components/student-portal";
 import { loadStudentPortalData } from "@/lib/student-portal";
 
 export const metadata: Metadata = {
-  title: "Strefa ucznia",
+  title: "Moje konto",
   description:
-    "Materiały, najbliższa lekcja i historia zajęć — panel ucznia GrygielGitara.",
+    "Konto GrygielGitara — lekcje, materiały i wkrótce zakupy cyfrowe.",
   robots: { index: false, follow: false },
 };
 
@@ -29,16 +29,11 @@ export default async function MojeKursyPage() {
 
     return (
       <section className="mx-auto max-w-lg space-y-4 px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold text-slate-900">Brak dostępu</h1>
+        <h1 className="text-2xl font-bold text-slate-900">Coś poszło nie tak</h1>
         <p className="text-sm leading-relaxed text-muted">{result.message}</p>
-        <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
-          <Button asChild>
-            <Link href="/kontakt">Napisz do nauczyciela</Link>
-          </Button>
-          <Button asChild variant="secondary">
-            <Link href="/moje-kursy/login">Inny e-mail</Link>
-          </Button>
-        </div>
+        <Button asChild variant="secondary">
+          <Link href="/moje-kursy/login">Wróć do logowania</Link>
+        </Button>
       </section>
     );
   }

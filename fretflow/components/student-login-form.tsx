@@ -24,14 +24,14 @@ export function StudentLoginForm({
     <div className="mx-auto w-full max-w-md space-y-6 rounded-2xl border border-sky-100 bg-white p-6 shadow-sm sm:p-8">
       <div className="space-y-2">
         <p className="text-xs font-semibold uppercase tracking-wide text-sky-600">
-          Strefa ucznia
+          Moje konto
         </p>
         <h1 className="text-[1.375rem] font-bold leading-snug text-slate-900">
           Zaloguj się
         </h1>
         <p className="text-[0.9375rem] leading-relaxed text-muted">
-          E-mail i hasło (to z maila od nauczyciela albo własne po rejestracji).
-          Po pierwszym wejściu warto zmienić hasło tymczasowe.
+          Wejdź na konto e-mailem i hasłem. Jeśli dostałeś hasło tymczasowe od
+          nauczyciela — po zalogowaniu zmień je w profilu.
         </p>
       </div>
 
@@ -87,15 +87,13 @@ export function StudentLoginForm({
       </form>
 
       <p className="text-center text-sm text-muted">
-        Nie masz jeszcze hasła?{" "}
+        Nie masz konta?{" "}
         <Link
           href="/moje-kursy/register"
           className="font-semibold text-sky-700 hover:underline"
         >
-          Zarejestruj się
+          Załóż konto
         </Link>
-        {" · "}
-        albo poproś nauczyciela o hasło tymczasowe.
       </p>
     </div>
   );

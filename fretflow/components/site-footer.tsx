@@ -43,7 +43,7 @@ export function SiteFooter() {
             href="/moje-kursy/login"
             className="inline-flex min-h-11 items-center hover:text-sky-600"
           >
-            Strefa ucznia
+            Konto
           </Link>
           <Link
             href="/kontakt"

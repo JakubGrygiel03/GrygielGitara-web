@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { StudentRegisterForm } from "@/components/student-register-form";
 
 export const metadata: Metadata = {
-  title: "Rejestracja — strefa ucznia",
+  title: "Załóż konto",
   robots: { index: false, follow: false },
 };
 

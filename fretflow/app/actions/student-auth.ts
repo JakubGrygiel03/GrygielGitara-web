@@ -34,14 +34,11 @@ export async function signInStudent(
       };
     }
 
-    const linked = await resolveStudentForAuthUser({
+    // Optional: link lesson-student profile when e-mail matches admin list
+    await resolveStudentForAuthUser({
       userId: data.user.id,
       email: data.user.email ?? email,
     });
-    if (!linked.ok) {
-      await supabase.auth.signOut();
-      return { ok: false, message: linked.message };
-    }
 
     return { ok: true, message: "Zalogowano." };
   } catch (error) {
@@ -51,15 +48,17 @@ export async function signInStudent(
 }
 
 /**
- * Self-register: only if teacher already added this e-mail as a student.
- * Creates Auth user + links students.user_id.
+ * Open registration — anyone can create an account (lessons + future shop).
+ * If e-mail already exists as a lesson student, link user_id.
  */
 export async function registerStudent(
   emailRaw: string,
   password: string,
   passwordConfirm: string,
+  fullNameRaw?: string,
 ): Promise<{ ok: boolean; message: string }> {
   const email = emailRaw.trim().toLowerCase();
+  const fullName = fullNameRaw?.trim() || "";
   if (!email.includes("@")) {
     return { ok: false, message: "Podaj poprawny e-mail." };
   }
@@ -72,77 +71,53 @@ export async function registerStudent(
 
   try {
     const admin = createAdminClient();
-    const { data: student, error: studentError } = await admin
+    const { data: existingStudent } = await admin
       .from("students")
-      .select("id, full_name, email, user_id")
+      .select("id, full_name, user_id")
       .eq("email", email)
       .maybeSingle();
-
-    if (studentError?.message.includes("user_id")) {
-      return {
-        ok: false,
-        message:
-          "Odpal migrację 20260326_student_portal_auth.sql w Supabase SQL Editor.",
-      };
-    }
-
-    if (!student) {
-      return {
-        ok: false,
-        message:
-          "Nie ma Cię jeszcze na liście. Najpierw nauczyciel musi Cię dodać (albo wyślij rezerwację).",
-      };
-    }
-    if (student.user_id) {
-      return {
-        ok: false,
-        message:
-          "Konto już istnieje — zaloguj się hasłem (albo poproś nauczyciela o reset).",
-      };
-    }
 
     const supabase = await createClient();
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { full_name: student.full_name },
+        data: {
+          full_name: fullName || existingStudent?.full_name || email.split("@")[0],
+        },
         emailRedirectTo: `${getSiteUrl()}/auth/callback?next=/moje-kursy`,
       },
     });
 
     if (error) {
-      // User may already exist in Auth without link
       if (error.message.toLowerCase().includes("already")) {
         return {
           ok: false,
-          message:
-            "Ten e-mail ma już konto Auth. Zaloguj się albo poproś nauczyciela o nowe hasło tymczasowe.",
+          message: "To konto już istnieje — zaloguj się.",
         };
       }
       return { ok: false, message: error.message };
     }
 
     if (data.user) {
-      await admin
-        .from("students")
-        .update({ user_id: data.user.id })
-        .eq("id", student.id);
+      await resolveStudentForAuthUser({
+        userId: data.user.id,
+        email,
+      });
     }
 
-    // If e-mail confirmation is required, session may be null
     if (!data.session) {
       return {
         ok: true,
         message:
-          "Konto utworzone. Jeśli Supabase wymaga potwierdzenia e-maila — kliknij link z maila, potem zaloguj się hasłem.",
+          "Konto utworzone. Jeśli dostaniesz mail potwierdzający — kliknij link, potem zaloguj się.",
       };
     }
 
     return { ok: true, message: "Konto gotowe — jesteś zalogowany." };
   } catch (error) {
     console.error("registerStudent error:", error);
-    return { ok: false, message: "Rejestracja nie powiodła się." };
+    return { ok: false, message: "Nie udało się założyć konta." };
   }
 }
 

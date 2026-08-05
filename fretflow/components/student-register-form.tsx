@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 
 export function StudentRegisterForm() {
   const router = useRouter();
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -21,14 +22,14 @@ export function StudentRegisterForm() {
     <div className="mx-auto w-full max-w-md space-y-6 rounded-2xl border border-sky-100 bg-white p-6 shadow-sm sm:p-8">
       <div className="space-y-2">
         <p className="text-xs font-semibold uppercase tracking-wide text-sky-600">
-          Strefa ucznia
+          Moje konto
         </p>
         <h1 className="text-[1.375rem] font-bold leading-snug text-slate-900">
-          Załóż hasło
+          Załóż konto
         </h1>
         <p className="text-[0.9375rem] leading-relaxed text-muted">
-          Działa tylko gdy nauczyciel dodał już Twój e-mail do listy uczniów.
-          Ustaw własne hasło (min. 8 znaków).
+          Darmowe konto do materiałów, lekcji (jeśli uczysz się u mnie) i wkrótce
+          zakupów (e-booki, kursy). Hasło min. 8 znaków.
         </p>
       </div>
 
@@ -41,6 +42,7 @@ export function StudentRegisterForm() {
               email,
               password,
               passwordConfirm,
+              fullName,
             );
             if (!result.ok) {
               toast.error(result.message);
@@ -53,7 +55,19 @@ export function StudentRegisterForm() {
         }}
       >
         <div className="space-y-2">
-          <Label htmlFor="reg-email">E-mail u nauczyciela</Label>
+          <Label htmlFor="reg-name">Imię i nazwisko</Label>
+          <Input
+            id="reg-name"
+            type="text"
+            autoComplete="name"
+            required
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            placeholder="Jan Kowalski"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="reg-email">E-mail</Label>
           <Input
             id="reg-email"
             type="email"
@@ -61,6 +75,7 @@ export function StudentRegisterForm() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            placeholder="jan@email.pl"
           />
         </div>
         <div className="space-y-2">
@@ -88,12 +103,12 @@ export function StudentRegisterForm() {
           />
         </div>
         <Button type="submit" className="w-full" disabled={isPending}>
-          {isPending ? "Tworzenie…" : "Utwórz konto"}
+          {isPending ? "Tworzenie konta…" : "Załóż konto"}
         </Button>
       </form>
 
       <p className="text-center text-sm text-muted">
-        Masz już hasło?{" "}
+        Masz już konto?{" "}
         <Link
           href="/moje-kursy/login"
           className="font-semibold text-sky-700 hover:underline"

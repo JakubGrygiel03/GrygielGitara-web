@@ -71,8 +71,8 @@ export function SiteHeader() {
             onClick={closeMenu}
           >
             <BookOpen className="size-4 shrink-0 sm:size-[1.1rem]" aria-hidden />
-            <span className="hidden sm:inline">Strefa ucznia</span>
-            <span className="sm:hidden">Uczeń</span>
+            <span className="hidden sm:inline">Konto</span>
+            <span className="sm:hidden">Konto</span>
           </Link>
 
           <Button
@@ -131,7 +131,7 @@ export function SiteHeader() {
                 className="mt-1 inline-flex min-h-12 items-center gap-2 rounded-xl border border-sky-200 bg-sky-50 px-3.5 text-base font-semibold text-sky-800 transition-colors hover:bg-sky-100 sm:text-lg"
               >
                 <BookOpen className="size-5 shrink-0" aria-hidden />
-                Strefa ucznia — zaloguj
+                Konto — zaloguj / załóż
               </Link>
               <Button asChild size="lg" className="mt-3 w-full text-base">
                 <Link href="/rezerwacja" onClick={closeMenu}>

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { StudentLoginForm } from "@/components/student-login-form";
 
 export const metadata: Metadata = {
-  title: "Logowanie — strefa ucznia",
+  title: "Logowanie — konto",
   robots: { index: false, follow: false },
 };
 
