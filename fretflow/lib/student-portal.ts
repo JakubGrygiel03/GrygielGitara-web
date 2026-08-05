@@ -44,6 +44,7 @@ export type StudentPortalData = {
   sessionNotes: { id: string; body: string; created_at: string }[];
   purchases: {
     productId: string;
+    slug: string;
     title: string;
     shortDescription: string;
     priceLabel: string;
@@ -108,6 +109,7 @@ export async function loadStudentPortalData(): Promise<
     const owned = await loadOwnedPurchases(user.id);
     purchases = owned.map((item) => ({
       productId: item.productId,
+      slug: item.slug,
       title: item.title,
       shortDescription: item.shortDescription,
       priceLabel: item.priceLabel,

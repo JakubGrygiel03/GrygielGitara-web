@@ -30,8 +30,8 @@ export default async function SklepPage({
     loggedIn = Boolean(catalog.userId);
   } catch {
     usedFallback = true;
-    items = fallbackProducts.map((product, index) => ({
-      id: `fallback-${index}`,
+    items = fallbackProducts.map((product) => ({
+      id: `fallback-${product.slug}`,
       slug: product.slug,
       title: product.title,
       shortDescription: product.shortDescription,

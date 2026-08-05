@@ -219,7 +219,7 @@ export function StudentPortal({ data }: { data: StudentPortalData }) {
                 <ShopProductCard
                   product={{
                     id: item.productId,
-                    slug: item.productId,
+                    slug: item.slug,
                     title: item.title,
                     shortDescription: item.shortDescription,
                     description: "",

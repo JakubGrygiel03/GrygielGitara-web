@@ -51,6 +51,21 @@ export async function getOwnedProductIds(userId: string): Promise<Set<string>> {
   return new Set((data ?? []).map((row) => row.product_id as string));
 }
 
+export async function getPublishedProductBySlug(
+  slug: string,
+): Promise<ProductRow | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("slug", slug)
+    .eq("published", true)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+  return (data as ProductRow | null) ?? null;
+}
+
 export async function loadShopCatalog(): Promise<{
   items: ShopCatalogItem[];
   stripeReady: boolean;
@@ -96,6 +111,7 @@ export async function loadShopCatalog(): Promise<{
 export type OwnedPurchase = {
   entitlementId: string;
   productId: string;
+  slug: string;
   title: string;
   shortDescription: string;
   priceLabel: string;
@@ -128,6 +144,7 @@ export async function loadOwnedPurchases(
 
   type ProductMeta = {
     id: string;
+    slug: string;
     title: string;
     short_description: string;
     price_grosze: number;
@@ -145,6 +162,7 @@ export async function loadOwnedPurchases(
     return {
       entitlementId: row.id as string,
       productId: row.product_id as string,
+      slug: product?.slug ?? row.product_id as string,
       title,
       shortDescription: product?.short_description ?? "Twój zakupiony e-book.",
       priceLabel: product
