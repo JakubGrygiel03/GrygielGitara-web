@@ -13,15 +13,37 @@ export function SiteHeader() {
   useEffect(() => {
     if (!open) return;
 
+    // Lock scroll without jumping to top (overflow:hidden alone resets scroll on mobile)
+    const scrollY = window.scrollY;
     const html = document.documentElement;
-    const previousHtmlOverflow = html.style.overflow;
-    const previousBodyOverflow = document.body.style.overflow;
+    const body = document.body;
+    const prev = {
+      htmlOverflow: html.style.overflow,
+      bodyOverflow: body.style.overflow,
+      bodyPosition: body.style.position,
+      bodyTop: body.style.top,
+      bodyLeft: body.style.left,
+      bodyRight: body.style.right,
+      bodyWidth: body.style.width,
+    };
+
     html.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
 
     return () => {
-      html.style.overflow = previousHtmlOverflow;
-      document.body.style.overflow = previousBodyOverflow;
+      html.style.overflow = prev.htmlOverflow;
+      body.style.overflow = prev.bodyOverflow;
+      body.style.position = prev.bodyPosition;
+      body.style.top = prev.bodyTop;
+      body.style.left = prev.bodyLeft;
+      body.style.right = prev.bodyRight;
+      body.style.width = prev.bodyWidth;
+      window.scrollTo(0, scrollY);
     };
   }, [open]);
 
@@ -71,8 +93,7 @@ export function SiteHeader() {
             onClick={closeMenu}
           >
             <BookOpen className="size-4 shrink-0 sm:size-[1.1rem]" aria-hidden />
-            <span className="hidden sm:inline">Konto</span>
-            <span className="sm:hidden">Konto</span>
+            <span>Konto</span>
           </Link>
 
           <Button
@@ -104,12 +125,13 @@ export function SiteHeader() {
             aria-label="Zamknij menu"
             onClick={closeMenu}
           />
+          {/* absolute under sticky header — opens where the bar is, not page top */}
           <div
             id="mobile-nav"
             role="dialog"
             aria-modal="true"
             aria-label="Menu"
-            className="fixed inset-x-0 top-[4.5rem] bottom-0 z-[50] overflow-y-auto border-t border-sky-100 bg-white sm:top-20 lg:hidden"
+            className="absolute inset-x-0 top-full z-[50] max-h-[min(100dvh-4.5rem,100svh-4.5rem)] overflow-y-auto border-t border-sky-100 bg-white shadow-lg sm:max-h-[min(100dvh-5rem,100svh-5rem)] lg:hidden"
           >
             <nav
               aria-label="Menu mobilne"
