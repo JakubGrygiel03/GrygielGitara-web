@@ -151,7 +151,7 @@ export async function loadOwnedPurchases(
         ? formatPricePln(product.price_grosze)
         : "Opłacone",
       badge: product?.badge ?? "E-book",
-      image: product?.image_path ?? "/images/shop/start-z-gitara.svg",
+      image: product?.image_path ?? "/images/shop/ebook-start-cover.svg",
       imageAlt: `Okładka: ${title}`,
       purchasedAt: row.created_at as string,
     };
