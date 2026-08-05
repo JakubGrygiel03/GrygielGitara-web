@@ -57,45 +57,52 @@ export function SiteHeader() {
           : "sticky top-0",
       )}
     >
-      <div className="mx-auto flex h-[4.5rem] max-w-6xl items-center justify-between gap-3 px-4 sm:h-20 sm:px-6">
+      <div className="flex h-[4.5rem] w-full items-center pl-3 pr-2 sm:h-20 sm:pl-4 sm:pr-3 lg:pl-5 lg:pr-4">
         <Link
           href="/"
-          className="shrink-0 text-[1.25rem] font-bold leading-none tracking-[-0.02em] text-slate-900 sm:text-[1.75rem]"
+          className="shrink-0 text-[1.125rem] font-bold leading-none tracking-[-0.03em] text-slate-900 sm:text-[1.35rem] lg:text-[1.45rem]"
           onClick={() => setOpen(false)}
           aria-label="GrygielGitara — strona główna"
         >
           Grygiel<span className="text-sky-500">Gitara</span>
         </Link>
 
-        <nav aria-label="Główne" className="hidden items-center gap-1 lg:flex">
-          {mainNavLinks.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className="inline-flex min-h-12 items-center rounded-xl px-3.5 text-lg font-semibold text-slate-700 transition-colors hover:bg-sky-50 hover:text-slate-900"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="ml-auto flex min-w-0 items-center gap-1.5 sm:gap-2">
+          <nav
+            aria-label="Główne"
+            className="hidden min-w-0 items-center gap-0.5 lg:flex xl:gap-1"
+          >
+            {mainNavLinks.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                className="inline-flex min-h-10 items-center rounded-lg px-2 text-[0.95rem] font-semibold text-slate-700 transition-colors hover:bg-sky-50 hover:text-slate-900 xl:min-h-11 xl:px-2.5 xl:text-base"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
 
-        <div className="flex items-center gap-1 sm:gap-2">
           <Link
             href="/moje-kursy/login"
-            className="inline-flex min-h-12 items-center gap-1.5 rounded-xl px-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-sky-50 hover:text-slate-900 sm:px-3 sm:text-base"
+            className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-sky-200/90 bg-sky-50 px-2.5 text-sm font-semibold text-sky-800 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] transition-colors hover:border-sky-300 hover:bg-sky-100 sm:min-h-11 sm:px-3 sm:text-[0.95rem]"
           >
-            <BookOpen className="size-5 shrink-0 sm:size-5" aria-hidden />
+            <BookOpen className="size-4 shrink-0 sm:size-[1.1rem]" aria-hidden />
             <span className="hidden sm:inline">Strefa ucznia</span>
             <span className="sm:hidden">Uczeń</span>
           </Link>
 
-          <Button asChild size="default" className="hidden text-lg lg:inline-flex">
+          <Button
+            asChild
+            size="default"
+            className="hidden text-base lg:inline-flex xl:text-lg"
+          >
             <Link href="/rezerwacja">Umów lekcję próbną</Link>
           </Button>
 
           <button
             type="button"
-            className="inline-flex min-h-12 min-w-12 items-center justify-center rounded-xl text-slate-700 transition-colors hover:bg-sky-50 lg:hidden"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl text-slate-700 transition-colors hover:bg-sky-50 lg:hidden"
             aria-expanded={open}
             aria-controls="mobile-nav"
             aria-label={open ? "Zamknij menu" : "Otwórz menu"}
@@ -143,8 +150,9 @@ export function SiteHeader() {
           <Link
             href="/moje-kursy/login"
             onClick={() => setOpen(false)}
-            className="inline-flex min-h-12 items-center rounded-xl px-3.5 text-base font-semibold text-sky-700 transition-colors hover:bg-sky-50 sm:text-lg"
+            className="mt-1 inline-flex min-h-12 items-center gap-2 rounded-xl border border-sky-200 bg-sky-50 px-3.5 text-base font-semibold text-sky-800 transition-colors hover:bg-sky-100 sm:text-lg"
           >
+            <BookOpen className="size-5 shrink-0" aria-hidden />
             Strefa ucznia — zaloguj
           </Link>
           <Button asChild size="lg" className="mt-3 w-full text-base">
