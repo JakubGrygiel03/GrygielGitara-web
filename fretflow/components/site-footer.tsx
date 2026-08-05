@@ -28,6 +28,12 @@ export function SiteFooter() {
             Cennik
           </Link>
           <Link
+            href="/sklep"
+            className="inline-flex min-h-11 items-center hover:text-sky-600"
+          >
+            Sklep
+          </Link>
+          <Link
             href="/pobierz-poradnik"
             className="inline-flex min-h-11 items-center hover:text-sky-600"
           >

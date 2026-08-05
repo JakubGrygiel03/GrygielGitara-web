@@ -375,6 +375,81 @@ export type Database = {
         };
         Relationships: [];
       };
+      products: {
+        Row: {
+          id: string;
+          created_at: string;
+          slug: string;
+          title: string;
+          short_description: string;
+          description: string;
+          price_grosze: number;
+          currency: string;
+          badge: string;
+          image_path: string;
+          file_path: string;
+          published: boolean;
+          coming_soon: boolean;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          slug: string;
+          title: string;
+          short_description?: string;
+          description?: string;
+          price_grosze: number;
+          currency?: string;
+          badge?: string;
+          image_path: string;
+          file_path: string;
+          published?: boolean;
+          coming_soon?: boolean;
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          slug?: string;
+          title?: string;
+          short_description?: string;
+          description?: string;
+          price_grosze?: number;
+          currency?: string;
+          badge?: string;
+          image_path?: string;
+          file_path?: string;
+          published?: boolean;
+          coming_soon?: boolean;
+        };
+        Relationships: [];
+      };
+      user_entitlements: {
+        Row: {
+          id: string;
+          created_at: string;
+          user_id: string;
+          product_id: string;
+          stripe_checkout_session_id: string | null;
+          source: string;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          user_id: string;
+          product_id: string;
+          stripe_checkout_session_id?: string | null;
+          source?: string;
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          user_id?: string;
+          product_id?: string;
+          stripe_checkout_session_id?: string | null;
+          source?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

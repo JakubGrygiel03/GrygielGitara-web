@@ -1,0 +1,23 @@
+import Stripe from "stripe";
+
+export function isStripeConfigured(): boolean {
+  return Boolean(process.env.STRIPE_SECRET_KEY?.trim());
+}
+
+export function getStripe(): Stripe {
+  const key = process.env.STRIPE_SECRET_KEY?.trim();
+  if (!key) {
+    throw new Error("Missing STRIPE_SECRET_KEY.");
+  }
+  return new Stripe(key, {
+    apiVersion: "2026-07-29.dahlia",
+    typescript: true,
+  });
+}
+
+export function formatPricePln(grosze: number): string {
+  return new Intl.NumberFormat("pl-PL", {
+    style: "currency",
+    currency: "PLN",
+  }).format(grosze / 100);
+}

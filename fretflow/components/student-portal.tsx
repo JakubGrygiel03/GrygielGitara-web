@@ -186,9 +186,31 @@ export function StudentPortal({ data }: { data: StudentPortalData }) {
 
       <section className="space-y-3 rounded-2xl border border-dashed border-slate-200 bg-white p-5">
         <h2 className="text-lg font-semibold text-slate-900">Zakupy</h2>
-        <p className="text-sm leading-relaxed text-muted">
-          Tu pojawią się e-booki i kursy po zakupie. Sklep uruchomimy wkrótce.
-        </p>
+        {data.purchases.length === 0 ? (
+          <>
+            <p className="text-sm leading-relaxed text-muted">
+              Nie masz jeszcze zakupionych materiałów. Po płatności w sklepie
+              e-booki pojawią się tutaj do pobrania (i na e-mailu).
+            </p>
+            <Button asChild size="sm" variant="secondary">
+              <Link href="/sklep">Zobacz sklep</Link>
+            </Button>
+          </>
+        ) : (
+          <ul className="space-y-2">
+            {data.purchases.map((item) => (
+              <li key={item.productId}>
+                <a
+                  href={`/api/shop/download/${item.productId}`}
+                  className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-900 transition-colors hover:border-sky-200 hover:bg-sky-50"
+                >
+                  <span>{item.title}</span>
+                  <span className="shrink-0 text-sky-700">Pobierz PDF</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       <section className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5">

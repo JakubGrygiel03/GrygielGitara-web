@@ -36,8 +36,13 @@ export async function proxy(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
     if (user) {
+      const nextRaw = request.nextUrl.searchParams.get("next");
+      const nextPath =
+        nextRaw?.startsWith("/") && !nextRaw.startsWith("//")
+          ? nextRaw
+          : "/moje-kursy";
       const dest = request.nextUrl.clone();
-      dest.pathname = "/moje-kursy";
+      dest.pathname = nextPath;
       dest.search = "";
       const redirect = NextResponse.redirect(dest);
       response.cookies.getAll().forEach((cookie) => {

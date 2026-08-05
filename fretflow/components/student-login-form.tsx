@@ -12,13 +12,19 @@ import { Label } from "@/components/ui/label";
 
 export function StudentLoginForm({
   initialError,
+  nextPath = "/moje-kursy",
 }: {
   initialError?: string | null;
+  nextPath?: string;
 }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPending, startTransition] = useTransition();
+  const safeNext =
+    nextPath.startsWith("/") && !nextPath.startsWith("//")
+      ? nextPath
+      : "/moje-kursy";
 
   return (
     <div className="mx-auto w-full max-w-md space-y-6 rounded-2xl border border-sky-100 bg-white p-6 shadow-sm sm:p-8">
@@ -52,7 +58,7 @@ export function StudentLoginForm({
               return;
             }
             toast.success(result.message);
-            router.push("/moje-kursy");
+            router.push(safeNext);
             router.refresh();
           });
         }}

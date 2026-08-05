@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000" role="img">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#E0F2FE"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg)"/>
+  <rect x="40" y="40" width="720" height="920" rx="4" fill="none" stroke="#0EA5E9" stroke-width="3" opacity="0.35"/>
+  <text x="80" y="140" fill="#0284C7" font-family="system-ui,sans-serif" font-size="26" font-weight="700" letter-spacing="6">E-BOOK</text>
+  <text x="80" y="280" fill="#0F172A" font-family="Georgia,serif" font-size="58" font-weight="700">Setup gitary</text>
+  <text x="80" y="350" fill="#0F172A" font-family="Georgia,serif" font-size="58" font-weight="700">w domu</text>
+  <text x="80" y="450" fill="#64748B" font-family="system-ui,sans-serif" font-size="28">Struny · czyszczenie · regulacja</text>
+  <g transform="translate(480 580)" stroke="#0EA5E9" stroke-width="10" fill="none" stroke-linecap="round">
+    <path d="M40 40 L40 220"/>
+    <path d="M20 80 L60 80"/>
+    <circle cx="40" cy="40" r="28"/>
+    <path d="M100 100 L180 180 M180 100 L100 180" opacity="0.7"/>
+  </g>
+  <text x="80" y="900" fill="#0284C7" font-family="system-ui,sans-serif" font-size="26" font-weight="600">GrygielGitara</text>
+</svg>

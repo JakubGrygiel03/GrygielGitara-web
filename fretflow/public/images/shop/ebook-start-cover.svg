@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000" role="img" aria-label="OkBadka e-booka">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0EA5E9"/>
+      <stop offset="55%" stop-color="#0284C7"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+    <linearGradient id="sheen" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg)"/>
+  <rect width="800" height="1000" fill="url(#sheen)"/>
+  <rect x="48" y="48" width="704" height="904" rx="8" fill="none" stroke="#E0F2FE" stroke-opacity="0.35" stroke-width="2"/>
+  <text x="80" y="160" fill="#BAE6FD" font-family="Georgia, serif" font-size="28" letter-spacing="4">E-BOOK</text>
+  <text x="80" y="280" fill="#FFFFFF" font-family="Georgia, serif" font-size="64" font-weight="700">Start z gitar</text>
+  <text x="80" y="350" fill="#E0F2FE" font-family="Georgia, serif" font-size="64" font-weight="700">bez stresu</text>
+  <text x="80" y="460" fill="#F0F9FF" font-family="system-ui, sans-serif" font-size="28">Praktyczny przewodnik</text>
+  <text x="80" y="505" fill="#F0F9FF" font-family="system-ui, sans-serif" font-size="28">na pierwsze tygodnie gry</text>
+  <!-- simplified guitar silhouette -->
+  <g transform="translate(470 620)" fill="none" stroke="#BAE6FD" stroke-width="8" stroke-linecap="round">
+    <ellipse cx="90" cy="160" rx="110" ry="140" opacity="0.9"/>
+    <ellipse cx="90" cy="160" rx="42" ry="52" opacity="0.7"/>
+    <line x1="90" y1="20" x2="90" y2="-180"/>
+    <rect x="60" y="-210" width="60" height="36" rx="6" fill="#BAE6FD" stroke="none" opacity="0.85"/>
+  </g>
+  <text x="80" y="900" fill="#BAE6FD" font-family="system-ui, sans-serif" font-size="26" font-weight="600">GrygielGitara</text>
+</svg>

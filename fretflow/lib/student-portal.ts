@@ -1,3 +1,4 @@
+import { loadOwnedPurchases } from "@/lib/shop";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { resolveStudentForAuthUser } from "@/lib/student-link";
@@ -41,11 +42,17 @@ export type StudentPortalData = {
   materials: StudentPortalMaterial[];
   packages: StudentPortalPackage[];
   sessionNotes: { id: string; body: string; created_at: string }[];
+  purchases: {
+    productId: string;
+    title: string;
+    purchasedAt: string;
+  }[];
 };
 
 function accountOnlyData(
   email: string,
   displayName: string,
+  purchases: StudentPortalData["purchases"] = [],
 ): StudentPortalData {
   return {
     isLessonStudent: false,
@@ -56,6 +63,7 @@ function accountOnlyData(
     materials: [],
     packages: [],
     sessionNotes: [],
+    purchases,
   };
 }
 
@@ -90,6 +98,18 @@ export async function loadStudentPortalData(): Promise<
       : "";
   const fallbackName = metaName || email.split("@")[0] || "Użytkowniku";
 
+  let purchases: StudentPortalData["purchases"] = [];
+  try {
+    const owned = await loadOwnedPurchases(user.id);
+    purchases = owned.map((item) => ({
+      productId: item.productId,
+      title: item.title,
+      purchasedAt: item.purchasedAt,
+    }));
+  } catch {
+    purchases = [];
+  }
+
   const linked = await resolveStudentForAuthUser({
     userId: user.id,
     email,
@@ -99,7 +119,7 @@ export async function loadStudentPortalData(): Promise<
     if (linked.reason === "no_student") {
       return {
         ok: true,
-        data: accountOnlyData(email, fallbackName),
+        data: accountOnlyData(email, fallbackName, purchases),
       };
     }
     return { ok: false, reason: "error", message: linked.message };
@@ -161,6 +181,7 @@ export async function loadStudentPortalData(): Promise<
       materials: mats.data ?? [],
       packages: pkgs.data ?? [],
       sessionNotes: nts.data ?? [],
+      purchases,
     },
   };
 }

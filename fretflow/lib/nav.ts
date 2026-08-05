@@ -3,6 +3,7 @@ export const mainNavLinks = [
   { href: "/", label: "Start" },
   { href: "/#oferta", label: "Oferta" },
   { href: "/#cennik", label: "Cennik" },
+  { href: "/sklep", label: "Sklep" },
   { href: "/#o-mnie", label: "O mnie" },
   { href: "/rezerwacja", label: "Rezerwacja" },
   { href: "/kontakt", label: "Kontakt" },
