@@ -3,6 +3,7 @@ import { Resend } from "resend";
 
 import { getSiteUrl } from "@/lib/env";
 import { resolveProductFileAbsolute, type ProductRow } from "@/lib/shop";
+import { getShopProductOffer } from "@/lib/shop-product-details";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 /**
@@ -90,6 +91,14 @@ export async function fulfillShopPurchase(input: {
   return { ok: true };
 }
 
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
 async function sendPurchaseEmail(input: {
   to: string;
   product: ProductRow;
@@ -98,7 +107,16 @@ async function sendPurchaseEmail(input: {
   const from = process.env.RESEND_FROM_EMAIL;
   if (!apiKey || !from) return;
 
-  const site = getSiteUrl();
+  const site = getSiteUrl().includes("localhost")
+    ? "https://grygielgitaraweb.vercel.app"
+    : getSiteUrl();
+  const portalUrl = `${site}/moje-kursy#zakupy`;
+  const title = input.product.title;
+  const offer = getShopProductOffer(input.product.slug);
+  const tip =
+    offer?.purchaseEmailTip ??
+    "Na start: idź spokojnie rozdział po rozdziale i daj sobie czas na oswojenie materiału — małe kroki dają najszybszy efekt.";
+
   let attachment:
     | { filename: string; content: string }
     | undefined;
@@ -114,22 +132,31 @@ async function sendPurchaseEmail(input: {
     attachment = undefined;
   }
 
+  const attachmentBlock = attachment
+    ? `<li>Pobierając plik PDF, który dla Twojej wygody dołączyłem jako załącznik do tej wiadomości.</li>`
+    : `<li>Pobierając PDF z sekcji Zakupy w koncie (załącznik wyślemy, gdy plik będzie dostępny na serwerze).</li>`;
+
   const html = `
-    <p>Dzięki za zakup w GrygielGitara.</p>
-    <p><strong>${input.product.title}</strong> jest już przypisany do Twojego konta.</p>
-    <p>Pobierz w panelu: <a href="${site}/moje-kursy">${site}/moje-kursy</a> (sekcja Zakupy).</p>
-    ${
-      attachment
-        ? "<p>PDF jest też w załączniku tej wiadomości.</p>"
-        : "<p>PDF pobierzesz z konta.</p>"
-    }
+    <p>Cześć!</p>
+    <p>Niezmiernie dziękuję Ci za zakup e-booka i za to, że doceniasz moją pracę oraz rzemieślnicze podejście do nauki gry na instrumencie.</p>
+    <p>Ponieważ buduję markę <strong>GrygielGitara</strong> w pełni niezależnie, pracując wyłącznie na własne nazwisko i odrzucając masowe, szkolne schematy, każde takie zamówienie ma dla mnie ogromne znaczenie. To dla mnie najlepszy dowód na to, że pokazywanie muzyki jako bezstresowej przygody i czystej radości ma ogromny sens. Twój sukces i komfort są dla mnie absolutnym priorytetem, dlatego włożyłem w ten poradnik całe moje pedagogiczne i techniczne doświadczenie.</p>
+    <p>Twój e-book <strong>„${escapeHtml(title)}”</strong> jest już przypisany do Twojego konta.</p>
+    <p>Możesz go pobrać na dwa wygodne sposoby:</p>
+    <ul>
+      <li>Bezpośrednio w panelu studenta: <a href="${portalUrl}">${portalUrl}</a> (sekcja <strong>Zakupy</strong>).</li>
+      ${attachmentBlock}
+    </ul>
+    <p>${escapeHtml(tip)}</p>
+    <p>Gdyby podczas czytania lub pierwszych domowych ćwiczeń pojawiły się jakiekolwiek pytania lub wątpliwości techniczne — napisz do mnie śmiało, odpowiadając na tę wiadomość.</p>
+    <p>Trzymam mocno kciuki za Twoje pierwsze kroki z instrumentem i do usłyszenia!</p>
+    <p>Jakub Grygiel<br/>GrygielGitara</p>
   `;
 
   const resend = new Resend(apiKey);
   const { error } = await resend.emails.send({
     from,
     to: input.to,
-    subject: `Twój zakup: ${input.product.title}`,
+    subject: `Dzięki za zaufanie! Twój e-book „${title}” jest już gotowy`,
     html,
     attachments: attachment
       ? [{ filename: attachment.filename, content: attachment.content }]

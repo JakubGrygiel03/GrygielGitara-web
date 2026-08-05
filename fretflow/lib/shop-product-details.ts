@@ -42,6 +42,8 @@ export type ShopProductOffer = {
   regularValueLabel: string;
   priceStory: string;
   ctaNote: string;
+  /** Short tip in the post-purchase Resend e-mail */
+  purchaseEmailTip: string;
 };
 
 export const shopProductOffers: Record<string, ShopProductOffer> = {
@@ -115,6 +117,8 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
       "Regularna wartość e-booka wraz z bonusami to 99,00 zł. Ponieważ jest to oficjalna premiera pierwszego wydania, możesz go odebrać teraz w cenie startowej. Ta promocyjna cena obowiązuje dla pierwszych osób — zależy mi na szczerych opiniach, zanim poradnik wejdzie do sprzedaży w pełnej cenie.",
     ctaNote:
       "Po płatności PDF znajdziesz w koncie (Moje kursy → Zakupy) oraz na e-mailu. Zacznij bezstresową przygodę z muzyką już za kilka minut.",
+    purchaseEmailTip:
+      "Na start mam dla Ciebie jedną, małą wskazówkę: nie rzucaj się od razu na głęboką wodę i trudne akordy. Zacznij spokojnie od pierwszych rozdziałów o ergonomii dłoni i prostych, jednogłosowych melodiach. Pozwól swoim palcom bezstresowo oswoić się z gryfem, a efekty usłyszysz szybciej, niż się spodziewasz.",
   },
 
   "setup-gitary-w-domu": {
@@ -186,6 +190,8 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
       "Wartość poradnika z bonusami to 79,00 zł. Na start sprzedaży możesz wziąć go w cenie premierowej — zależy mi na feedbacku od pierwszych czytelników.",
     ctaNote:
       "Po płatności PDF jest w Moje kursy → Zakupy oraz na e-mailu. Możesz zacząć przy gitarze jeszcze dziś.",
+    purchaseEmailTip:
+      "Na start: zanim cokolwiek „regulujesz na czuja”, zrób spokojnie checklistę z e-booka — najpierw struny i czystość, potem ocena, czy coś wymaga serwisu. Małe, bezpieczne kroki chronią instrument i Twój spokój.",
   },
 
   "rytm-i-timing-na-start": {
@@ -257,6 +263,8 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
       "Regularna wartość e-booka z bonusami to 119,00 zł. Na premierę możesz wziąć go w cenie startowej — zbieram pierwsze szczere opinie przed pełną ceną.",
     ctaNote:
       "Po płatności materiał jest w Moje kursy → Zakupy i na e-mailu. Pierwszą sesję z metronomem możesz zrobić dziś wieczorem.",
+    purchaseEmailTip:
+      "Na start: włącz metronom wolniej, niż Ci się wydaje „wygodnie”, i zrób krótką serię z pierwszych ćwiczeń. Timing buduje się małymi wygranymi — nie walką z tempem.",
   },
 };
 
