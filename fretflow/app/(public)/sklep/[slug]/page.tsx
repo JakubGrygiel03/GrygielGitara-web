@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
 import { ShopProductCta } from "@/components/shop-product-cta";
@@ -11,6 +11,7 @@ import {
   getPublishedProductBySlug,
 } from "@/lib/shop";
 import { getShopProductOffer } from "@/lib/shop-product-details";
+import { isShopSalesOpen } from "@/lib/shop-sales";
 import { shopProducts as fallbackProducts } from "@/lib/shop-products";
 import { formatPricePln, isStripeConfigured } from "@/lib/stripe";
 import { createClient } from "@/lib/supabase/server";
@@ -89,6 +90,14 @@ export default async function SklepProductPage({ params }: PageProps) {
     productRow?.coming_soon ?? fallback!.status === "coming_soon";
   const productId = productRow?.id ?? `fallback-${slug}`;
   const loginNext = `/sklep/${slug}`;
+  const salesOpen = isShopSalesOpen();
+
+  // Hide public product pages while shop is closed (owned download still ok).
+  if (!salesOpen && !owned) {
+    redirect("/sklep");
+  }
+
+  const buyReady = salesOpen && stripeReady && Boolean(productRow);
 
   return (
     <div className="bg-surface">
@@ -136,8 +145,8 @@ export default async function SklepProductPage({ params }: PageProps) {
                 <p className="text-sm text-muted">{offer.editionNote}</p>
               ) : null}
               <ShopProductCta
-                product={{ id: productId, owned, comingSoon }}
-                stripeReady={stripeReady && Boolean(productRow)}
+                product={{ id: productId, owned, comingSoon: comingSoon || !salesOpen }}
+                stripeReady={buyReady}
                 loggedIn={loggedIn}
                 className="w-full"
                 loginNext={loginNext}
@@ -166,8 +175,12 @@ export default async function SklepProductPage({ params }: PageProps) {
               </div>
               <div className="lg:hidden">
                 <ShopProductCta
-                  product={{ id: productId, owned, comingSoon }}
-                  stripeReady={stripeReady && Boolean(productRow)}
+                  product={{
+                    id: productId,
+                    owned,
+                    comingSoon: comingSoon || !salesOpen,
+                  }}
+                  stripeReady={buyReady}
                   loggedIn={loggedIn}
                   className="w-full"
                   loginNext={loginNext}
@@ -181,8 +194,8 @@ export default async function SklepProductPage({ params }: PageProps) {
                 priceLabel={priceLabel}
                 productId={productId}
                 owned={owned}
-                comingSoon={comingSoon}
-                stripeReady={stripeReady && Boolean(productRow)}
+                comingSoon={comingSoon || !salesOpen}
+                stripeReady={buyReady}
                 loggedIn={loggedIn}
                 loginNext={loginNext}
               />

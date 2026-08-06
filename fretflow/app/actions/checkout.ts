@@ -1,9 +1,10 @@
 "use server";
 
 import { getRequestSiteUrl } from "@/lib/env";
+import type { ProductRow } from "@/lib/shop";
+import { isShopSalesOpen } from "@/lib/shop-sales";
 import { getStripe, isStripeConfigured } from "@/lib/stripe";
 import { createClient } from "@/lib/supabase/server";
-import type { ProductRow } from "@/lib/shop";
 
 export type CheckoutState = {
   ok: boolean;
@@ -15,6 +16,13 @@ export type CheckoutState = {
 export async function startProductCheckout(
   productId: string,
 ): Promise<CheckoutState> {
+  if (!isShopSalesOpen()) {
+    return {
+      ok: false,
+      message: "Sklep jest chwilowo zamknięty — sprzedaż wróci już wkrótce.",
+    };
+  }
+
   if (!isStripeConfigured()) {
     return {
       ok: false,

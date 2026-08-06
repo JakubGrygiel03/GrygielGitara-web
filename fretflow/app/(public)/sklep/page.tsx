@@ -2,14 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ShopProductCard } from "@/components/shop-product-card";
+import { Button } from "@/components/ui/button";
 import { loadShopCatalog } from "@/lib/shop";
+import { isShopSalesOpen } from "@/lib/shop-sales";
 import { shopProducts as fallbackProducts } from "@/lib/shop-products";
 import { formatPricePln, isStripeConfigured } from "@/lib/stripe";
 
 export const metadata: Metadata = {
   title: "Sklep — e-booki i materiały",
   description:
-    "Kup e-booki GrygielGitara online. Po płatności PDF w koncie i na e-mailu.",
+    "E-booki GrygielGitara — sprzedaż online już wkrótce. Materiały po zakupie w koncie i na e-mailu.",
 };
 
 export default async function SklepPage({
@@ -18,6 +20,41 @@ export default async function SklepPage({
   searchParams: Promise<{ anulowano?: string }>;
 }) {
   const params = await searchParams;
+  const salesOpen = isShopSalesOpen();
+
+  if (!salesOpen) {
+    return (
+      <div className="bg-surface">
+        <section className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:py-16">
+          <div className="mx-auto max-w-xl space-y-5 text-center sm:space-y-6">
+            <p className="text-base font-bold uppercase tracking-wide text-sky-600 sm:text-lg">
+              Sklep
+            </p>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
+              Już wkrótce
+            </h1>
+            <p className="text-[0.9375rem] leading-relaxed text-muted sm:text-base">
+              Przygotowuję e-booki i materiały do sprzedaży online. Wrócę tu z
+              pełną ofertą niedługo.
+            </p>
+            <p className="text-sm leading-relaxed text-slate-700">
+              Masz już dostęp z lekcji albo dostałeś materiał ode mnie? Zaloguj
+              się — pliki są w sekcji Zakupy na koncie.
+            </p>
+            <div className="flex flex-col items-stretch justify-center gap-3 pt-2 sm:flex-row sm:items-center">
+              <Button asChild>
+                <Link href="/moje-kursy">Moje konto / Zakupy</Link>
+              </Button>
+              <Button asChild variant="secondary">
+                <Link href="/kontakt">Napisz, jeśli chcesz być powiadomiony</Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
   let items: Awaited<ReturnType<typeof loadShopCatalog>>["items"] = [];
   let stripeReady = isStripeConfigured();
   let loggedIn = false;
