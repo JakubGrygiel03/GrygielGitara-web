@@ -5,20 +5,20 @@ import { cn } from "@/lib/utils";
 
 const reasons = [
   {
-    title: "Prawidłowa ergonomia",
-    body: "Uczysz się grać luźno i świadomie. Mniej bólu palców, mniej napięć, więcej czystego dźwięku już na początku drogi.",
+    title: "Ergonomia dłoni zamiast „pułapki akordów”",
+    body: "Na start uczymy się grać luźno i świadomie — bez wpychania w twarde, frustrujące chwyty za wcześnie. Mniej bólu palców, więcej czystego dźwięku.",
   },
   {
-    title: "Indywidualny program",
-    body: "Bez nudnych schematów szkolnych. Budujemy plan pod Twoje cele, tempo i ulubione utwory, żeby frajda pojawiała się szybko.",
+    title: "Ulubione utwory we właściwym momencie",
+    body: "Po około 4 lekcjach wielu uczniów gra już pierwsze melodie ze swojej listy — w uproszczonej, grywalnej wersji. Frajda pojawia się szybko, bez obietnic cudów w tydzień.",
   },
   {
-    title: "Stały kontakt w tygodniu",
-    body: "Między lekcjami nie zostajesz sam. Masz wsparcie przy technice i ćwiczeniach, zamiast czekać tydzień z nierozwiązanym problemem.",
+    title: "Telegram + tablet na lekcjach online",
+    body: "Online łączymy się na Telegramie — nie zabiera rejestru dźwięku jak typowe wideokonferencje. Materiały i przykłady pokazuję na tablecie, żebyś widział dokładnie to, co ja.",
   },
   {
-    title: "Sprawny instrument oznacza szybszy progres",
-    body: "Setup, struny i podstawowa regulacja pomagają grać lżej. Nie walczysz z twardą gitarą, tylko rozwijasz umiejętność.",
+    title: "Sprawny instrument przyspiesza progres",
+    body: "Setup, struny i podstawowa regulacja sprawiają, że nie walczysz z twardą gitarą. Jako absolwent Technikum Budowy i Strojenia Fortepianów dbam o to, by instrument pomagał — nie przeszkadzał.",
   },
 ] as const;
 
@@ -32,13 +32,13 @@ function MethodImage({ className }: { className?: string }) {
     >
       <Image
         src="/images/jakub-casual.png"
-        alt="Jakub Grygiel, bezstresowe podejście do nauki gitary"
+        alt="Jakub Grygiel — praktyczna metoda nauki gitary"
         fill
         sizes="(max-width: 1024px) 100vw, 40vw"
         className="object-cover object-top"
       />
       <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-900/75 to-transparent px-4 py-4 text-sm text-white">
-        Luz, praktyka i Twoje ulubione utwory od startu
+        Jak to działa na lekcji — krok po kroku
       </figcaption>
     </figure>
   );
@@ -52,16 +52,15 @@ export function MethodSection() {
           <Reveal variant="right" className="space-y-5 sm:space-y-6">
             <div className="space-y-2 sm:space-y-3">
               <p className="text-base font-bold uppercase tracking-wide text-sky-600 sm:text-lg">
-                Emocje i efekty
+                Metoda
               </p>
               <h2 className="text-[1.375rem] font-bold leading-snug tracking-[-0.015em] text-slate-900 sm:text-3xl lg:text-4xl">
                 Dlaczego ta metoda działa?
               </h2>
               <p className="text-[0.9375rem] leading-relaxed text-muted sm:text-base lg:text-lg">
-                Po około 4 lekcjach wielu uczniów gra już pierwsze melodie ze
-                swojej listy ulubionych piosenek. Nie obiecuję cudów w tydzień,
-                ale daję prosty przekaz, dobre narzędzia i utwory, które
-                naprawdę chcesz grać.
+                Komfort dłoni, repertuar we właściwym momencie, jasne narzędzia
+                online i sprawny instrument — to cztery rzeczy, które realnie
+                przyspieszają start.
               </p>
             </div>
 

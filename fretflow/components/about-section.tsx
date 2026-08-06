@@ -2,18 +2,18 @@ import Image from "next/image";
 
 import { Reveal } from "@/components/reveal";
 
-const pillars = [
+const practices = [
   {
-    title: "Pedagog z powołania (ponad 7 lat doświadczenia)",
-    body: "Prowadziłem lekcje w szkołach prywatnych, ośrodkach kultury oraz z setkami uczniów indywidualnych. Wypracowałem dzięki temu ogromną cierpliwość i umiejętność prostego tłumaczenia ułożeń dłoni oraz technik.",
+    title: "Osobista odpowiedzialność",
+    body: "Nie ukrywam się za logiem znanej firmy. Moje nazwisko firmuje każdą minutę naszych zajęć, jakość przygotowanych dla Ciebie materiałów oraz stan Twojego instrumentu po moim serwisie. Jeśli coś robimy, robimy to dobrze albo wcale.",
   },
   {
-    title: "Certyfikowany rzemieślnik i technik instrumentów",
-    body: "Ukończyłem Szkołę Muzyczną II st. w Kaliszu oraz Technikum Budowy i Strojenia Fortepianów. Dbam o to, aby Twoja gitara była idealnie wyregulowana – miękka w grze i wygodna, co eliminuje ból palców na początku.",
+    title: "Partnerskie, kumpelskie relacje",
+    body: "Całkowicie odrzucam szkolny rygor, ocenianie i wytykanie błędów. Na moich lekcjach jesteśmy partnerami. Wspólnie cieszymy się z każdego czystego dźwięku i wspólnie, bez pośpiechu, pokonujemy techniczne trudności.",
   },
   {
-    title: "Aktywny muzyk sceniczny",
-    body: "Jestem czynnym artystą współtworzącym zespół The Medievals. Przekazuję Ci praktyczny warsztat i sposoby na opanowanie tremy, zamiast czystej teorii z podręczników.",
+    title: "Dzielenie się żywą pasją",
+    body: "Muzyka towarzyszy mi każdego dnia – na estradzie, przy warsztatowym stole rzemieślniczym i podczas pracy z uczniami. Nie uczę z obowiązku, ale z autentycznej chęci przekazania Ci narzędzi do tego, by instrument stał się Twoim najlepszym sposobem na wyrażenie siebie i odpoczynek po ciężkim dniu.",
   },
 ] as const;
 
@@ -24,59 +24,63 @@ export function AboutSection() {
         <div className="grid items-start gap-8 md:grid-cols-2 md:gap-10 lg:gap-16">
           <Reveal variant="blur" className="space-y-4 sm:space-y-5">
             <p className="text-base font-bold uppercase tracking-wide text-sky-600 sm:text-lg">
-              O mnie
+              Autorska marka
             </p>
             <h2 className="text-[1.375rem] font-bold leading-snug tracking-[-0.015em] text-slate-900 sm:text-3xl lg:text-4xl">
-              Autorska marka i osobiste zaangażowanie
+              Moja filozofia: Muzyka to rzemiosło, nie wyścig
             </h2>
             <div className="space-y-4 text-[0.9375rem] leading-relaxed text-muted sm:text-base lg:text-lg">
               <p>
-                Wierzę, że muzyka powinna dawać wolność, wyraz emocjom i czystą
-                radość z gry – a nie kojarzyć się ze szkolnym rygorem, stresem
-                czy nudną teorią.
+                Za marką GrygielGitara nie stoi bezosobowa korporacja, sieć szkół
+                muzycznych ani managerowie goniący za kolejnym arkuszem w
+                Excelu. Stoję za nią ja. Kiedy decydujesz się na naukę ze mną,
+                nie kupujesz po prostu „godziny z nauczycielem”. Wchodzisz do
+                mojej pracowni, w której do muzyki podchodzimy z szacunkiem,
+                spokojem i rzemieślniczą precyzją.
               </p>
               <p className="text-slate-800">
-                Dlatego świadomie odrzuciłem sztywne szablony masowych szkół
-                muzycznych i rozwijam w pełni niezależną markę GrygielGitara pod
-                własnym nazwiskiem. Nie realizuję narzuconych od góry procedur
-                ani norm godzinowych. W przeciwieństwie do dużych szkół, u mnie
-                otrzymujesz moje 100% wsparcie. Pracuję na własną reputację,
-                dlatego na Twoim sukcesie, wygodzie i realnym progresie zależy
-                mi bezpośrednio.
+                Świadomie buduję swoją markę niezależnie, ponieważ głęboko
+                wierzę, że masowe podejście zabija w ludziach pasję. W
+                tradycyjnych szkołach często brakuje miejsca na indywidualność,
+                a uczeń musi dopasować się do sztywnego, odgórnego programu. U
+                mnie jest dokładnie na odwrót. To ja dopasowuję swoje narzędzia,
+                cierpliwość i tempo do Twoich dłoni oraz Twojego samopoczucia
+                danego dnia.
               </p>
             </div>
 
             <div className="space-y-4 pt-1">
               <p className="text-sm font-bold uppercase tracking-wide text-sky-600 sm:text-base">
-                Trzy filary mojego przygotowania
+                Co to oznacza dla Ciebie w praktyce?
               </p>
               <ul className="space-y-4">
-                {pillars.map((pillar) => (
-                  <li key={pillar.title} className="space-y-1.5">
+                {practices.map((item) => (
+                  <li key={item.title} className="space-y-1.5">
                     <p className="text-[0.9375rem] font-semibold text-slate-900 sm:text-base">
-                      {pillar.title}
+                      {item.title}
                     </p>
                     <p className="text-sm leading-relaxed text-muted sm:text-[0.9375rem]">
-                      {pillar.body}
+                      {item.body}
                     </p>
                   </li>
                 ))}
               </ul>
+              <p className="text-[0.9375rem] leading-relaxed text-slate-800 sm:text-base">
+                Uczę na własnych warunkach, bo tylko wtedy mogę dać Ci jakość i
+                zaangażowanie, pod którymi podpisuję się obiema rękami.
+              </p>
             </div>
           </Reveal>
 
           <Reveal variant="blur" delay={120}>
             <figure className="relative mx-auto aspect-[3/4] w-full max-w-sm overflow-hidden rounded-2xl bg-sky-50 md:sticky md:top-28 md:max-w-none md:justify-self-end">
               <Image
-                src="/images/medievals-portrait.png"
-                alt="Jakub Grygiel z instrumentem historycznym, The Medievals"
+                src="/images/jakub-portrait.png"
+                alt="Jakub Grygiel — osobiste podejście do nauki gitary"
                 fill
                 sizes="(max-width: 768px) 100vw, 40vw"
-                className="object-cover"
+                className="object-cover object-[center_18%]"
               />
-              <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-900/70 to-transparent px-4 py-4 text-sm text-white">
-                The Medievals, muzyka dawna na scenie
-              </figcaption>
             </figure>
           </Reveal>
         </div>

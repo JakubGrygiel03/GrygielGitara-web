@@ -7,17 +7,17 @@ import { PillarsSection } from "@/components/pillars-section";
 import { PricingSection } from "@/components/pricing-section";
 
 /**
- * Homepage orchestration: Why → pillars → proof → method → pricing → trust → FAQ.
+ * Homepage: Promise → What → How → Stage proof → Philosophy → Offer → FAQ.
  */
 export default function HomePage() {
   return (
     <>
       <Hero />
       <PillarsSection />
-      <ForumMusicumBand />
       <MethodSection />
-      <PricingSection />
+      <ForumMusicumBand />
       <AboutSection />
+      <PricingSection />
       <Faq />
     </>
   );

@@ -20,32 +20,20 @@ export function PricingSection() {
                 Cennik i bezpieczny start
               </p>
               <h2 className="text-balance text-[1.375rem] font-bold leading-snug tracking-[-0.015em] text-slate-900 sm:text-3xl lg:text-[2rem] lg:leading-snug">
-                Inwestujesz w lekcję, materiały i spokojny początek
+                Jasne pakiety i wartość w cenie lekcji
               </h2>
 
               <div className="space-y-1.5 sm:space-y-2">
                 <h3 className="text-base font-semibold text-slate-900 sm:text-lg">
-                  Indywidualna lekcja i jasny plan
+                  Co dostajesz poza samą godziną
                 </h3>
                 <p className="text-pretty text-[0.9375rem] leading-relaxed text-muted sm:text-base">
-                  Otrzymujesz mój pełny czas i 100% skupienia. Zapomnij o nudnych
-                  ćwiczeniach z przestarzałych podręczników. Choć na pierwszym
-                  spotkaniu nie rozpracujemy jeszcze całego, trudnego utworu z
-                  radia (bo zdrowe podstawy wymagają odrobiny cierpliwości i
-                  prawidłowego ułożenia dłoni), gwarantuję, że nie stracimy ani
-                  minuty na zbędną teorię. Zaczynamy od prostych, przyjemnych
-                  melodii, które krok po kroku przygotują Cię do grania Twoich
-                  ulubionych piosenek już po kilku pierwszych lekcjach.
+                  Materiały do ćwiczeń, wsparcie między spotkaniami oraz
+                  podstawowy setup / opiekę nad instrumentem dla aktywnych
+                  uczniów — żebyś nie dokładał osobno za rzeczy, które i tak
+                  potrzebujesz na start.
                 </p>
               </div>
-
-              <p className="text-pretty text-[0.9375rem] leading-relaxed text-muted sm:text-base">
-                Przy pierwszej wymianie strun pomagam też wyczyścić gitarę i
-                ogarnąć podstawy opieki nad instrumentem, żeby grało się lżej od
-                startu. Online łączymy się na Telegramie — nie psuje barwy
-                dźwięku jak typowe wideokonferencje, a materiały pokazuję na
-                tablecie.
-              </p>
             </Reveal>
 
             <Reveal variant="scale" delay={100}>
@@ -143,8 +131,7 @@ export function PricingSection() {
           </Button>
           <p className="text-sm leading-relaxed text-muted">
             W formularzu wybierasz wariant i cenę jak wyżej. Pierwsza lekcja z
-            gwarancją — płacisz tylko, jeśli uznasz, że warto kontynuować. Online
-            przez Telegram.
+            gwarancją — płacisz tylko, jeśli uznasz, że warto kontynuować.
           </p>
         </Reveal>
       </div>

@@ -7,23 +7,23 @@ const pillars = [
   {
     id: "lekcje",
     eyebrow: "Filar 1",
-    title: "Bezstresowa nauka i Twoje utwory",
-    body: "Praktyka zamiast suchej teorii – bez obietnic gruszek na wierzbie. Zaczynamy od prostych melodii z tabulatury, a po około czterech lekcjach bierzemy Twoje utwory w uproszczonej wersji, żeby grać to, co lubisz, bez zniechęcenia.",
+    title: "Lekcje gitary",
+    body: "Indywidualne zajęcia w Gdańsku (studio przy Galerii Forum, dojazd) albo online. Bez stresu, z utworami, które naprawdę chcesz grać.",
     cta: { href: "/rezerwacja", label: "Umów lekcję" },
   },
   {
     id: "serwis",
     eyebrow: "Filar 2",
-    title: "Wsparcie techniczne i serwis",
-    body: "Absolwent Technikum Budowy i Strojenia Fortepianów. Pomagam w czyszczeniu, setupie i wymianie strun, a dla aktywnych uczniów podstawowy serwis jest w cenie zajęć.",
+    title: "Serwis instrumentu",
+    body: "Setup, struny i podstawowa opieka nad gitarą — żeby grało się lżej. Dla aktywnych uczniów podstawowy serwis jest w cenie zajęć.",
     cta: { href: "/kontakt?temat=setup_service", label: "Zapytaj o serwis" },
   },
   {
     id: "materialy",
     eyebrow: "Filar 3",
-    title: "Pełna wolność i autorski program",
-    body: "Bez szablonów korporacyjnych szkół. Pracuję na własną markę i biorę osobistą odpowiedzialność za Twój progres, komfort i radość z gry.",
-    cta: { href: "/kontakt", label: "Poznaj podejście" },
+    title: "Autorskie podejście",
+    body: "Jedna osoba, jeden program dopasowany do Ciebie — bez korporacyjnych szablonów i masówki. Materiały i wsparcie między lekcjami w pakiecie.",
+    cta: { href: "/#o-mnie", label: "Poznaj filozofię" },
   },
 ] as const;
 
@@ -36,12 +36,11 @@ export function PillarsSection() {
             Fundament oferty
           </p>
           <h2 className="text-[1.375rem] font-bold leading-snug tracking-[-0.015em] text-slate-900 sm:text-3xl lg:text-4xl">
-            Lekcje, rzemiosło i osobista odpowiedzialność
+            Co dostajesz w GrygielGitara
           </h2>
           <p className="text-[0.9375rem] leading-relaxed text-muted sm:text-base lg:text-lg">
-            Stacjonarnie obok Galerii Forum, z dojazdem w Gdańsku albo online.
-            Do tego realne wsparcie przy instrumencie, którego masowe szkoły
-            zwykle nie dają.
+            Lekcje, serwis instrumentu i autorskie podejście — w skrócie, zanim
+            przejdziesz do metody i oferty.
           </p>
         </Reveal>
 

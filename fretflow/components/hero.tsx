@@ -36,15 +36,15 @@ export function Hero() {
               className="hero-animate-item text-[1.375rem] font-semibold leading-snug tracking-[-0.015em] text-slate-900 sm:text-4xl sm:leading-tight md:text-[2.75rem]"
               style={{ animationDelay: "200ms" }}
             >
-              Zagraj swoje ulubione utwory bez nudnej teorii i szkolnego stresu
+              Zagraj to, co lubisz — bez szkolnego stresu
             </h1>
 
             <p
               className="hero-animate-item text-[0.9375rem] leading-relaxed text-muted sm:text-lg md:text-xl"
               style={{ animationDelay: "280ms" }}
             >
-              Lekcje z dojazdem w Gdańsku, stacjonarnie obok Galerii Forum oraz
-              online. Profesjonalny serwis instrumentu od technika w cenie zajęć.
+              Indywidualne lekcje gitary w Gdańsku: dojazd, studio obok Galerii
+              Forum albo online.
             </p>
 
             <div

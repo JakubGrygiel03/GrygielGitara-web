@@ -28,14 +28,15 @@ export function ForumMusicumBand() {
               Ciekawostka
             </p>
             <h2 className="text-[1.25rem] font-semibold leading-snug tracking-[-0.015em] text-slate-900 sm:text-2xl lg:text-3xl">
-              Uczysz się od muzyka ze sceny, nie tylko z sali lekcyjnej
+              Uczysz się od muzyka ze sceny
             </h2>
             <p className="text-[0.9375rem] leading-relaxed text-muted sm:text-base lg:text-lg">
               Z zespołem The Medievals gram po całej Polsce – w pałacach,
               zamkach, muzeach oraz na mniejszych i większych scenach. Ostatnio
-              mogłem też zagrać koncert w prestiżowym Narodowym Forum Muzyki.
-              Przekazuję realny warsztat estradowy, a nie suchą teorię z
-              podręcznika.
+              zagrałem też koncert w prestiżowym Narodowym Forum Muzyki. Na
+              lekcjach przekazuję ten sam praktyczny warsztat: jak panować nad
+              tremą, jak wybrzmieć na scenie i jak grać z ludźmi, a nie tylko z
+              nut w zeszycie.
             </p>
           </Reveal>
         </div>
