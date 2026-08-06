@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { trackGoogleAdsContactConversion } from "@/lib/google-ads";
 import {
   SHOP_EARLY_BIRD_PERCENT,
   SHOP_INTEREST_FORM_HINT,
@@ -75,6 +76,7 @@ export function ContactForm({
       setWasWaitlist(values.topic === "lesson_waitlist");
       setWasShopInterest(values.topic === "shop_support");
       setSubmitted(true);
+      trackGoogleAdsContactConversion();
       reset({
         senderName: "",
         email: "",
