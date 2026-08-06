@@ -233,81 +233,88 @@ export function AdminCalendarTab({
             <span>Wyślij uczniowi informację (e-mail + SMS jeśli włączony)</span>
           </label>
 
-          <button
-            type="button"
-            className="text-sm font-semibold text-sky-700 hover:underline"
-            onClick={() => setMoreOpen((v) => !v)}
-          >
-            {moreOpen ? "Ukryj dodatkowe opcje" : "Więcej opcji (cykl, pakiet, notatka)"}
-          </button>
+          <div className="flex flex-col items-stretch gap-3">
+            <button
+              type="button"
+              className="self-start text-left text-sm font-semibold text-sky-700 hover:underline"
+              onClick={() => setMoreOpen((v) => !v)}
+            >
+              {moreOpen
+                ? "Ukryj dodatkowe opcje"
+                : "Więcej opcji (cykl, pakiet, notatka)"}
+            </button>
 
-          {moreOpen ? (
-            <div className="space-y-3 rounded-xl border border-slate-100 bg-slate-50/80 p-3">
-              <label className="flex items-start gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={consumeFromPackage}
-                  onChange={(e) => setConsumeFromPackage(e.target.checked)}
-                  className="mt-0.5 size-4 rounded border-slate-300 text-sky-600"
-                />
-                <span>
-                  Odejmij 1 lekcję z pakietu ucznia (jak się nie odbędzie —
-                  przywrócisz poniżej)
-                </span>
-              </label>
-              <label className="flex items-start gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={recurring}
-                  onChange={(e) => setRecurring(e.target.checked)}
-                  className="mt-0.5 size-4 rounded border-slate-300 text-sky-600"
-                />
-                <span>Powtarzaj co tydzień</span>
-              </label>
-              {recurring ? (
-                <div className="space-y-1">
-                  <Label htmlFor="weeksCount">Ile terminów łącznie</Label>
-                  <Input
-                    id="weeksCount"
-                    type="number"
-                    min={2}
-                    max={26}
-                    value={weeksCount}
-                    onChange={(e) =>
-                      setWeeksCount(
-                        Math.min(26, Math.max(2, Number(e.target.value) || 2)),
-                      )
-                    }
+            {moreOpen ? (
+              <div className="space-y-3 rounded-xl border border-slate-100 bg-slate-50/80 p-3">
+                <label className="flex items-start gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={consumeFromPackage}
+                    onChange={(e) => setConsumeFromPackage(e.target.checked)}
+                    className="mt-0.5 size-4 rounded border-slate-300 text-sky-600"
                   />
-                </div>
-              ) : null}
-              <label className="flex items-start gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={includeNotes}
-                  onChange={(e) => setIncludeNotes(e.target.checked)}
-                  className="mt-0.5 size-4 rounded border-slate-300 text-sky-600"
-                />
-                <span>Notatka do ucznia w wiadomości</span>
-              </label>
-              {includeNotes ? (
-                <Textarea
-                  className="min-h-16"
-                  placeholder="np. weź struny…"
-                  value={lessonNotes}
-                  onChange={(e) => setLessonNotes(e.target.value)}
-                />
-              ) : null}
-            </div>
-          ) : null}
+                  <span>
+                    Odejmij 1 lekcję z pakietu ucznia (jak się nie odbędzie —
+                    przywrócisz poniżej)
+                  </span>
+                </label>
+                <label className="flex items-start gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={recurring}
+                    onChange={(e) => setRecurring(e.target.checked)}
+                    className="mt-0.5 size-4 rounded border-slate-300 text-sky-600"
+                  />
+                  <span>Powtarzaj co tydzień</span>
+                </label>
+                {recurring ? (
+                  <div className="space-y-1">
+                    <Label htmlFor="weeksCount">Ile terminów łącznie</Label>
+                    <Input
+                      id="weeksCount"
+                      type="number"
+                      min={2}
+                      max={26}
+                      value={weeksCount}
+                      onChange={(e) =>
+                        setWeeksCount(
+                          Math.min(
+                            26,
+                            Math.max(2, Number(e.target.value) || 2),
+                          ),
+                        )
+                      }
+                    />
+                  </div>
+                ) : null}
+                <label className="flex items-start gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={includeNotes}
+                    onChange={(e) => setIncludeNotes(e.target.checked)}
+                    className="mt-0.5 size-4 rounded border-slate-300 text-sky-600"
+                  />
+                  <span>Notatka do ucznia w wiadomości</span>
+                </label>
+                {includeNotes ? (
+                  <Textarea
+                    className="min-h-16"
+                    placeholder="np. weź struny…"
+                    value={lessonNotes}
+                    onChange={(e) => setLessonNotes(e.target.value)}
+                  />
+                ) : null}
+              </div>
+            ) : null}
 
-          <Button type="submit" disabled={isPending}>
-            {recurring
-              ? `Zapisz cykl (${weeksCount} lekcji)`
-              : sendNotify
-                ? "Zapisz i wyślij info"
-                : "Zapisz lekcję"}
-          </Button>
+            <Button type="submit" className="w-full sm:w-auto" disabled={isPending}>
+              {recurring
+                ? `Zapisz cykl (${weeksCount} lekcji)`
+                : sendNotify
+                  ? "Zapisz i wyślij info"
+                  : "Zapisz lekcję"}
+            </Button>
+          </div>
         </form>
       )}
 
