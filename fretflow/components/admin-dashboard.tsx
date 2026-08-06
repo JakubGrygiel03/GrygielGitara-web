@@ -41,6 +41,7 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
     sessionNotes = [],
     leads = [],
     products = [],
+    shopAccounts = [],
     settings,
     calendarError,
     opsError,
@@ -206,7 +207,9 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
 
       {tab === "leads" ? <AdminLeadsTab leads={leads} /> : null}
 
-      {tab === "shop" ? <AdminShopTab products={products} /> : null}
+      {tab === "shop" ? (
+        <AdminShopTab products={products} shopAccounts={shopAccounts} />
+      ) : null}
 
       {tab === "settings" ? <AdminSettingsTab settings={settings} /> : null}
     </div>

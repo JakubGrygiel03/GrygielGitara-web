@@ -110,6 +110,12 @@ export type AdminShopProduct = {
   coming_soon: boolean;
 };
 
+/** Auth accounts available for shop access grant (autocomplete). */
+export type AdminShopAccountOption = {
+  email: string;
+  label: string | null;
+};
+
 export type MonthBalance = {
   lessons: number;
   service: number;
@@ -129,6 +135,7 @@ export type AdminDashboardData = {
   sessionNotes: SessionNoteRow[];
   leads: LeadRow[];
   products: AdminShopProduct[];
+  shopAccounts: AdminShopAccountOption[];
   monthBalance: MonthBalance;
   settings: AdminSettings;
   calendarError?: string | null;

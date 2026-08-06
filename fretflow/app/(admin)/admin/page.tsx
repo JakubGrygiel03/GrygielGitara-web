@@ -7,7 +7,11 @@ import {
   DEFAULT_ADMIN_SETTINGS,
   getAdminSettings,
 } from "@/lib/admin-settings";
-import type { AdminDashboardData, LessonRow } from "@/lib/admin-types";
+import type {
+  AdminDashboardData,
+  AdminShopAccountOption,
+  LessonRow,
+} from "@/lib/admin-types";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export const metadata: Metadata = {
@@ -255,6 +259,8 @@ async function loadAdminData(): Promise<AdminDashboardData> {
     monthLabel,
   };
 
+  const shopAccounts = await loadShopAccountOptions(supabase, students);
+
   return {
     contacts: contactsResult.data ?? [],
     bookings: bookingsResult.data ?? [],
@@ -266,11 +272,55 @@ async function loadAdminData(): Promise<AdminDashboardData> {
     sessionNotes,
     leads: leadsResult.error ? [] : (leadsResult.data ?? []),
     products: productsResult.error ? [] : (productsResult.data ?? []),
+    shopAccounts,
     monthBalance,
     settings: settings ?? DEFAULT_ADMIN_SETTINGS,
     calendarError,
     opsError,
   };
+}
+
+async function loadShopAccountOptions(
+  supabase: ReturnType<typeof createAdminClient>,
+  students: AdminDashboardData["students"],
+): Promise<AdminShopAccountOption[]> {
+  const nameByEmail = new Map<string, string>();
+  for (const student of students) {
+    const email = student.email.trim().toLowerCase();
+    if (email) nameByEmail.set(email, student.full_name);
+  }
+
+  const emails = new Set<string>();
+
+  try {
+    for (let page = 1; page <= 10; page++) {
+      const { data, error } = await supabase.auth.admin.listUsers({
+        page,
+        perPage: 200,
+      });
+      if (error) break;
+      const users = data?.users ?? [];
+      for (const user of users) {
+        const email = user.email?.trim().toLowerCase();
+        if (email) emails.add(email);
+      }
+      if (users.length < 200) break;
+    }
+  } catch (error) {
+    console.error("loadShopAccountOptions auth list failed:", error);
+  }
+
+  // Also surface CRM students (even if Auth link missing — lookup will explain).
+  for (const email of nameByEmail.keys()) {
+    emails.add(email);
+  }
+
+  return [...emails]
+    .sort((a, b) => a.localeCompare(b, "pl"))
+    .map((email) => ({
+      email,
+      label: nameByEmail.get(email) ?? null,
+    }));
 }
 
 function mapLessons(rows: unknown[]): LessonRow[] {

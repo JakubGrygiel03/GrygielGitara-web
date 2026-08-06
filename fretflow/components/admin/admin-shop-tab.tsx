@@ -11,9 +11,18 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { AdminShopProduct } from "@/lib/admin-types";
+import type {
+  AdminShopAccountOption,
+  AdminShopProduct,
+} from "@/lib/admin-types";
 
-export function AdminShopTab({ products }: { products: AdminShopProduct[] }) {
+export function AdminShopTab({
+  products,
+  shopAccounts,
+}: {
+  products: AdminShopProduct[];
+  shopAccounts: AdminShopAccountOption[];
+}) {
   const [isPending, startTransition] = useTransition();
   const [email, setEmail] = useState("");
   const [account, setAccount] = useState<ShopAccountLookup | null>(null);
@@ -32,15 +41,29 @@ export function AdminShopTab({ products }: { products: AdminShopProduct[] }) {
     [products],
   );
 
+  const filteredAccounts = useMemo(() => {
+    const q = email.trim().toLowerCase();
+    const list = !q
+      ? shopAccounts
+      : shopAccounts.filter((item) => {
+          const hay = `${item.email} ${item.label ?? ""}`.toLowerCase();
+          return hay.includes(q);
+        });
+    return list.slice(0, 40);
+  }, [email, shopAccounts]);
+
   function toggleProduct(id: string) {
     setSelected((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
     );
   }
 
-  function runSearch() {
+  function runSearch(emailOverride?: string) {
+    const query = (emailOverride ?? email).trim();
+    if (emailOverride) setEmail(emailOverride);
+
     startTransition(async () => {
-      const result = await lookupShopAccountByEmail(email);
+      const result = await lookupShopAccountByEmail(query);
       if (!result.ok || !result.account) {
         setAccount(null);
         setSelected([]);
@@ -80,8 +103,8 @@ export function AdminShopTab({ products }: { products: AdminShopProduct[] }) {
           Sklep — nadawanie dostępu
         </h2>
         <p className="mt-1 text-sm text-muted">
-          Wyszukaj konto po e-mailu i przypisz wybrane e-booki / produkty z
-          oferty (bez Stripe).
+          Wyszukaj konto po e-mailu lub nazwie i przypisz wybrane e-booki /
+          produkty z oferty (bez Stripe).
         </p>
       </div>
 
@@ -91,9 +114,9 @@ export function AdminShopTab({ products }: { products: AdminShopProduct[] }) {
           <div className="flex flex-col gap-2 sm:flex-row">
             <Input
               id="shop-email"
-              type="email"
-              autoComplete="email"
-              placeholder="np. uczen@email.pl"
+              type="search"
+              autoComplete="off"
+              placeholder="Filtruj: e-mail lub imię…"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               onKeyDown={(e) => {
@@ -106,11 +129,61 @@ export function AdminShopTab({ products }: { products: AdminShopProduct[] }) {
             <Button
               type="button"
               disabled={isPending || !email.trim()}
-              onClick={runSearch}
+              onClick={() => runSearch()}
             >
               Szukaj
             </Button>
           </div>
+        </div>
+
+        <div>
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">
+            Konta ({filteredAccounts.length}
+            {shopAccounts.length > filteredAccounts.length
+              ? ` z ${shopAccounts.length}`
+              : ""}
+            )
+          </p>
+          {shopAccounts.length === 0 ? (
+            <p className="text-sm text-muted">
+              Brak kont do podpowiedzi. Jak ktoś się zarejestruje albo dodasz
+              ucznia — pojawi się tu.
+            </p>
+          ) : filteredAccounts.length === 0 ? (
+            <p className="text-sm text-muted">
+              Nic nie pasuje do „{email.trim()}”.
+            </p>
+          ) : (
+            <ul className="max-h-64 overflow-y-auto rounded-2xl border border-sky-100">
+              {filteredAccounts.map((item, index) => (
+                <li
+                  key={item.email}
+                  className={index > 0 ? "border-t border-sky-100" : ""}
+                >
+                  <button
+                    type="button"
+                    disabled={isPending}
+                    onClick={() => runSearch(item.email)}
+                    className="flex w-full items-start justify-between gap-3 px-4 py-3 text-left transition-colors hover:bg-sky-50"
+                  >
+                    <span className="min-w-0">
+                      <span className="block font-semibold text-slate-900">
+                        {item.email}
+                      </span>
+                      {item.label ? (
+                        <span className="block text-sm text-muted">
+                          {item.label}
+                        </span>
+                      ) : null}
+                    </span>
+                    <span className="shrink-0 text-sm font-semibold text-sky-700">
+                      Wybierz
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
 
