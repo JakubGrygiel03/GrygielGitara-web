@@ -74,7 +74,7 @@ const lessonFaqs: FaqItem[] = [
 const platformFaqs: FaqItem[] = [
   {
     q: "Czym różni się darmowy PDF od płatnego e-booka?",
-    a: "Darmowy PDF „Gitarowy Falstart” to krótki tekst o tym, dlaczego start od akordów boli i jak zacząć od prostych melodii. E-book „Start z gitarą bez stresu” (49 zł) to pełniejszy plan na pierwsze tygodnie — ok. 40 stron i wsparcie wideo.",
+    a: "Darmowy PDF „Gitarowy Falstart” to krótki tekst o tym, dlaczego start od akordów boli i jak zacząć od prostych melodii. E-book „Start z gitarą bez stresu” (59 zł) to pełniejszy plan na pierwsze tygodnie — ok. 40 stron i wsparcie wideo.",
   },
   {
     q: "Jak założyć konto i gdzie je znajdę?",

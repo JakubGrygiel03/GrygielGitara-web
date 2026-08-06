@@ -3,6 +3,13 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import { Toaster } from "sonner";
 
 import { AuthReturnCatcher } from "@/components/auth-return-catcher";
+import {
+  SITE_CANONICAL_ORIGIN,
+  SITE_DEFAULT_DESCRIPTION,
+  SITE_DEFAULT_TITLE,
+  SITE_NAME,
+  SITE_OG_IMAGE_PATH,
+} from "@/lib/seo";
 
 import "./globals.css";
 
@@ -15,12 +22,46 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_CANONICAL_ORIGIN),
   title: {
-    default: "GrygielGitara — Bezstresowe lekcje gitary w Gdańsku",
-    template: "%s | GrygielGitara",
+    default: SITE_DEFAULT_TITLE,
+    template: `%s | ${SITE_NAME}`,
   },
-  description:
-    "Lekcje gitary w Gdańsku i online, regulacja instrumentu oraz materiały edukacyjne. Zero stresu, praktyczne podejście.",
+  description: SITE_DEFAULT_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: [
+    "lekcje gitary Gdańsk",
+    "nauka gry na gitarze",
+    "lekcje gitary online",
+    "gitara z dojazdem Gdańsk",
+    "e-book gitara",
+    "setup gitary",
+    "GrygielGitara",
+  ],
+  openGraph: {
+    type: "website",
+    locale: "pl_PL",
+    url: SITE_CANONICAL_ORIGIN,
+    siteName: SITE_NAME,
+    title: SITE_DEFAULT_TITLE,
+    description: SITE_DEFAULT_DESCRIPTION,
+    images: [
+      {
+        url: SITE_OG_IMAGE_PATH,
+        alt: "Jakub Grygiel — lekcje gitary i sklep materiałów GrygielGitara",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_DEFAULT_TITLE,
+    description: SITE_DEFAULT_DESCRIPTION,
+    images: [SITE_OG_IMAGE_PATH],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export const viewport: Viewport = {

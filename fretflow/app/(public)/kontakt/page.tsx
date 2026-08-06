@@ -8,13 +8,15 @@ import {
   shopInterestPrefillMessage,
   shopProducts,
 } from "@/lib/shop-products";
+import { pageMetadata } from "@/lib/seo";
 import { contactTopics, type ContactFormValues } from "@/lib/validations/contact";
 
-export const metadata: Metadata = {
-  title: "Kontakt",
+export const metadata: Metadata = pageMetadata({
+  title: "Kontakt — lekcje, serwis gitary, sklep",
   description:
-    "Napisz w sprawie serwisu gitary, materiałów cyfrowych albo innego pytania. Odpiszę osobiście.",
-};
+    "Napisz o lekcjach gitary, serwisie i regulacji instrumentu albo e-bookach ze sklepu. Odpisuję osobiście — GrygielGitara, Gdańsk i online.",
+  path: "/kontakt",
+});
 
 type KontaktPageProps = {
   searchParams: Promise<{ temat?: string; produkt?: string; tytul?: string }>;

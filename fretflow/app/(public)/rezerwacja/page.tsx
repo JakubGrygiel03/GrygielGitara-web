@@ -6,12 +6,14 @@ import { BookingForm } from "@/components/booking-form";
 import { Button } from "@/components/ui/button";
 import { SitePhoneCard } from "@/components/site-phone-card";
 import { getAdminSettings } from "@/lib/admin-settings";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Rezerwacja lekcji próbnej",
+export const metadata: Metadata = pageMetadata({
+  title: "Rezerwacja lekcji gitary — Gdańsk i online",
   description:
-    "Zarezerwuj lekcję próbną gitary w Gdańsku lub online. Gwarancja pierwszej lekcji — nie płacisz, jeśli nie pasuje.",
-};
+    "Umów lekcję próbną gitary w Gdańsku (dojazd lub Forum) albo online. Gwarancja pierwszej lekcji — nie płacisz, jeśli nie złapiemy wspólnego języka. Ceny od 80 zł.",
+  path: "/rezerwacja",
+});
 
 export default async function RezerwacjaPage() {
   const settings = await getAdminSettings();

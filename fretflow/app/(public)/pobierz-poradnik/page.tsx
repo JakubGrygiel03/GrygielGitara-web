@@ -12,11 +12,13 @@ import {
   FREE_GUIDE_TITLE,
   FREE_GUIDE_VS_PAID,
 } from "@/lib/free-guide-copy";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: `${FREE_GUIDE_SHORT_TITLE} — darmowy PDF`,
+export const metadata: Metadata = pageMetadata({
+  title: `${FREE_GUIDE_SHORT_TITLE} — darmowy PDF na start gitary`,
   description: FREE_GUIDE_BLURB,
-};
+  path: "/pobierz-poradnik",
+});
 
 export default function PobierzPoradnikPage() {
   const open = isFreeGuideOpen();

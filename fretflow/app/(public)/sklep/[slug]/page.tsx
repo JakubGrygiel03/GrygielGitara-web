@@ -18,6 +18,7 @@ import {
   shopProducts as fallbackProducts,
   staticCompareAtGrosze,
 } from "@/lib/shop-products";
+import { pageMetadata } from "@/lib/seo";
 import { formatPricePln, isStripeConfigured } from "@/lib/stripe";
 import { createClient } from "@/lib/supabase/server";
 
@@ -38,19 +39,26 @@ export async function generateMetadata({
   try {
     const product = await getPublishedProductBySlug(slug);
     if (product) {
-      return {
-        title: `${product.title} — sklep`,
+      return pageMetadata({
+        title: `${product.title} — e-book | sklep GrygielGitara`,
         description: offer?.subtitle ?? product.short_description,
-      };
+        path: `/sklep/${slug}`,
+      });
     }
   } catch {
     // ignore
   }
   const fallback = fallbackProducts.find((p) => p.slug === slug);
-  return {
-    title: fallback ? `${fallback.title} — sklep` : "Produkt — sklep",
-    description: offer?.subtitle ?? fallback?.shortDescription,
-  };
+  return pageMetadata({
+    title: fallback
+      ? `${fallback.title} — e-book | sklep GrygielGitara`
+      : "Produkt — sklep GrygielGitara",
+    description:
+      offer?.subtitle ??
+      fallback?.shortDescription ??
+      "Materiały cyfrowe do nauki gry na gitarze w sklepie GrygielGitara.",
+    path: `/sklep/${slug}`,
+  });
 }
 
 export default async function SklepProductPage({ params }: PageProps) {

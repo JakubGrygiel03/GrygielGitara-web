@@ -8,13 +8,15 @@ import {
   shopInterestHref,
   shopProducts as fallbackProducts,
 } from "@/lib/shop-products";
+import { pageMetadata } from "@/lib/seo";
 import { formatPricePln, isStripeConfigured } from "@/lib/stripe";
 
-export const metadata: Metadata = {
-  title: "Sklep — e-booki i materiały",
+export const metadata: Metadata = pageMetadata({
+  title: "Sklep e-booków gitarowych — Start, Setup, Feedback VIP",
   description:
-    "E-booki GrygielGitara — katalog już dostępny. Zapisz się na listę oczekujących i złap −30% przy premierze konkretnego tytułu.",
-};
+    "Kup e-booki GrygielGitara: Setup i dbanie o gitarę (19 zł), Start z gitarą bez stresu (59 zł) oraz pakiet Feedback VIP (119 zł). Lista −30% przed premierą. Zakupy w koncie na stronie.",
+  path: "/sklep",
+});
 
 export default async function SklepPage({
   searchParams,
