@@ -1,6 +1,8 @@
 "use server";
 
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { sendAdminAccessGrantedEmail } from "@/lib/shop-fulfillment";
+import type { ProductRow } from "@/lib/shop";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export type ShopAccountLookup = {
@@ -89,6 +91,8 @@ export async function lookupShopAccountByEmail(
 export async function grantShopProducts(input: {
   userId: string;
   productIds: string[];
+  /** Send “assigned to your account” email (not the Stripe purchase copy). */
+  notifyEmail?: boolean;
 }): Promise<{ ok: boolean; message: string }> {
   if (!(await isAdminAuthenticated())) {
     return { ok: false, message: "Brak autoryzacji." };
@@ -117,7 +121,7 @@ export async function grantShopProducts(input: {
 
     const { data: products, error: productsError } = await admin
       .from("products")
-      .select("id, title")
+      .select("*")
       .in("id", productIds);
 
     if (productsError) {
@@ -127,17 +131,19 @@ export async function grantShopProducts(input: {
       return { ok: false, message: "Nie znaleziono wybranych produktów." };
     }
 
+    const typedProducts = products as ProductRow[];
+
     const { data: existing } = await admin
       .from("user_entitlements")
       .select("product_id")
       .eq("user_id", userId)
       .in(
         "product_id",
-        products.map((p) => p.id),
+        typedProducts.map((p) => p.id),
       );
 
     const already = new Set((existing ?? []).map((row) => row.product_id));
-    const toInsert = products.filter((p) => !already.has(p.id));
+    const toInsert = typedProducts.filter((p) => !already.has(p.id));
 
     if (toInsert.length === 0) {
       return {
@@ -166,13 +172,36 @@ export async function grantShopProducts(input: {
     }
 
     const titles = toInsert.map((p) => p.title).join(", ");
-    const skipped = products.length - toInsert.length;
+    const skipped = typedProducts.length - toInsert.length;
     const skipHint =
       skipped > 0 ? ` (${skipped} już było na koncie — pominięte).` : "";
 
+    let emailHint = "";
+    if (input.notifyEmail) {
+      const to = authData.user.email;
+      if (!to) {
+        emailHint = " Mail: brak e-maila przy koncie Auth.";
+      } else {
+        const { data: student } = await admin
+          .from("students")
+          .select("full_name")
+          .eq("email", to.toLowerCase())
+          .maybeSingle();
+
+        const mail = await sendAdminAccessGrantedEmail({
+          to,
+          products: toInsert,
+          recipientName: student?.full_name ?? null,
+        });
+        emailHint = mail.ok
+          ? " Wysłano mail o przypisaniu."
+          : ` Mail nie poszedł: ${mail.message ?? "błąd Resend"}.`;
+      }
+    }
+
     return {
       ok: true,
-      message: `Nadano dostęp: ${titles}.${skipHint}`,
+      message: `Nadano dostęp: ${titles}.${skipHint}${emailHint}`,
     };
   } catch (error) {
     console.error("grantShopProducts error:", error);

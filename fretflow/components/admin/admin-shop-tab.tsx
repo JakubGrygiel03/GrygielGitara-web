@@ -27,6 +27,7 @@ export function AdminShopTab({
   const [email, setEmail] = useState("");
   const [account, setAccount] = useState<ShopAccountLookup | null>(null);
   const [selected, setSelected] = useState<string[]>([]);
+  const [notifyEmail, setNotifyEmail] = useState(true);
 
   const ownedSet = useMemo(
     () => new Set(account?.ownedProductIds ?? []),
@@ -82,6 +83,7 @@ export function AdminShopTab({
       const result = await grantShopProducts({
         userId: account.userId,
         productIds: selected,
+        notifyEmail,
       });
       if (!result.ok) {
         toast.error(result.message);
@@ -243,12 +245,27 @@ export function AdminShopTab({
             </ul>
           )}
 
+          <label className="flex items-start gap-2 text-sm text-slate-800">
+            <input
+              type="checkbox"
+              checked={notifyEmail}
+              onChange={(e) => setNotifyEmail(e.target.checked)}
+              className="mt-0.5 size-4 rounded border-slate-300 text-sky-600"
+            />
+            <span>
+              Wyślij e-mail o przypisaniu materiału do konta (inna treść niż po
+              zakupie Stripe; z PDF jeśli dostępny)
+            </span>
+          </label>
+
           <Button
             type="button"
             disabled={isPending || selected.length === 0}
             onClick={runGrant}
           >
-            Nadaj dostęp ({selected.length})
+            {notifyEmail
+              ? `Nadaj dostęp i wyślij mail (${selected.length})`
+              : `Nadaj dostęp (${selected.length})`}
           </Button>
         </div>
       ) : null}
