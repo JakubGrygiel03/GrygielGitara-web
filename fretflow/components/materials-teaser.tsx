@@ -11,7 +11,6 @@ import {
   SECTION_BAND_A,
   SECTION_BODY,
   SECTION_EYEBROW,
-  SECTION_LEAD,
   SECTION_PAD,
   SECTION_TITLE,
 } from "@/lib/section";
@@ -27,9 +26,9 @@ export function MaterialsTeaser() {
     <section id="materialy" className={SECTION_BAND_A}>
       <div className={cn("mx-auto max-w-6xl", SECTION_PAD)}>
         <Reveal variant="up" className="max-w-2xl space-y-2 sm:space-y-3">
-          <p className={SECTION_EYEBROW}>Materiały</p>
+          <p className={cn(SECTION_EYEBROW, "text-sky-700")}>Materiały</p>
           <h2 className={SECTION_TITLE}>Materiały do samodzielnej pracy</h2>
-          <p className={SECTION_LEAD}>
+          <p className="text-base font-medium leading-[1.65] text-slate-800 sm:text-[1.0625rem] sm:leading-relaxed">
             Niezależnie od tego, czy uczysz się pod moim okiem, czy wolisz zacząć
             w domu — przygotowałem konkretne pomoce. Wybierz to, czego teraz
             potrzebujesz.
@@ -102,14 +101,19 @@ export function MaterialsTeaser() {
         </div>
 
         <Reveal delay={160} variant="up" className="mt-6 max-w-2xl space-y-3 sm:mt-8">
-          <h3 className="text-base font-semibold text-slate-900 sm:text-lg">
+          <h3 className="text-lg font-bold text-slate-900 sm:text-xl">
             Szukasz czegoś innego?
           </h3>
-          <p className={SECTION_BODY}>
+          <p className="text-base font-medium leading-[1.65] text-slate-800">
             Tabulatury, nuty albo inne autorskie poradniki — w sklepie jest pełna
             lista materiałów, które ułatwiają bezstresową grę.
           </p>
-          <Button asChild variant="secondary" size="lg" className="w-full sm:w-auto">
+          <Button
+            asChild
+            variant="secondary"
+            size="lg"
+            className="w-full border-2 border-sky-600 bg-white font-semibold text-sky-900 hover:bg-sky-50 sm:w-auto"
+          >
             <Link href="/sklep">Zajrzyj do sklepu</Link>
           </Button>
         </Reveal>
