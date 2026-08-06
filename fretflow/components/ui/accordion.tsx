@@ -12,7 +12,10 @@ export function Accordion({
 }: React.ComponentProps<typeof AccordionPrimitive.Root>) {
   return (
     <AccordionPrimitive.Root
-      className={cn("w-full divide-y divide-sky-100", className)}
+      className={cn(
+        "w-full divide-y divide-sky-100 overflow-hidden rounded-2xl border border-sky-100 bg-white",
+        className,
+      )}
       {...props}
     />
   );
@@ -22,7 +25,15 @@ export function AccordionItem({
   className,
   ...props
 }: React.ComponentProps<typeof AccordionPrimitive.Item>) {
-  return <AccordionPrimitive.Item className={cn("py-1", className)} {...props} />;
+  return (
+    <AccordionPrimitive.Item
+      className={cn(
+        "px-4 transition-colors data-[state=open]:bg-sky-50/60 sm:px-5",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 
 export function AccordionTrigger({
