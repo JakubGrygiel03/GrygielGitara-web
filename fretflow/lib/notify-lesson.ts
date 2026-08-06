@@ -1,4 +1,9 @@
 import { getAdminSettings, resolveNotifyEmail } from "@/lib/admin-settings";
+import {
+  formatWarsawDateTimePl,
+  formatWarsawTimePl,
+  toGoogleCalendarWarsawStamp,
+} from "@/lib/warsaw-time";
 import { Resend } from "resend";
 
 type LessonNotifyInput = {
@@ -21,21 +26,6 @@ export type LessonNotifyResult = {
   smsSkippedReason?: string;
 };
 
-function formatPl(date: Date) {
-  return new Intl.DateTimeFormat("pl-PL", {
-    dateStyle: "full",
-    timeStyle: "short",
-  }).format(date);
-}
-
-/** UTC stamp for Google Calendar template URLs: YYYYMMDDTHHMMSSZ */
-function toGoogleCalendarStamp(date: Date) {
-  return date
-    .toISOString()
-    .replace(/[-:]/g, "")
-    .replace(/\.\d{3}/, "");
-}
-
 function buildGoogleCalendarUrl(input: {
   title: string;
   startsAt: Date;
@@ -43,10 +33,12 @@ function buildGoogleCalendarUrl(input: {
   location: string;
   details: string;
 }) {
+  // Floating Warsaw wall times + ctz — matches email times (not UTC-as-local).
   const params = new URLSearchParams({
     action: "TEMPLATE",
     text: input.title,
-    dates: `${toGoogleCalendarStamp(input.startsAt)}/${toGoogleCalendarStamp(input.endsAt)}`,
+    dates: `${toGoogleCalendarWarsawStamp(input.startsAt)}/${toGoogleCalendarWarsawStamp(input.endsAt)}`,
+    ctz: "Europe/Warsaw",
     details: input.details,
     location: input.location,
   });
@@ -134,10 +126,8 @@ export async function notifyStudentAboutLesson(
   input: LessonNotifyInput,
 ): Promise<LessonNotifyResult> {
   const kind = input.kind ?? "created";
-  const when = formatPl(input.startsAt);
-  const until = new Intl.DateTimeFormat("pl-PL", { timeStyle: "short" }).format(
-    input.endsAt,
-  );
+  const when = formatWarsawDateTimePl(input.startsAt);
+  const until = formatWarsawTimePl(input.endsAt);
   const place = input.location?.trim() || "do ustalenia / jak zwykle";
   const note = input.notes?.trim();
 

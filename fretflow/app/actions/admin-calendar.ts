@@ -10,6 +10,7 @@ import {
   restorePackageCredit,
 } from "@/lib/package-credits";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { parseWarsawDateTimeLocal } from "@/lib/warsaw-time";
 
 export type AdminMutationResult = {
   ok: boolean;
@@ -147,8 +148,8 @@ export async function createLesson(input: {
     return { ok: false, message: "Brak autoryzacji." };
   }
 
-  const startsAt = new Date(input.startsAt);
-  const endsAt = new Date(input.endsAt);
+  const startsAt = parseWarsawDateTimeLocal(input.startsAt);
+  const endsAt = parseWarsawDateTimeLocal(input.endsAt);
   if (Number.isNaN(startsAt.getTime()) || Number.isNaN(endsAt.getTime())) {
     return { ok: false, message: "Nieprawidłowa data lekcji." };
   }
