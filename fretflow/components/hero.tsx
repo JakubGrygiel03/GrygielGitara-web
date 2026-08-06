@@ -2,8 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { isFreeGuideOpen } from "@/lib/free-guide";
 
 export function Hero() {
+  const freeGuideOpen = isFreeGuideOpen();
+
   return (
     <section className="relative overflow-hidden">
       <div
@@ -55,14 +58,25 @@ export function Hero() {
               >
                 <Link href="/rezerwacja">Umów lekcję próbną</Link>
               </Button>
-              <Button
-                asChild
-                variant="secondary"
-                size="lg"
-                className="w-full px-5 text-[0.9375rem] leading-snug sm:w-auto sm:text-base"
-              >
-                <Link href="/pobierz-poradnik">Pobierz darmowy poradnik</Link>
-              </Button>
+              {freeGuideOpen ? (
+                <Button
+                  asChild
+                  variant="secondary"
+                  size="lg"
+                  className="w-full px-5 text-[0.9375rem] leading-snug sm:w-auto sm:text-base"
+                >
+                  <Link href="/pobierz-poradnik">Pobierz darmowy poradnik</Link>
+                </Button>
+              ) : (
+                <Button
+                  asChild
+                  variant="secondary"
+                  size="lg"
+                  className="w-full px-5 text-[0.9375rem] leading-snug sm:w-auto sm:text-base"
+                >
+                  <Link href="/kontakt">Napisz wiadomość</Link>
+                </Button>
+              )}
             </div>
 
             <p

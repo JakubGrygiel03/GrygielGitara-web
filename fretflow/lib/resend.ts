@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import { resolveNotifyEmail } from "@/lib/admin-settings";
+import { isFreeGuideOpen } from "@/lib/free-guide";
 import { lessonPackageLabel } from "@/lib/lesson-packages";
 import {
   bookingLocationLabels,
@@ -92,15 +93,22 @@ export async function sendContactEmails(input: ContactMailInput): Promise<void> 
     return;
   }
 
-  const guide = await loadGuideAttachment();
+  const guideOpen = isFreeGuideOpen();
+  const guide = guideOpen ? await loadGuideAttachment() : null;
   const topicLabel = contactTopicLabels[input.topic];
 
-  const leadHtml = `
+  const leadHtml = guideOpen
+    ? `
     <p>Cześć ${input.senderName},</p>
     <p>Dzięki za wiadomość. Odpiszę tak szybko, jak to możliwe.</p>
     <p><strong>Bonus na start:</strong> poradnik PDF
     „Jak bezstresowo nastroić i przygotować gitarę do gry w 3 minuty”
     ${guide ? "jest w załączniku tej wiadomości." : "wyślę w osobnej wiadomości, gdy tylko plik będzie dostępny na serwerze."}</p>
+    <p>Do usłyszenia,<br/>Jakub · GrygielGitara</p>
+  `
+    : `
+    <p>Cześć ${input.senderName},</p>
+    <p>Dzięki za wiadomość. Odpiszę tak szybko, jak to możliwe.</p>
     <p>Do usłyszenia,<br/>Jakub · GrygielGitara</p>
   `;
 
@@ -129,7 +137,7 @@ export async function sendContactEmails(input: ContactMailInput): Promise<void> 
         <p><strong>Temat:</strong> ${topicLabel}</p>
         <p><strong>Wiadomość:</strong></p>
         <p>${input.message.replace(/\n/g, "<br/>")}</p>
-        <p><em>Lead dostał potwierdzenie${guide ? " z załącznikiem PDF" : " (PDF jeszcze niedostępny w public/guides)"}.</em></p>
+        <p><em>Lead dostał potwierdzenie${guide ? " z załącznikiem PDF" : ""}.</em></p>
       `,
     });
   }

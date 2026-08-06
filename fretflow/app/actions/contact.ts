@@ -80,7 +80,6 @@ export async function submitContactForm(
 
   return {
     ok: true,
-    message:
-      "Wiadomość wysłana. Na maila leci potwierdzenie (poradnik PDF dołączymy, gdy będzie gotowy).",
+    message: "Wiadomość wysłana. Na maila leci potwierdzenie.",
   };
 }

@@ -1,6 +1,7 @@
 "use server";
 
 import { upsertBrevoContact } from "@/lib/brevo";
+import { isFreeGuideOpen } from "@/lib/free-guide";
 import { leadMagnetSchema } from "@/lib/validations/lead";
 import { createClient } from "@/lib/supabase/server";
 
@@ -10,6 +11,13 @@ export type LeadActionState = {
 };
 
 export async function submitLeadMagnet(email: string): Promise<LeadActionState> {
+  if (!isFreeGuideOpen()) {
+    return {
+      ok: false,
+      message: "Darmowy poradnik jest jeszcze w przygotowaniu. Wróć wkrótce.",
+    };
+  }
+
   const parsed = leadMagnetSchema.safeParse({
     email,
     source: "tuning_pdf_lead_magnet",
