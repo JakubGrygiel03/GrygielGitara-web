@@ -10,9 +10,16 @@ import { mainNavLinks } from "@/lib/nav";
 
 const SCROLL_Y_ATTR = "navScrollY";
 
-/** Always clear body/html scroll lock (safe to call repeatedly). */
+function isScrollLocked() {
+  return (
+    typeof document !== "undefined" &&
+    document.body.dataset[SCROLL_Y_ATTR] !== undefined
+  );
+}
+
+/** Clear body scroll lock only if we actually locked it. */
 function unlockBodyScroll() {
-  if (typeof document === "undefined") return;
+  if (typeof document === "undefined" || !isScrollLocked()) return;
 
   const html = document.documentElement;
   const body = document.body;
@@ -31,48 +38,44 @@ function unlockBodyScroll() {
   window.scrollTo(0, y);
 }
 
+/**
+ * Freeze page at current scroll without jumping.
+ * Set position/top BEFORE overflow — overflow:hidden first resets scrollY on mobile.
+ */
 function lockBodyScroll() {
   if (typeof document === "undefined") return;
-
-  const html = document.documentElement;
-  const body = document.body;
-
-  if (body.style.position === "fixed") {
-    unlockBodyScroll();
-  }
+  if (isScrollLocked()) return;
 
   const scrollY = window.scrollY;
+  const body = document.body;
+  const html = document.documentElement;
+
   body.dataset[SCROLL_Y_ATTR] = String(scrollY);
-  html.style.overflow = "hidden";
-  body.style.overflow = "hidden";
-  body.style.position = "fixed";
   body.style.top = `-${scrollY}px`;
+  body.style.position = "fixed";
   body.style.left = "0";
   body.style.right = "0";
   body.style.width = "100%";
   body.style.touchAction = "none";
+  body.style.overflow = "hidden";
+  html.style.overflow = "hidden";
 }
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  // Route change: always close + unlock (layout may stay mounted)
   useEffect(() => {
     setOpen(false);
     unlockBodyScroll();
   }, [pathname]);
 
   useEffect(() => {
-    if (!open) {
-      unlockBodyScroll();
-      return;
+    if (open) {
+      lockBodyScroll();
+      return () => unlockBodyScroll();
     }
-
-    lockBodyScroll();
-    return () => {
-      unlockBodyScroll();
-    };
+    unlockBodyScroll();
   }, [open]);
 
   useEffect(() => {
@@ -87,7 +90,6 @@ export function SiteHeader() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
-  /** Unlock scroll first (sync), then close — required for Next.js Link clicks. */
   const closeMenu = () => {
     unlockBodyScroll();
     setOpen(false);
@@ -171,12 +173,13 @@ export function SiteHeader() {
             aria-label="Zamknij menu"
             onClick={closeMenu}
           />
+          {/* fixed to viewport under sticky bar — header is already at top of screen when scrolled */}
           <div
             id="mobile-nav"
             role="dialog"
             aria-modal="true"
             aria-label="Menu"
-            className="absolute inset-x-0 top-full z-[50] max-h-[min(100dvh-4.5rem,100svh-4.5rem)] overflow-y-auto border-t border-sky-100 bg-white shadow-lg sm:max-h-[min(100dvh-5rem,100svh-5rem)] lg:hidden"
+            className="fixed inset-x-0 top-[4.5rem] bottom-0 z-[50] overflow-y-auto border-t border-sky-100 bg-white shadow-lg sm:top-20 lg:hidden"
           >
             <nav
               aria-label="Menu mobilne"
