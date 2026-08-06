@@ -115,18 +115,57 @@ export type Database = {
           created_at: string;
           email: string;
           source: string | null;
+          marketing_consent: boolean;
+          marketing_consent_text: string | null;
+          marketing_consent_at: string | null;
         };
         Insert: {
           id?: string;
           created_at?: string;
           email: string;
           source?: string | null;
+          marketing_consent?: boolean;
+          marketing_consent_text?: string | null;
+          marketing_consent_at?: string | null;
         };
         Update: {
           id?: string;
           created_at?: string;
           email?: string;
           source?: string | null;
+          marketing_consent?: boolean;
+          marketing_consent_text?: string | null;
+          marketing_consent_at?: string | null;
+        };
+        Relationships: [];
+      };
+      lesson_waitlist: {
+        Row: {
+          id: string;
+          created_at: string;
+          full_name: string;
+          email: string;
+          phone: string | null;
+          note: string | null;
+          status: "waiting" | "contacted" | "booked" | "closed";
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          full_name: string;
+          email: string;
+          phone?: string | null;
+          note?: string | null;
+          status?: "waiting" | "contacted" | "booked" | "closed";
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          full_name?: string;
+          email?: string;
+          phone?: string | null;
+          note?: string | null;
+          status?: "waiting" | "contacted" | "booked" | "closed";
         };
         Relationships: [];
       };
@@ -424,6 +463,45 @@ export type Database = {
           published?: boolean;
           coming_soon?: boolean;
           early_bird_open?: boolean;
+        };
+        Relationships: [];
+      };
+      shop_digital_consents: {
+        Row: {
+          id: string;
+          created_at: string;
+          user_id: string;
+          product_id: string | null;
+          email: string | null;
+          immediate_delivery_consent: boolean;
+          regulamin_accepted: boolean;
+          consent_text: string;
+          stripe_checkout_session_id: string | null;
+          source: string;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          user_id: string;
+          product_id?: string | null;
+          email?: string | null;
+          immediate_delivery_consent?: boolean;
+          regulamin_accepted?: boolean;
+          consent_text: string;
+          stripe_checkout_session_id?: string | null;
+          source?: string;
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          user_id?: string;
+          product_id?: string | null;
+          email?: string | null;
+          immediate_delivery_consent?: boolean;
+          regulamin_accepted?: boolean;
+          consent_text?: string;
+          stripe_checkout_session_id?: string | null;
+          source?: string;
         };
         Relationships: [];
       };
