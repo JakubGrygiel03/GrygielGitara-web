@@ -10,6 +10,7 @@ import { AdminOverviewTab } from "@/components/admin/admin-overview-tab";
 import { AdminRequestsTab } from "@/components/admin/admin-requests-tab";
 import { AdminServiceTab } from "@/components/admin/admin-service-tab";
 import { AdminSettingsTab } from "@/components/admin/admin-settings-tab";
+import { AdminShopTab } from "@/components/admin/admin-shop-tab";
 import { AdminStudentsTab } from "@/components/admin/admin-students-tab";
 import { Button } from "@/components/ui/button";
 import type { AdminDashboardData } from "@/lib/admin-types";
@@ -25,6 +26,7 @@ type Tab =
   | "students"
   | "service"
   | "leads"
+  | "shop"
   | "settings";
 
 export function AdminDashboard({ data }: AdminDashboardProps) {
@@ -38,6 +40,7 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
     materials = [],
     sessionNotes = [],
     leads = [],
+    products = [],
     settings,
     calendarError,
     opsError,
@@ -112,7 +115,7 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
           type="button"
           onClick={() => setMoreOpen((v) => !v)}
           className={
-            tab === "leads" || tab === "settings"
+            tab === "leads" || tab === "shop" || tab === "settings"
               ? "rounded-xl bg-slate-800 px-4 py-2.5 text-sm font-semibold text-white"
               : "rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50"
           }
@@ -133,6 +136,17 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
             }
           >
             Lista e-mail ({leads.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setTab("shop")}
+            className={
+              tab === "shop"
+                ? "rounded-lg bg-white px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm"
+                : "rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white"
+            }
+          >
+            Sklep — dostęp
           </button>
           <button
             type="button"
@@ -191,6 +205,8 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
       ) : null}
 
       {tab === "leads" ? <AdminLeadsTab leads={leads} /> : null}
+
+      {tab === "shop" ? <AdminShopTab products={products} /> : null}
 
       {tab === "settings" ? <AdminSettingsTab settings={settings} /> : null}
     </div>

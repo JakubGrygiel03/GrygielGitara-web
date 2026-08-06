@@ -102,6 +102,14 @@ export type LeadRow = {
   source: string | null;
 };
 
+export type AdminShopProduct = {
+  id: string;
+  slug: string;
+  title: string;
+  published: boolean;
+  coming_soon: boolean;
+};
+
 export type MonthBalance = {
   lessons: number;
   service: number;
@@ -120,6 +128,7 @@ export type AdminDashboardData = {
   materials: MaterialRow[];
   sessionNotes: SessionNoteRow[];
   leads: LeadRow[];
+  products: AdminShopProduct[];
   monthBalance: MonthBalance;
   settings: AdminSettings;
   calendarError?: string | null;

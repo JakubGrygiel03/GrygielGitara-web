@@ -45,21 +45,26 @@ export default async function AdminPage() {
 async function loadAdminData(): Promise<AdminDashboardData> {
   const supabase = createAdminClient();
 
-  const [contactsResult, leadsResult, settings] = await Promise.all([
-    supabase
-      .from("contact_messages")
-      .select(
-        "id, created_at, sender_name, email, phone, topic, message, is_read",
-      )
-      .order("created_at", { ascending: false })
-      .limit(100),
-    supabase
-      .from("newsletter_subscribers")
-      .select("id, created_at, email, source")
-      .order("created_at", { ascending: false })
-      .limit(500),
-    getAdminSettings(),
-  ]);
+  const [contactsResult, leadsResult, productsResult, settings] =
+    await Promise.all([
+      supabase
+        .from("contact_messages")
+        .select(
+          "id, created_at, sender_name, email, phone, topic, message, is_read",
+        )
+        .order("created_at", { ascending: false })
+        .limit(100),
+      supabase
+        .from("newsletter_subscribers")
+        .select("id, created_at, email, source")
+        .order("created_at", { ascending: false })
+        .limit(500),
+      supabase
+        .from("products")
+        .select("id, slug, title, published, coming_soon")
+        .order("title", { ascending: true }),
+      getAdminSettings(),
+    ]);
 
   if (contactsResult.error) throw new Error(contactsResult.error.message);
 
@@ -260,6 +265,7 @@ async function loadAdminData(): Promise<AdminDashboardData> {
     materials,
     sessionNotes,
     leads: leadsResult.error ? [] : (leadsResult.data ?? []),
+    products: productsResult.error ? [] : (productsResult.data ?? []),
     monthBalance,
     settings: settings ?? DEFAULT_ADMIN_SETTINGS,
     calendarError,
