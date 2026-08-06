@@ -2,6 +2,7 @@ import { Resend } from "resend";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
+import { resolveNotifyEmail } from "@/lib/admin-settings";
 import { lessonPackageLabel } from "@/lib/lesson-packages";
 import {
   bookingLocationLabels,
@@ -82,7 +83,7 @@ type ContactMailInput = {
 export async function sendContactEmails(input: ContactMailInput): Promise<void> {
   const resend = getResendClient();
   const from = process.env.RESEND_FROM_EMAIL;
-  const ownerInbox = process.env.CONTACT_TO_EMAIL;
+  const ownerInbox = resolveNotifyEmail();
 
   if (!resend || !from) {
     console.warn(
@@ -106,6 +107,7 @@ export async function sendContactEmails(input: ContactMailInput): Promise<void> 
   await resend.emails.send({
     from,
     to: input.email,
+    ...(ownerInbox ? { replyTo: ownerInbox } : {}),
     subject: guide
       ? "Dzięki za wiadomość + Twój bonus PDF · GrygielGitara"
       : "Dzięki za wiadomość · GrygielGitara",
@@ -119,6 +121,7 @@ export async function sendContactEmails(input: ContactMailInput): Promise<void> 
     await resend.emails.send({
       from,
       to: ownerInbox,
+      replyTo: input.email,
       subject: `Nowa wiadomość: ${topicLabel} · ${input.senderName}`,
       html: `
         <p><strong>Od:</strong> ${input.senderName} (${input.email})</p>
@@ -151,7 +154,7 @@ type BookingMailInput = {
 export async function sendBookingEmails(input: BookingMailInput): Promise<void> {
   const resend = getResendClient();
   const from = process.env.RESEND_FROM_EMAIL;
-  const ownerInbox = process.env.CONTACT_TO_EMAIL;
+  const ownerInbox = resolveNotifyEmail();
 
   if (!resend || !from) {
     console.warn(
@@ -167,6 +170,7 @@ export async function sendBookingEmails(input: BookingMailInput): Promise<void> 
   await resend.emails.send({
     from,
     to: input.email,
+    ...(ownerInbox ? { replyTo: ownerInbox } : {}),
     subject: "Zgłoszenie lekcji próbnej · GrygielGitara",
     html: `
       <p>Cześć ${input.studentName},</p>
@@ -187,6 +191,7 @@ export async function sendBookingEmails(input: BookingMailInput): Promise<void> 
     await resend.emails.send({
       from,
       to: ownerInbox,
+      replyTo: input.email,
       subject: `Nowa rezerwacja · ${input.studentName}`,
       html: `
         <p><strong>Uczeń:</strong> ${input.studentName} (${input.email})</p>

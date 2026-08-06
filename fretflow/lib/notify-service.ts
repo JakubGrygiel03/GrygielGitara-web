@@ -1,4 +1,4 @@
-import { getAdminSettings } from "@/lib/admin-settings";
+import { getAdminSettings, resolveNotifyEmail } from "@/lib/admin-settings";
 import { Resend } from "resend";
 
 function getResend(): Resend | null {
@@ -62,11 +62,14 @@ export async function notifyServiceReady(input: {
   const message =
     "Cześć! Twoja gitara jest już wyregulowana i gotowa do odbioru.";
 
+  const ownerInbox = resolveNotifyEmail(settings);
+
   if (resend && from && input.email?.includes("@")) {
     try {
       await resend.emails.send({
         from,
         to: input.email.trim(),
+        ...(ownerInbox ? { replyTo: ownerInbox } : {}),
         subject: `Gitara gotowa do odbioru · ${input.guitarModel} · GrygielGitara`,
         html: `
           <p>Cześć ${input.clientName},</p>

@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { Resend } from "resend";
 
+import { resolveNotifyEmail } from "@/lib/admin-settings";
 import { getSiteUrl } from "@/lib/env";
 import { resolveProductFileAbsolute, type ProductRow } from "@/lib/shop";
 import { getShopProductOffer } from "@/lib/shop-product-details";
@@ -156,7 +157,7 @@ async function sendPurchaseEmail(input: {
     <p>Jakub Grygiel<br/>GrygielGitara</p>
   `;
 
-  const replyTo = process.env.CONTACT_TO_EMAIL?.trim() || undefined;
+  const replyTo = resolveNotifyEmail() || undefined;
 
   const resend = new Resend(apiKey);
   const { error } = await resend.emails.send({
@@ -225,7 +226,7 @@ export async function sendAdminAccessGrantedEmail(input: {
     <p>Do zobaczenia!<br/>Jakub Grygiel<br/>GrygielGitara</p>
   `;
 
-  const replyTo = process.env.CONTACT_TO_EMAIL?.trim() || undefined;
+  const replyTo = resolveNotifyEmail() || undefined;
 
   const resend = new Resend(apiKey);
   const { error } = await resend.emails.send({

@@ -83,11 +83,15 @@ export async function saveAdminSettings(
   }
 }
 
-/** Effective owner inbox: settings override, else CONTACT_TO_EMAIL. */
-export function resolveNotifyEmail(settings: AdminSettings) {
+/**
+ * Business inbox for owner notifications / Reply-To.
+ * CONTACT_TO_EMAIL (Vercel / .env) wins so a stale admin_settings value
+ * cannot keep routing to an old private Gmail.
+ */
+export function resolveNotifyEmail(settings?: AdminSettings | null) {
   return (
-    settings.notifyEmail.trim() ||
     process.env.CONTACT_TO_EMAIL?.trim() ||
+    settings?.notifyEmail.trim() ||
     ""
   );
 }

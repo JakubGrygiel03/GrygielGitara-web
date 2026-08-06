@@ -167,11 +167,13 @@ export async function notifyStudentAboutLesson(
 
   const resend = getResend();
   const from = process.env.RESEND_FROM_EMAIL;
+  const ownerInbox = resolveNotifyEmail(settings);
   if (resend && from) {
     try {
       await resend.emails.send({
         from,
         to: input.email,
+        ...(ownerInbox ? { replyTo: ownerInbox } : {}),
         subject: studentSubject,
         html: `
           <p>Cześć ${input.studentName},</p>
@@ -207,12 +209,12 @@ export async function notifyStudentAboutLesson(
   }
 
   if (input.notifyTeacher) {
-    const owner = resolveNotifyEmail(settings);
-    if (resend && from && owner) {
+    if (resend && from && ownerInbox) {
       try {
         await resend.emails.send({
           from,
-          to: owner,
+          to: ownerInbox,
+          replyTo: input.email,
           subject: isReminder
             ? `Przypomnienie (Ty): lekcja jutro z ${input.studentName}`
             : `Nowa lekcja w kalendarzu: ${input.studentName}`,

@@ -93,16 +93,20 @@ export function AdminSettingsTab({ settings }: { settings: AdminSettings }) {
 
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="space-y-1">
-            <Label htmlFor="notifyEmail">E-mail odbiorczy (powiadomienia)</Label>
+            <Label htmlFor="notifyEmail">E-mail odbiorczy (awaryjny)</Label>
             <Input
               id="notifyEmail"
               type="email"
-              placeholder="z CONTACT_TO_EMAIL jeśli puste"
+              placeholder="grygielgitara@gmail.com"
               value={form.notifyEmail}
               onChange={(e) =>
                 setForm((p) => ({ ...p, notifyEmail: e.target.value }))
               }
             />
+            <p className="text-xs text-muted">
+              Główny adres to <code className="font-mono">CONTACT_TO_EMAIL</code>{" "}
+              na Vercel. To pole używane tylko, gdy env jest puste.
+            </p>
           </div>
           <div className="space-y-1">
             <Label htmlFor="teacherPhone">Twój telefon (SMS przypomnienia)</Label>
