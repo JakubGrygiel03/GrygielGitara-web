@@ -1,66 +1,110 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { BookOpen, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { mainNavLinks } from "@/lib/nav";
 
+const SCROLL_Y_ATTR = "navScrollY";
+
+/** Always clear body/html scroll lock (safe to call repeatedly). */
+function unlockBodyScroll() {
+  if (typeof document === "undefined") return;
+
+  const html = document.documentElement;
+  const body = document.body;
+  const y = Number(body.dataset[SCROLL_Y_ATTR] ?? "0");
+
+  html.style.removeProperty("overflow");
+  body.style.removeProperty("overflow");
+  body.style.removeProperty("position");
+  body.style.removeProperty("top");
+  body.style.removeProperty("left");
+  body.style.removeProperty("right");
+  body.style.removeProperty("width");
+  body.style.removeProperty("touch-action");
+  delete body.dataset[SCROLL_Y_ATTR];
+
+  window.scrollTo(0, y);
+}
+
+function lockBodyScroll() {
+  if (typeof document === "undefined") return;
+
+  const html = document.documentElement;
+  const body = document.body;
+
+  if (body.style.position === "fixed") {
+    unlockBodyScroll();
+  }
+
+  const scrollY = window.scrollY;
+  body.dataset[SCROLL_Y_ATTR] = String(scrollY);
+  html.style.overflow = "hidden";
+  body.style.overflow = "hidden";
+  body.style.position = "fixed";
+  body.style.top = `-${scrollY}px`;
+  body.style.left = "0";
+  body.style.right = "0";
+  body.style.width = "100%";
+  body.style.touchAction = "none";
+}
+
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  // Route change: always close + unlock (layout may stay mounted)
+  useEffect(() => {
+    setOpen(false);
+    unlockBodyScroll();
+  }, [pathname]);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) {
+      unlockBodyScroll();
+      return;
+    }
 
-    // Lock scroll without jumping to top (overflow:hidden alone resets scroll on mobile)
-    const scrollY = window.scrollY;
-    const html = document.documentElement;
-    const body = document.body;
-    const prev = {
-      htmlOverflow: html.style.overflow,
-      bodyOverflow: body.style.overflow,
-      bodyPosition: body.style.position,
-      bodyTop: body.style.top,
-      bodyLeft: body.style.left,
-      bodyRight: body.style.right,
-      bodyWidth: body.style.width,
-    };
-
-    html.style.overflow = "hidden";
-    body.style.overflow = "hidden";
-    body.style.position = "fixed";
-    body.style.top = `-${scrollY}px`;
-    body.style.left = "0";
-    body.style.right = "0";
-    body.style.width = "100%";
-
+    lockBodyScroll();
     return () => {
-      html.style.overflow = prev.htmlOverflow;
-      body.style.overflow = prev.bodyOverflow;
-      body.style.position = prev.bodyPosition;
-      body.style.top = prev.bodyTop;
-      body.style.left = prev.bodyLeft;
-      body.style.right = prev.bodyRight;
-      body.style.width = prev.bodyWidth;
-      window.scrollTo(0, scrollY);
+      unlockBodyScroll();
     };
   }, [open]);
 
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") {
+        unlockBodyScroll();
+        setOpen(false);
+      }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
-  const closeMenu = () => setOpen(false);
+  /** Unlock scroll first (sync), then close — required for Next.js Link clicks. */
+  const closeMenu = () => {
+    unlockBodyScroll();
+    setOpen(false);
+  };
+
+  const toggleMenu = () => {
+    setOpen((wasOpen) => {
+      if (wasOpen) {
+        unlockBodyScroll();
+        return false;
+      }
+      return true;
+    });
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-sky-100/80 bg-white/95 backdrop-blur-md">
-      {/* Bar must stay above the backdrop so hamburger / X stay clickable */}
       <div className="relative z-[60] flex h-[4.5rem] w-full items-center bg-white/95 pl-3 pr-2 sm:h-20 sm:pl-4 sm:pr-3 lg:pl-5 lg:pr-4">
         <Link
           href="/"
@@ -101,7 +145,9 @@ export function SiteHeader() {
             size="default"
             className="hidden text-base lg:inline-flex xl:text-lg"
           >
-            <Link href="/rezerwacja">Umów lekcję próbną</Link>
+            <Link href="/rezerwacja" onClick={closeMenu}>
+              Umów lekcję próbną
+            </Link>
           </Button>
 
           <button
@@ -110,7 +156,7 @@ export function SiteHeader() {
             aria-expanded={open}
             aria-controls="mobile-nav"
             aria-label={open ? "Zamknij menu" : "Otwórz menu"}
-            onClick={() => setOpen((value) => !value)}
+            onClick={toggleMenu}
           >
             {open ? <X className="size-7" /> : <Menu className="size-7" />}
           </button>
@@ -125,7 +171,6 @@ export function SiteHeader() {
             aria-label="Zamknij menu"
             onClick={closeMenu}
           />
-          {/* absolute under sticky header — opens where the bar is, not page top */}
           <div
             id="mobile-nav"
             role="dialog"
