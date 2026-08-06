@@ -156,10 +156,13 @@ async function sendPurchaseEmail(input: {
     <p>Jakub Grygiel<br/>GrygielGitara</p>
   `;
 
+  const replyTo = process.env.CONTACT_TO_EMAIL?.trim() || undefined;
+
   const resend = new Resend(apiKey);
   const { error } = await resend.emails.send({
     from,
     to: input.to,
+    ...(replyTo ? { replyTo } : {}),
     subject: `Dzięki za zaufanie! Twój e-book „${title}” jest już gotowy`,
     html,
     attachments: attachment
@@ -187,8 +190,8 @@ export async function sendAdminAccessGrantedEmail(input: {
   }
 
   const portalUrl = portalPurchasesUrl();
-  const name = input.recipientName?.trim();
-  const greeting = name ? `Cześć ${escapeHtml(name)},` : "Cześć!";
+  const firstName = input.recipientName?.trim().split(/\s+/)[0] || "";
+  const greeting = firstName ? `Cześć ${escapeHtml(firstName)},` : "Cześć!";
   const titles = input.products.map((p) => p.title);
   const titleListHtml = titles
     .map((t) => `<li><strong>„${escapeHtml(t)}”</strong></li>`)
@@ -222,10 +225,13 @@ export async function sendAdminAccessGrantedEmail(input: {
     <p>Do zobaczenia!<br/>Jakub Grygiel<br/>GrygielGitara</p>
   `;
 
+  const replyTo = process.env.CONTACT_TO_EMAIL?.trim() || undefined;
+
   const resend = new Resend(apiKey);
   const { error } = await resend.emails.send({
     from,
     to: input.to,
+    ...(replyTo ? { replyTo } : {}),
     subject: `Przypisałem materiał do Twojego konta: ${subjectTitle}`,
     html,
     attachments: attachments.length
