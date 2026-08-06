@@ -98,12 +98,13 @@ export default async function SklepSukcesPage({ searchParams }: PageProps) {
           <Link href={user ? "/moje-kursy" : loginHref}>Moje konto</Link>
         </Button>
       </div>
-      {fulfilledOk ? (
+      {fulfilledOk &&
+      (process.env.RESEND_FROM_EMAIL ?? "").includes("resend.dev") ? (
         <p className="mt-6 text-xs leading-relaxed text-muted">
-          Mail z PDF wysyłamy przez Resend. Przy adresie{" "}
-          <code className="font-mono">onboarding@resend.dev</code> działa tylko
-          na zweryfikowany e-mail konta Resend — do klientów potrzebna własna
-          domena nadawcy.
+          Mail z PDF: nadal używany jest{" "}
+          <code className="font-mono">onboarding@resend.dev</code> — działa
+          tylko na zweryfikowany e-mail w Resend. Do klientów ustaw własną
+          domenę nadawcy (np. kontakt@grygielgitara.pl).
         </p>
       ) : null}
       <p className="mt-4">
