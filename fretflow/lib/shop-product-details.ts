@@ -117,8 +117,8 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
       },
     ],
     priceStory:
-      "To pierwsza wersja tego e-booka. Ustawiam cenę świadomie niżej, bo zależy mi na szczerych opiniach i poprawkach od pierwszych czytelników — nie na sztucznej „promocji do północy”. Kupujesz gotowy materiał PDF z bonusami; w kolejnych wydaniach cena może wzrosnąć, gdy treść będzie dopracowana na podstawie feedbacku.",
-    editionNote: "1. wersja e-booka · cena za feedback i rozwój materiału",
+      "Sugerowana cena to 79 zł. Aktualnie 59 zł — za gotowy plan na pierwsze tygodnie zamiast godzin szukania po internecie. Nadal wyraźnie taniej niż jedna lekcja stacjonarna. Kupujesz raz, wracasz do PDF kiedy chcesz.",
+    editionNote: "Cena 59 zł · sugerowana 79 zł",
     ctaNote:
       "Po płatności PDF znajdziesz zwykle na e-mailu oraz w „Konto” → „Zakupy”. Przed zakupem zaznaczysz zgodę na natychmiastowe dostarczenie — po udostępnieniu pliku ustawowy zwrot bez podania przyczyny nie przysługuje.",
     purchaseEmailTip:
@@ -128,7 +128,7 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
   "setup-gitary-w-domu": {
     slug: "setup-gitary-w-domu",
     subtitle:
-      "Domowa opieka nad gitarą bez warsztatu — wymiana strun, czyszczenie i podstawowa regulacja, które słychać w brzmieniu.",
+      "Setup i dbanie o gitarę w domu — wymiana strun, czyszczenie i podstawowa regulacja bez warsztatu. Konkret lutniczy w cenie impulse buy.",
     whyHook:
       "Czy wiesz, dlaczego tyle tanich gitar „źle gra”, zanim jeszcze zdążysz się ich nauczyć?",
     whyBody: [
@@ -189,84 +189,84 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
       },
     ],
     priceStory:
-      "To pierwsze wydanie poradnika. Cena jest niższa celowo: zbieram uwagi od osób, które realnie użyją checklisty przy własnej gitarze. Nie ma tu odliczania „było drożej, jest taniej” — jest uczciwa stawka za 1. wersję, z myślą o ulepszeniach w następnych edycjach.",
-    editionNote: "1. wersja poradnika · niższa cena za feedback praktyczny",
+      "19 zł to kwota praktycznie niezauważalna — jak kawa na mieście. Kupujesz bez długiego namysłu, dostajesz konkret lutniczy, a ja buduję z Tobą zaufanie do mojej wiedzy o instrumencie.",
+    editionNote: "Wejście impulsowe · 19 zł",
     ctaNote:
       "Po płatności PDF jest zwykle na e-mailu oraz w „Konto” → „Zakupy”. Przed zakupem zaznaczysz zgodę na natychmiastowe dostarczenie — po udostępnieniu pliku ustawowy zwrot bez podania przyczyny nie przysługuje.",
     purchaseEmailTip:
       "Na start: zanim cokolwiek „regulujesz na czuja”, zrób spokojnie checklistę z e-booka — najpierw struny i czystość, potem ocena, czy coś wymaga serwisu. Małe, bezpieczne kroki chronią instrument i Twój spokój.",
   },
 
-  "rytm-i-timing-na-start": {
-    slug: "rytm-i-timing-na-start",
+  "start-bez-stresu-feedback-vip": {
+    slug: "start-bez-stresu-feedback-vip",
     subtitle:
-      "Ćwiczenia rytmiczne, które słychać — metronom bez frustracji i timing bez sztywnego, „robotycznego” grania.",
+      "E-book „Start z gitarą bez stresu” plus moja osobista analiza wideo Twojej postawy i ułożenia dłoni — pakiet dla osób, które chcą uniknąć błędów na starcie.",
     whyHook:
-      "Czy wiesz, dlaczego tyle osób ćwiczy z metronomem… i i tak „ucieka” z rytmu?",
+      "Czy wiesz, że najdroższe błędy na gitarze to te, których nie widzisz — bo ćwiczysz je codziennie w domu?",
     whyBody: [
-      "Samoucy często włączają klik na zbyt szybkie tempo, walczą z utworem i kończą z poczuciem, że „nie mają poczucia rytmu”. To nie brak talentu — to zły start.",
-      "Wierzę, że timing to umiejętność, którą da się zbudować małymi, przyjemnymi krokami — tak, żeby muzyka znów sprawiała radość, a nie stres.",
-      "Ten e-book prowadzi Cię od pulsu i prostych podziałów do grania z podkładem — bez sztywności i bez rezygnacji po trzech dniach.",
+      "Samoucy często utrwalają złe ułożenie dłoni, spięte barki albo twardy nacisk na struny. Potem miesiące „walki z gitarą”, a problem siedzi w ergonomii, którą trudno ocenić z lustra albo losowego filmu.",
+      "Wierzę, że na starcie warto mieć kogoś, kto spojrzy z zewnątrz — krótko, konkretnie, bez szkolnego stresu.",
+      "Ten pakiet łączy handbook na pierwsze tygodnie z moim feedbackiem VIP: nagrywasz krótkie wideo, ja wskazuję co poprawić, zanim zły nawyk się utrwali.",
     ],
     promise:
-      "Zagraj równo i pewniej — z metronomem, który pomaga, zamiast frustruje — i przenieś to od razu na proste utwory.",
+      "Dostajesz plan na start w PDF i konkretną korektę techniki na podstawie Twojego wideo — spokojniej, czyściej, bez zgadywania.",
     forWhom: [
-      "Dla początkujących, którym „ucieka” rytm przy najprostszych figurach.",
-      "Dla osób ćwiczących z metronomem, ale bez efektu — bo zaczynają za szybko albo bez planu.",
-      "Dla uczniów, którzy chcą grać równo do podkładów i z innymi, bez spięcia w barkach.",
+      "Dla samouków z całej Polski, którzy chcą mojego oka na technikę, nie tylko plik PDF.",
+      "Dla osób, które boją się „wdrukować” błędy dłoni / postawy na pierwsze tygodnie.",
+      "Dla tych, którzy czują, że sam e-book za 59 zł to mało wsparcia — i wolą dopłacić za bezpośrednią analizę.",
     ],
     modules: [
       {
-        title: "Puls i podział — po ludzku",
-        fact: "Jak liczyć i czuć rytm bez szkolnego żargonu.",
-        why: "Przestajesz zgadywać „gdzie jest jedynka” i wiesz, co właściwie ćwiczysz.",
+        title: "E-book „Start z gitarą bez stresu”",
+        fact: "Pełny handbook na pierwsze tygodnie: ergonomia, strojenie, melodie, plan 15 minut.",
+        why: "Masz jasną ścieżkę w domu — nie skaczesz po losowych filmikach.",
       },
       {
-        title: "Metronom bez frustracji",
-        fact: "Protokół startu: wolne tempo, krótkie serie, jasne kryterium sukcesu.",
-        why: "Klik przestaje być wrogiem — staje się lustrem, które pomaga, zamiast karać.",
+        title: "Jak nagrać wideo do analizy",
+        fact: "Krótka instrukcja: kąt, światło, co pokazać (dłonie, postawa, prosty fragment).",
+        why: "Feedback jest trafny, bo widać to, co naprawdę trzeba poprawić.",
       },
       {
-        title: "Proste rytmy na start",
-        fact: "Figury na prawą / lewą rękę, które od razu słychać w grze.",
-        why: "Budujesz pewność małymi wygranymi, zanim wejdziesz w trudniejsze utwory.",
+        title: "Analiza Feedback VIP",
+        fact: "Oglądam Twoje nagranie i odpisuję konkretnie: co zostawić, co zmienić, na czym się skupić.",
+        why: "Eliminujesz błędy zanim wejdą w nawyk — oszczędzasz tygodnie frustracji.",
       },
       {
-        title: "Gra z podkładem",
-        fact: "Jak utrzymać tempo przy znanym motywie i nie „płynąć”.",
-        why: "Muzyka zaczyna brzmieć jak zespół — a Ty czujesz, że trzymasz kontrolę.",
+        title: "Jeden spokojny plan na kolejne dni",
+        fact: "Po feedbacku dostajesz 2–3 priorytety ćwiczeń, nie listę stu rzeczy.",
+        why: "Wiesz, co robić jutro — bez chaosu i bez poczucia, że „wszystko jest źle”.",
       },
     ],
     emotionFunctional:
-      "PDF z progresją ćwiczeń i checklistą „czy już gram równo?” — do pracy przy gitarze 10–15 minut dziennie.",
+      "PDF + procedura nagrania + pisemna / wideo odpowiedź z korektą techniki (w zależności od ustaleń przy realizacji).",
     emotionImage:
-      "Wyobraź sobie: włączasz metronom, robisz trzy krótkie serie z e-booka, potem ten sam rytm do prostego podkładu. Palce i ucho w końcu „idą razem”.",
+      "Wyobraź sobie: ćwiczysz z e-booka, nagrywasz 60–90 sekund przy oknie, dostajesz ode mnie konkret „tu rozluźnij kciuk, tu obniż bark” — i nagle gra staje się lżejsza.",
     emotionFeeling:
-      "Zamiast wstydu i spięcia pojawia się spokój: wiesz, że timing da się trenować. Muzyka znów jest zabawą, a nie egzaminem.",
+      "Czujesz spokój: nie jesteś sam z lustrem. Masz eksperckie oko na starcie i pewność, że budujesz dobre nawyki.",
     notForYou:
-      "To nie jest podręcznik akademickiej rytmiki ani kurs na dyplom w szkole muzycznej. Nie ma tu skomplikowanych polirytmii ani teorii na egzamin. Jeśli szukasz rozrywki i praktycznego timingowego startu w domu — jesteś we właściwym miejscu.",
+      "To nie jest pakiet cotygodniowych lekcji online ani nieograniczony mentoring. Jest jeden cykl Feedback VIP powiązany ze startem. Jeśli chcesz stałą naukę — umów lekcje. Jeśli chcesz handbook + jedną konkretną korektę techniki — jesteś we właściwym miejscu.",
     guaranteeTitle: digitalDeliveryGuaranteeTitle,
     guaranteeBody: digitalDeliveryGuaranteeBody,
-    bonusesIntro: "Dorzucam turbo-dodatki, które rozbrajają typowe wymówki:",
+    bonusesIntro: "W pakiecie VIP dostajesz też to, co jest w bestsellerze:",
     bonuses: [
       {
-        title: "Bonus 1 — 7-dniowy mini-plan rytmiczny",
+        title: "Bonusy z e-booka „Start…”",
         description:
-          "Gotowy tydzień krótkich sesji, żeby nie myśleć „co dziś ćwiczyć”.",
+          "Poradnik zakupowy pierwszej gitary oraz kolekcja wideo na start — jak w wersji standard.",
       },
       {
-        title: "Bonus 2 — lista podkładów na start (wolne tempa)",
+        title: "Priorytetowa ścieżka Feedback VIP",
         description:
-          "Propozycje utworów / stylów, przy których łatwiej usłyszeć postęp.",
+          "Po zakupie dostajesz jasną instrukcję, jak i gdzie wysłać wideo do analizy.",
       },
     ],
     priceStory:
-      "To pierwsza wersja materiału o rytmie. Cenę trzymam niżej, żeby więcej osób mogło przetestować ćwiczenia i powiedzieć, co działa w domu — a co warto dopisać. Bez sztucznych przecen: płacisz za 1. wydanie, a ja inwestuję Twój feedback w kolejne poprawki.",
-    editionNote: "1. wersja e-booka · cena za feedback i rozwój ćwiczeń",
+      "119 zł za handbook + mój personalny komentarz do Twojego wideo — a środkowa karta za 59 zł zostaje oczywistym wyborem „na start samemu”. VIP jest dla osób, które chcą korekty techniki od razu.",
+    editionNote: "Pakiet VIP · e-book + feedback · 119 zł",
     ctaNote:
-      "Po płatności materiał jest zwykle na e-mailu oraz w „Konto” → „Zakupy”. Przed zakupem zaznaczysz zgodę na natychmiastowe dostarczenie — po udostępnieniu pliku ustawowy zwrot bez podania przyczyny nie przysługuje.",
+      "Po płatności e-book trafia zwykle na e-mail i do „Konto” → „Zakupy”. Instrukcję Feedback VIP dostajesz w wiadomości — tam umawiamy nagranie / analizę. Przed zakupem zaznaczysz zgodę na natychmiastowe dostarczenie treści cyfrowej.",
     purchaseEmailTip:
-      "Na start: włącz metronom wolniej, niż Ci się wydaje „wygodnie”, i zrób krótką serię z pierwszych ćwiczeń. Timing buduje się małymi wygranymi — nie walką z tempem.",
+      "Najpierw otwórz e-book i rozdział o ergonomii, potem nagraj krótkie wideo według instrukcji VIP. Im spokojniej pokażesz dłonie i postawę, tym celniejszy będzie feedback.",
   },
 };
 

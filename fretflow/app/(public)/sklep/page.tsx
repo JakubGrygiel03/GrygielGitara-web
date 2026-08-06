@@ -44,6 +44,7 @@ export default async function SklepPage({
       description: "",
       priceLabel: product.priceLabel,
       priceGrosze: product.priceGrosze,
+      compareAtGrosze: product.compareAtGrosze,
       badge: product.badge,
       image: product.image,
       imageAlt: product.imageAlt,

@@ -14,7 +14,10 @@ import {
 import { getShopProductOffer } from "@/lib/shop-product-details";
 import { staticEarlyBirdOpen } from "@/lib/shop-early-bird";
 import { isShopSalesOpen } from "@/lib/shop-sales";
-import { shopProducts as fallbackProducts } from "@/lib/shop-products";
+import {
+  shopProducts as fallbackProducts,
+  staticCompareAtGrosze,
+} from "@/lib/shop-products";
 import { formatPricePln, isStripeConfigured } from "@/lib/stripe";
 import { createClient } from "@/lib/supabase/server";
 
@@ -86,6 +89,8 @@ export default async function SklepProductPage({ params }: PageProps) {
   const priceLabel = productRow
     ? formatPricePln(productRow.price_grosze)
     : fallback!.priceLabel;
+  const compareAtGrosze =
+    fallback?.compareAtGrosze ?? staticCompareAtGrosze(slug);
   const badge = productRow?.badge ?? fallback!.badge;
   const comingSoon =
     productRow?.coming_soon ?? fallback!.status === "coming_soon";
@@ -130,6 +135,7 @@ export default async function SklepProductPage({ params }: PageProps) {
               <ShopPrice
                 priceGrosze={priceGrosze}
                 priceLabel={priceLabel}
+                compareAtGrosze={compareAtGrosze}
                 showEarlyBird={showEarlyBirdPrice}
                 size="detail"
               />
@@ -158,7 +164,9 @@ export default async function SklepProductPage({ params }: PageProps) {
           <div className="space-y-8">
             <header className="space-y-3">
               <p className="text-sm font-bold uppercase tracking-wide text-sky-600">
-                Oferta e-booka
+                {slug === "start-bez-stresu-feedback-vip"
+                  ? "Oferta pakietu"
+                  : "Oferta e-booka"}
               </p>
               <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
                 {title}
@@ -182,6 +190,7 @@ export default async function SklepProductPage({ params }: PageProps) {
                 <ShopPrice
                   priceGrosze={priceGrosze}
                   priceLabel={priceLabel}
+                  compareAtGrosze={compareAtGrosze}
                   showEarlyBird={showEarlyBirdPrice}
                   size="detail"
                 />
@@ -214,6 +223,7 @@ export default async function SklepProductPage({ params }: PageProps) {
                 offer={offer}
                 priceLabel={priceLabel}
                 priceGrosze={priceGrosze}
+                compareAtGrosze={compareAtGrosze}
                 showEarlyBirdPrice={showEarlyBirdPrice}
                 productId={productId}
                 productSlug={slug}

@@ -22,11 +22,11 @@ const THEMES: Record<string, CoverTheme> = {
     accent: "text-emerald-100",
     muted: "text-emerald-100/85",
   },
-  "rytm-i-timing-na-start": {
-    stage: "from-indigo-900 via-slate-900 to-slate-950",
-    cover: "from-sky-600 via-indigo-800 to-slate-950",
-    accent: "text-sky-100",
-    muted: "text-slate-200/85",
+  "start-bez-stresu-feedback-vip": {
+    stage: "from-[#2a1038] via-[#120818] to-black",
+    cover: "from-[#6b21a8] via-[#3b0764] to-[#0c0414]",
+    accent: "text-amber-200",
+    muted: "text-violet-200/80",
   },
 };
 

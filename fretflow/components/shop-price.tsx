@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 type ShopPriceProps = {
   priceGrosze: number;
   priceLabel: string;
+  /** Suggested / anchor price (e.g. ~~129~~ 79). */
+  compareAtGrosze?: number;
   showEarlyBird?: boolean;
   className?: string;
   size?: "card" | "detail";
@@ -20,16 +22,28 @@ export function earlyBirdSaleGrosze(
 export function ShopPrice({
   priceGrosze,
   priceLabel,
+  compareAtGrosze,
   showEarlyBird = false,
   className,
   size = "card",
 }: ShopPriceProps) {
-  const regular =
-    priceGrosze > 0 ? formatPricePln(priceGrosze) : priceLabel;
-  const saleGrosze =
-    priceGrosze > 0 ? earlyBirdSaleGrosze(priceGrosze) : 0;
+  const sellingGrosze = priceGrosze > 0 ? priceGrosze : 0;
+  const earlyGrosze =
+    showEarlyBird && sellingGrosze > 0
+      ? earlyBirdSaleGrosze(sellingGrosze)
+      : 0;
+  const displayGrosze = earlyGrosze > 0 ? earlyGrosze : sellingGrosze;
+  const displayLabel =
+    displayGrosze > 0 ? formatPricePln(displayGrosze) : priceLabel;
 
-  if (!showEarlyBird || saleGrosze <= 0) {
+  const strikeGrosze =
+    compareAtGrosze && compareAtGrosze > displayGrosze
+      ? compareAtGrosze
+      : showEarlyBird && sellingGrosze > displayGrosze
+        ? sellingGrosze
+        : 0;
+
+  if (strikeGrosze <= 0) {
     return (
       <p
         className={cn(
@@ -38,7 +52,7 @@ export function ShopPrice({
           className,
         )}
       >
-        {regular}
+        {displayLabel}
       </p>
     );
   }
@@ -52,7 +66,7 @@ export function ShopPrice({
       )}
     >
       <span className="font-medium text-slate-500 line-through decoration-slate-400">
-        {regular}
+        {formatPricePln(strikeGrosze)}
       </span>{" "}
       <span
         className={cn(
@@ -60,16 +74,21 @@ export function ShopPrice({
           size === "detail" ? "text-2xl" : "text-base",
         )}
       >
-        {formatPricePln(saleGrosze)}
-      </span>{" "}
-      <span
-        className={cn(
-          "font-semibold text-sky-700",
-          size === "detail" ? "text-base" : "text-sm",
-        )}
-      >
-        z rabatem
+        {displayLabel}
       </span>
+      {showEarlyBird ? (
+        <>
+          {" "}
+          <span
+            className={cn(
+              "font-semibold text-sky-700",
+              size === "detail" ? "text-base" : "text-sm",
+            )}
+          >
+            z rabatem
+          </span>
+        </>
+      ) : null}
     </p>
   );
 }

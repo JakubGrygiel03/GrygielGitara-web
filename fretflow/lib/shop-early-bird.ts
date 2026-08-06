@@ -9,5 +9,5 @@ export function staticEarlyBirdOpen(slug: string): boolean {
 }
 
 export function earlyBirdSuccessMessage(productTitle: string): string {
-  return `Jesteś na liście na „${productTitle}”. Przy premierze tego e-booka dostaniesz kod −${SHOP_EARLY_BIRD_PERCENT}% (zapisany na ten tytuł).`;
+  return `Jesteś na liście na „${productTitle}”. Przy premierze tego produktu dostaniesz kod −${SHOP_EARLY_BIRD_PERCENT}% (zapisany na ten tytuł).`;
 }

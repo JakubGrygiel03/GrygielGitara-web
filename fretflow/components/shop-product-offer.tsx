@@ -9,6 +9,7 @@ type ShopProductOfferBodyProps = {
   offer: ShopProductOffer;
   priceLabel: string;
   priceGrosze: number;
+  compareAtGrosze?: number;
   showEarlyBirdPrice?: boolean;
   productId: string;
   productSlug: string;
@@ -26,6 +27,7 @@ export function ShopProductOfferBody({
   offer,
   priceLabel,
   priceGrosze,
+  compareAtGrosze,
   showEarlyBirdPrice = false,
   productId,
   productSlug,
@@ -202,6 +204,7 @@ export function ShopProductOfferBody({
           <ShopPrice
             priceGrosze={priceGrosze}
             priceLabel={priceLabel}
+            compareAtGrosze={compareAtGrosze}
             showEarlyBird={showEarlyBirdPrice}
             size="detail"
           />

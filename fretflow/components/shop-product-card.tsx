@@ -25,14 +25,31 @@ export function ShopProductCard({
   const canOpenDetail = !product.slug.startsWith("fallback");
   const showEarlyBirdPrice =
     product.earlyBirdOpen && (!salesOpen || product.comingSoon || !stripeReady);
+  const isFeatured = product.slug === "start-z-gitara-bez-stresu";
+  const isVip = product.slug === "start-bez-stresu-feedback-vip";
 
   return (
     <article
       className={cn(
-        "group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_32px_-16px_rgba(14,165,233,0.35)] transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_1px_0_rgba(15,23,42,0.06),0_24px_48px_-20px_rgba(14,165,233,0.45)]",
+        "group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_32px_-16px_rgba(14,165,233,0.35)] transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_1px_0_rgba(15,23,42,0.06),0_24px_48px_-20px_rgba(14,165,233,0.45)]",
+        isFeatured &&
+          "ring-2 ring-sky-500 shadow-[0_1px_0_rgba(15,23,42,0.06),0_24px_48px_-18px_rgba(14,165,233,0.55)] sm:scale-[1.02]",
+        isVip &&
+          "ring-2 ring-amber-600/80 shadow-[0_1px_0_rgba(15,23,42,0.06),0_24px_48px_-18px_rgba(180,130,40,0.4)]",
         className,
       )}
     >
+      {isFeatured ? (
+        <p className="bg-sky-600 px-3 py-1.5 text-center text-[0.7rem] font-bold uppercase tracking-wide text-white">
+          Najpopularniejszy
+        </p>
+      ) : null}
+      {isVip ? (
+        <p className="bg-gradient-to-r from-[#2a1038] via-[#5b21b6] to-[#2a1038] px-3 py-1.5 text-center text-[0.7rem] font-bold uppercase tracking-[0.14em] text-amber-200">
+          VIP
+        </p>
+      ) : null}
+
       {canOpenDetail ? (
         <Link href={detailHref} className="relative block">
           <ShopEbookCover
@@ -74,7 +91,7 @@ export function ShopProductCard({
             product.title
           )}
         </h2>
-        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted">
+        <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted">
           {product.shortDescription}
         </p>
 
@@ -91,6 +108,7 @@ export function ShopProductCard({
           <ShopPrice
             priceGrosze={product.priceGrosze}
             priceLabel={product.priceLabel}
+            compareAtGrosze={product.compareAtGrosze}
             showEarlyBird={showEarlyBirdPrice}
           />
         </div>

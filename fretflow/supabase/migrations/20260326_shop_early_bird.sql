@@ -10,7 +10,7 @@ set early_bird_open = true
 where slug in (
   'start-z-gitara-bez-stresu',
   'setup-gitary-w-domu',
-  'rytm-i-timing-na-start'
+  'start-bez-stresu-feedback-vip'
 );
 
 create table if not exists public.shop_early_bird_signups (

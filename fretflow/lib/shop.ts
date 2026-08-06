@@ -3,6 +3,7 @@ import path from "node:path";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { staticEarlyBirdOpen } from "@/lib/shop-early-bird";
+import { staticCompareAtGrosze } from "@/lib/shop-products";
 import { formatPricePln, isStripeConfigured } from "@/lib/stripe";
 import type { Database } from "@/lib/supabase/types";
 
@@ -16,6 +17,7 @@ export type ShopCatalogItem = {
   description: string;
   priceLabel: string;
   priceGrosze: number;
+  compareAtGrosze?: number;
   badge: string;
   image: string;
   imageAlt: string;
@@ -102,6 +104,7 @@ export async function loadShopCatalog(): Promise<{
       description: product.description,
       priceLabel: formatPricePln(product.price_grosze),
       priceGrosze: product.price_grosze,
+      compareAtGrosze: staticCompareAtGrosze(product.slug),
       badge: product.badge,
       image: product.image_path,
       imageAlt: `Okładka: ${product.title}`,

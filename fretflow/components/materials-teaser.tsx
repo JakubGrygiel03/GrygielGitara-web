@@ -79,7 +79,7 @@ export function MaterialsTeaser() {
             <article className="flex h-full flex-col gap-4 rounded-2xl border border-sky-300 bg-sky-100/80 px-5 py-6 sm:px-6">
               <div className="space-y-2">
                 <p className="text-sm font-extrabold uppercase tracking-wide text-sky-800 sm:text-base">
-                  Opcja 2 · E-book · 49 zł
+                  Opcja 2 · E-book · 59 zł
                 </p>
                 <h3 className="text-lg font-semibold text-slate-900 sm:text-xl">
                   Start z gitarą bez stresu
