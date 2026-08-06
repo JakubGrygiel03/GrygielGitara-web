@@ -1,23 +1,12 @@
 import { Resend } from "resend";
-import { readFile } from "node:fs/promises";
-import path from "node:path";
 
 import { resolveNotifyEmail } from "@/lib/admin-settings";
-import { isFreeGuideOpen } from "@/lib/free-guide";
 import { lessonPackageLabel } from "@/lib/lesson-packages";
 import {
   bookingLocationLabels,
   type BookingFormValues,
 } from "@/lib/validations/booking";
 import { contactTopicLabels, type ContactFormValues } from "@/lib/validations/contact";
-
-const GUIDE_FILENAME = "jak-nastroic-gitare.pdf";
-const GUIDE_PUBLIC_PATH = path.join(
-  process.cwd(),
-  "public",
-  "guides",
-  GUIDE_FILENAME,
-);
 
 function getResendClient(): Resend | null {
   const apiKey = process.env.RESEND_API_KEY;
@@ -53,22 +42,6 @@ export async function sendEmail(input: {
   }
 }
 
-async function loadGuideAttachment(): Promise<
-  | { filename: string; content: string }
-  | null
-> {
-  try {
-    const file = await readFile(GUIDE_PUBLIC_PATH);
-    return {
-      filename: GUIDE_FILENAME,
-      // Resend expects base64 content for binary attachments.
-      content: file.toString("base64"),
-    };
-  } catch {
-    return null;
-  }
-}
-
 type ContactMailInput = {
   senderName: string;
   email: string;
@@ -78,8 +51,8 @@ type ContactMailInput = {
 };
 
 /**
- * Sends lead confirmation (+ PDF bonus when file exists) and owner notification.
- * Never throws to the UI — contact DB save is the source of truth.
+ * Transactional confirmation + owner notification.
+ * Free PDF is only via /pobierz-poradnik (email for delivery; marketing optional).
  */
 export async function sendContactEmails(input: ContactMailInput): Promise<void> {
   const resend = getResendClient();
@@ -93,36 +66,18 @@ export async function sendContactEmails(input: ContactMailInput): Promise<void> 
     return;
   }
 
-  const guideOpen = isFreeGuideOpen();
-  const guide = guideOpen ? await loadGuideAttachment() : null;
   const topicLabel = contactTopicLabels[input.topic];
-
-  const leadHtml = guideOpen
-    ? `
-    <p>Cześć ${input.senderName},</p>
-    <p>Dzięki za wiadomość. Odpiszę tak szybko, jak to możliwe.</p>
-    <p><strong>Bonus na start:</strong> poradnik PDF
-    „Jak bezstresowo nastroić i przygotować gitarę do gry w 3 minuty”
-    ${guide ? "jest w załączniku tej wiadomości." : "wyślę w osobnej wiadomości, gdy tylko plik będzie dostępny na serwerze."}</p>
-    <p>Do usłyszenia,<br/>Jakub · GrygielGitara</p>
-  `
-    : `
-    <p>Cześć ${input.senderName},</p>
-    <p>Dzięki za wiadomość. Odpiszę tak szybko, jak to możliwe.</p>
-    <p>Do usłyszenia,<br/>Jakub · GrygielGitara</p>
-  `;
 
   await resend.emails.send({
     from,
     to: input.email,
     ...(ownerInbox ? { replyTo: ownerInbox } : {}),
-    subject: guide
-      ? "Dzięki za wiadomość + Twój bonus PDF · GrygielGitara"
-      : "Dzięki za wiadomość · GrygielGitara",
-    html: leadHtml,
-    attachments: guide
-      ? [{ filename: guide.filename, content: guide.content }]
-      : undefined,
+    subject: "Dzięki za wiadomość · GrygielGitara",
+    html: `
+    <p>Cześć ${input.senderName},</p>
+    <p>Dzięki za wiadomość. Odpiszę tak szybko, jak to możliwe.</p>
+    <p>Do usłyszenia,<br/>Jakub · GrygielGitara</p>
+  `,
   });
 
   if (ownerInbox) {
@@ -137,7 +92,7 @@ export async function sendContactEmails(input: ContactMailInput): Promise<void> 
         <p><strong>Temat:</strong> ${topicLabel}</p>
         <p><strong>Wiadomość:</strong></p>
         <p>${input.message.replace(/\n/g, "<br/>")}</p>
-        <p><em>Lead dostał potwierdzenie${guide ? " z załącznikiem PDF" : ""}.</em></p>
+        <p><em>Lead dostał potwierdzenie transakcyjne (bez PDF / marketingu).</em></p>
       `,
     });
   }

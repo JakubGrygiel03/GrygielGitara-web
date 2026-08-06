@@ -102,12 +102,37 @@ export type LeadRow = {
   source: string | null;
 };
 
+export type WaitlistRow = {
+  id: string;
+  created_at: string;
+  full_name: string;
+  email: string;
+  phone: string | null;
+  note: string | null;
+  status: "waiting" | "contacted" | "booked" | "closed";
+};
+
+export type ShopEarlyBirdRow = {
+  id: string;
+  created_at: string;
+  full_name: string;
+  email: string;
+  phone: string | null;
+  product_slug: string;
+  product_title: string;
+  discount_percent: number;
+  claim_token: string;
+  status: "waiting" | "notified" | "redeemed" | "cancelled";
+  note: string | null;
+};
+
 export type AdminShopProduct = {
   id: string;
   slug: string;
   title: string;
   published: boolean;
   coming_soon: boolean;
+  early_bird_open?: boolean;
 };
 
 /** Auth accounts available for shop access grant (autocomplete). */
@@ -134,6 +159,8 @@ export type AdminDashboardData = {
   materials: MaterialRow[];
   sessionNotes: SessionNoteRow[];
   leads: LeadRow[];
+  waitlist: WaitlistRow[];
+  shopEarlyBird: ShopEarlyBirdRow[];
   products: AdminShopProduct[];
   shopAccounts: AdminShopAccountOption[];
   monthBalance: MonthBalance;

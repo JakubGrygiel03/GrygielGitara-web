@@ -1,6 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 
+import { ShopEbookCover } from "@/components/shop-ebook-cover";
+import { ShopPrice } from "@/components/shop-price";
 import { ShopProductCta } from "@/components/shop-product-cta";
 import type { ShopCatalogItem } from "@/lib/shop";
 import { cn } from "@/lib/utils";
@@ -9,6 +10,7 @@ type ShopProductCardProps = {
   product: ShopCatalogItem;
   stripeReady: boolean;
   loggedIn: boolean;
+  salesOpen?: boolean;
   className?: string;
 };
 
@@ -16,10 +18,13 @@ export function ShopProductCard({
   product,
   stripeReady,
   loggedIn,
+  salesOpen = true,
   className,
 }: ShopProductCardProps) {
   const detailHref = `/sklep/${product.slug}`;
   const canOpenDetail = !product.slug.startsWith("fallback");
+  const showEarlyBirdPrice =
+    product.earlyBirdOpen && (!salesOpen || product.comingSoon || !stripeReady);
 
   return (
     <article
@@ -29,15 +34,30 @@ export function ShopProductCard({
       )}
     >
       {canOpenDetail ? (
-        <Link
-          href={detailHref}
-          className="relative flex aspect-[5/4] items-center justify-center bg-gradient-to-b from-slate-100 to-sky-50/80 px-6 py-7 sm:px-8 sm:py-8"
-        >
-          <CardCover product={product} />
+        <Link href={detailHref} className="relative block">
+          <ShopEbookCover
+            slug={product.slug}
+            title={product.title}
+            badge={product.badge}
+          />
+          {product.comingSoon ? (
+            <span className="absolute right-3 top-3 rounded-md bg-white/95 px-2 py-1 text-[0.65rem] font-semibold uppercase tracking-wide text-sky-800 shadow-sm">
+              Wkrótce
+            </span>
+          ) : null}
         </Link>
       ) : (
-        <div className="relative flex aspect-[5/4] items-center justify-center bg-gradient-to-b from-slate-100 to-sky-50/80 px-6 py-7 sm:px-8 sm:py-8">
-          <CardCover product={product} />
+        <div className="relative">
+          <ShopEbookCover
+            slug={product.slug}
+            title={product.title}
+            badge={product.badge}
+          />
+          {product.comingSoon ? (
+            <span className="absolute right-3 top-3 rounded-md bg-white/95 px-2 py-1 text-[0.65rem] font-semibold uppercase tracking-wide text-sky-800 shadow-sm">
+              Wkrótce
+            </span>
+          ) : null}
         </div>
       )}
 
@@ -67,10 +87,12 @@ export function ShopProductCard({
           </Link>
         ) : null}
 
-        <div className="mt-4 flex items-end justify-between gap-3 border-t border-slate-100 pt-3">
-          <p className="text-base font-semibold tabular-nums text-slate-900">
-            {product.priceLabel}
-          </p>
+        <div className="mt-4 border-t border-slate-100 pt-3">
+          <ShopPrice
+            priceGrosze={product.priceGrosze}
+            priceLabel={product.priceLabel}
+            showEarlyBird={showEarlyBirdPrice}
+          />
         </div>
 
         <div className="mt-4">
@@ -78,48 +100,12 @@ export function ShopProductCard({
             product={product}
             stripeReady={stripeReady}
             loggedIn={loggedIn}
+            salesOpen={salesOpen}
             className="w-full"
             loginNext={canOpenDetail ? detailHref : "/sklep"}
           />
         </div>
       </div>
     </article>
-  );
-}
-
-function CardCover({ product }: { product: ShopCatalogItem }) {
-  return (
-    <>
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-8 top-6 h-px bg-gradient-to-r from-transparent via-sky-200/80 to-transparent"
-      />
-      <div className="relative aspect-[3/4] w-[42%] max-w-[7.5rem] rotate-[-2deg] shadow-[0_18px_40px_-12px_rgba(15,23,42,0.45)] transition-transform duration-300 ease-out group-hover:rotate-0 group-hover:scale-[1.03] sm:max-w-[8.25rem]">
-        {product.image.endsWith(".svg") ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={product.image}
-            alt={product.imageAlt}
-            className="h-full w-full rounded-sm object-cover"
-          />
-        ) : (
-          <Image
-            src={product.image}
-            alt={product.imageAlt}
-            fill
-            sizes="8.25rem"
-            className="rounded-sm object-cover"
-          />
-        )}
-      </div>
-      <span className="absolute left-3 top-3 rounded-md bg-slate-900/90 px-2 py-1 text-[0.65rem] font-bold uppercase tracking-[0.08em] text-white">
-        {product.badge}
-      </span>
-      {product.comingSoon ? (
-        <span className="absolute right-3 top-3 rounded-md bg-white/95 px-2 py-1 text-[0.65rem] font-semibold uppercase tracking-wide text-sky-800 shadow-sm">
-          Wkrótce
-        </span>
-      ) : null}
-    </>
   );
 }

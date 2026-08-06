@@ -1,7 +1,10 @@
 import { z } from "zod";
 
+import { SHOP_EARLY_BIRD_PERCENT } from "@/lib/shop-products";
+
 export const contactTopics = [
   "lessons",
+  "lesson_waitlist",
   "setup_service",
   "shop_support",
   "other",
@@ -9,11 +12,15 @@ export const contactTopics = [
 
 export const contactTopicLabels: Record<(typeof contactTopics)[number], string> =
   {
-    lessons: "Lekcje w Gdańsku (dojazd / Forum)",
+    lessons: "Pytanie o lekcje (bez rezerwacji terminu)",
+    lesson_waitlist: "Lista oczekujących na lekcję",
     setup_service: "Serwis i regulacja gitary",
-    shop_support: "Materiały cyfrowe / lista oczekujących",
-    other: "Lekcje online / inne pytanie",
+    shop_support: `Sklep — lista oczekujących (−${SHOP_EARLY_BIRD_PERCENT}% przy premierze)`,
+    other: "Inne pytanie",
   };
+
+export const LESSON_WAITLIST_SUCCESS =
+  "Jesteś na liście. Jak tylko zwolni się miejsce, odezwę się na podany e-mail.";
 
 export const contactFormSchema = z.object({
   senderName: z
@@ -36,6 +43,19 @@ export const contactFormSchema = z.object({
     .trim()
     .min(10, "Napisz trochę więcej (min. 10 znaków).")
     .max(2000, "Wiadomość jest zbyt długa (max. 2000 znaków)."),
+  /** Locked product for early-bird (−30%) when set from shop CTA. */
+  productSlug: z
+    .string()
+    .trim()
+    .max(120)
+    .optional()
+    .or(z.literal("")),
+  productTitle: z
+    .string()
+    .trim()
+    .max(200)
+    .optional()
+    .or(z.literal("")),
 });
 
 export type ContactFormValues = z.infer<typeof contactFormSchema>;

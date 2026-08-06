@@ -1,6 +1,7 @@
 /**
- * Public free PDF lead magnet (/pobierz-poradnik + hero/footer CTAs).
- * Set FREE_GUIDE_OPEN=true when the PDF is ready to offer.
+ * Free PDF download form.
+ * false = keep teaser/page visible with „Już wkrótce dostępny”.
+ * true = open /pobierz-poradnik form + real download CTAs.
  */
 export function isFreeGuideOpen(): boolean {
   const raw = process.env.FREE_GUIDE_OPEN?.trim().toLowerCase();

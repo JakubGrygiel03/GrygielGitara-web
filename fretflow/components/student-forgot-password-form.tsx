@@ -8,6 +8,7 @@ import { requestStudentPasswordReset } from "@/app/actions/student-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { resetEmailNotice } from "@/lib/auth-email-copy";
 
 export function StudentForgotPasswordForm({
   initialEmail = "",
@@ -28,16 +29,17 @@ export function StudentForgotPasswordForm({
           Zapomniałem hasła
         </h1>
         <p className="text-[0.9375rem] leading-relaxed text-muted">
-          Podaj e-mail konta — wyślemy link do ustawienia nowego hasła. Sprawdź
-          też folder spam.
+          {resetEmailNotice}
         </p>
       </div>
 
       {sent ? (
         <div className="space-y-4">
-          <p className="rounded-xl border border-sky-100 bg-sky-50 px-3 py-3 text-sm text-sky-950">
-            Jeśli konto z adresem <strong>{email}</strong> istnieje, link jest
-            w drodze. Po kliknięciu ustawisz nowe hasło.
+          <p className="rounded-xl border border-sky-100 bg-sky-50 px-3 py-3 text-sm leading-relaxed text-sky-950">
+            Jeśli konto z adresem <strong>{email}</strong> istnieje, link jest w
+            drodze. Szukaj maila od <strong>GrygielGitara</strong> (
+            kontakt@grygielgitara.pl) — także w spam / powiadomieniach. Po
+            kliknięciu ustawisz nowe hasło.
           </p>
           <Button
             type="button"

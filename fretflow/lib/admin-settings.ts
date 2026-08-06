@@ -12,7 +12,7 @@ export const DEFAULT_ADMIN_SETTINGS: AdminSettings = {
   smsEnabled: true,
   bookingPaused: false,
   bookingPausedMessage:
-    "Chwilowo wstrzymane zapisy na nowe lekcje. Napisz na kontakt — odpiszę, gdy wrócę.",
+    "Stałe okienka na nowe starty są teraz zajęte (kalendarz lekcji + koncerty). Dopisz się do listy oczekujących poniżej — odezwę się, gdy zwolni się miejsce.",
   notifyEmail: "",
   teacherPhone: "",
 };

@@ -56,7 +56,7 @@ export async function registerStudent(
   password: string,
   passwordConfirm: string,
   fullNameRaw?: string,
-): Promise<{ ok: boolean; message: string }> {
+): Promise<{ ok: boolean; message: string; needsEmailConfirm?: boolean }> {
   const email = emailRaw.trim().toLowerCase();
   const fullName = fullNameRaw?.trim() || "";
   if (!email.includes("@")) {
@@ -109,12 +109,17 @@ export async function registerStudent(
     if (!data.session) {
       return {
         ok: true,
+        needsEmailConfirm: true,
         message:
-          "Konto utworzone. Jeśli dostaniesz mail potwierdzający — kliknij link, potem zaloguj się.",
+          "Konto utworzone. Sprawdź e-mail (także spam / powiadomienia): kliknij link potwierdzający od GrygielGitara, potem zaloguj się.",
       };
     }
 
-    return { ok: true, message: "Konto gotowe — jesteś zalogowany." };
+    return {
+      ok: true,
+      needsEmailConfirm: false,
+      message: "Konto gotowe — jesteś zalogowany.",
+    };
   } catch (error) {
     console.error("registerStudent error:", error);
     return { ok: false, message: "Nie udało się założyć konta." };

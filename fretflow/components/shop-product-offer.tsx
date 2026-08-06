@@ -1,28 +1,41 @@
 import Link from "next/link";
 import { Check } from "lucide-react";
 
+import { ShopPrice } from "@/components/shop-price";
 import { ShopProductCta } from "@/components/shop-product-cta";
 import type { ShopProductOffer } from "@/lib/shop-product-details";
 
 type ShopProductOfferBodyProps = {
   offer: ShopProductOffer;
   priceLabel: string;
+  priceGrosze: number;
+  showEarlyBirdPrice?: boolean;
   productId: string;
+  productSlug: string;
+  productTitle: string;
   owned: boolean;
   comingSoon: boolean;
+  earlyBirdOpen: boolean;
   stripeReady: boolean;
   loggedIn: boolean;
+  salesOpen?: boolean;
   loginNext: string;
 };
 
 export function ShopProductOfferBody({
   offer,
   priceLabel,
+  priceGrosze,
+  showEarlyBirdPrice = false,
   productId,
+  productSlug,
+  productTitle,
   owned,
   comingSoon,
+  earlyBirdOpen,
   stripeReady,
   loggedIn,
+  salesOpen = true,
   loginNext,
 }: ShopProductOfferBodyProps) {
   return (
@@ -142,13 +155,19 @@ export function ShopProductOfferBody({
         <p className="text-sm leading-relaxed text-slate-700">{offer.notForYou}</p>
       </section>
 
-      {/* R — Ryzyko */}
-      <section className="space-y-2 rounded-2xl border border-emerald-100 bg-emerald-50/50 px-5 py-4">
+      <section className="space-y-2 rounded-2xl border border-slate-200 bg-slate-50/80 px-5 py-4">
         <h2 className="text-base font-bold text-slate-900">
           {offer.guaranteeTitle}
         </h2>
         <p className="text-sm leading-relaxed text-slate-700">
-          {offer.guaranteeBody}
+          {offer.guaranteeBody}{" "}
+          <Link
+            href="/regulamin-sklepu"
+            className="font-semibold text-sky-700 underline-offset-2 hover:underline"
+          >
+            przeczytaj Regulamin sklepu
+          </Link>
+          .
         </p>
       </section>
 
@@ -180,15 +199,26 @@ export function ShopProductOfferBody({
           {offer.priceStory}
         </p>
         <div className="space-y-1">
-          <p className="text-2xl font-bold tabular-nums text-slate-900">
-            {priceLabel}
-          </p>
+          <ShopPrice
+            priceGrosze={priceGrosze}
+            priceLabel={priceLabel}
+            showEarlyBird={showEarlyBirdPrice}
+            size="detail"
+          />
           <p className="text-sm text-muted">{offer.editionNote}</p>
         </div>
         <ShopProductCta
-          product={{ id: productId, owned, comingSoon }}
+          product={{
+            id: productId,
+            owned,
+            comingSoon,
+            earlyBirdOpen,
+            slug: productSlug,
+            title: productTitle,
+          }}
           stripeReady={stripeReady}
           loggedIn={loggedIn}
+          salesOpen={salesOpen}
           className="w-full sm:w-auto sm:min-w-[14rem]"
           loginNext={loginNext}
         />

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
+import { ShopEbookCover } from "@/components/shop-ebook-cover";
+import { ShopPrice } from "@/components/shop-price";
 import { ShopProductCta } from "@/components/shop-product-cta";
 import { ShopProductOfferBody } from "@/components/shop-product-offer";
 import {
@@ -11,6 +12,7 @@ import {
   getPublishedProductBySlug,
 } from "@/lib/shop";
 import { getShopProductOffer } from "@/lib/shop-product-details";
+import { staticEarlyBirdOpen } from "@/lib/shop-early-bird";
 import { isShopSalesOpen } from "@/lib/shop-sales";
 import { shopProducts as fallbackProducts } from "@/lib/shop-products";
 import { formatPricePln, isStripeConfigured } from "@/lib/stripe";
@@ -80,24 +82,29 @@ export default async function SklepProductPage({ params }: PageProps) {
   const title = productRow?.title ?? fallback!.title;
   const shortDescription =
     productRow?.short_description ?? fallback!.shortDescription;
+  const priceGrosze = productRow?.price_grosze ?? fallback!.priceGrosze;
   const priceLabel = productRow
     ? formatPricePln(productRow.price_grosze)
     : fallback!.priceLabel;
   const badge = productRow?.badge ?? fallback!.badge;
-  const image = productRow?.image_path ?? fallback!.image;
-  const imageAlt = `Okładka: ${title}`;
   const comingSoon =
     productRow?.coming_soon ?? fallback!.status === "coming_soon";
+  const earlyBirdOpen =
+    typeof productRow?.early_bird_open === "boolean"
+      ? productRow.early_bird_open
+      : (fallback?.earlyBirdOpen ?? staticEarlyBirdOpen(slug));
   const productId = productRow?.id ?? `fallback-${slug}`;
   const loginNext = `/sklep/${slug}`;
   const salesOpen = isShopSalesOpen();
+  const showAsComingSoon = !salesOpen || comingSoon;
 
-  // Hide public product pages while shop is closed (owned download still ok).
-  if (!salesOpen && !owned) {
-    redirect("/sklep");
-  }
-
-  const buyReady = salesOpen && stripeReady && Boolean(productRow);
+  // Allow buy UI only when sales are open and Stripe is ready.
+  const buyReady =
+    salesOpen &&
+    stripeReady &&
+    (Boolean(productRow) || productId.startsWith("fallback-"));
+  const showEarlyBirdPrice =
+    earlyBirdOpen && (!salesOpen || showAsComingSoon || !buyReady);
 
   return (
     <div className="bg-surface">
@@ -112,42 +119,36 @@ export default async function SklepProductPage({ params }: PageProps) {
 
         <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start lg:gap-14">
           <div className="space-y-4 lg:sticky lg:top-24">
-            <div className="relative flex aspect-[5/4] items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-b from-slate-100 to-sky-50/80 px-8 py-10 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_32px_-16px_rgba(14,165,233,0.35)]">
-              <div className="relative aspect-[3/4] w-[48%] max-w-[11rem] rotate-[-2deg] shadow-[0_18px_40px_-12px_rgba(15,23,42,0.45)]">
-                {image.endsWith(".svg") ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={image}
-                    alt={imageAlt}
-                    className="h-full w-full rounded-sm object-cover"
-                  />
-                ) : (
-                  <Image
-                    src={image}
-                    alt={imageAlt}
-                    fill
-                    sizes="11rem"
-                    className="rounded-sm object-cover"
-                    priority
-                  />
-                )}
-              </div>
-              <span className="absolute left-4 top-4 rounded-md bg-slate-900/90 px-2 py-1 text-[0.65rem] font-bold uppercase tracking-[0.08em] text-white">
-                {badge}
-              </span>
-            </div>
+            <ShopEbookCover
+              slug={slug}
+              title={title}
+              badge={badge}
+              size="detail"
+            />
 
             <div className="hidden space-y-3 rounded-2xl border border-slate-200 bg-white p-5 lg:block">
-              <p className="text-2xl font-bold tabular-nums text-slate-900">
-                {priceLabel}
-              </p>
+              <ShopPrice
+                priceGrosze={priceGrosze}
+                priceLabel={priceLabel}
+                showEarlyBird={showEarlyBirdPrice}
+                size="detail"
+              />
               {offer ? (
                 <p className="text-sm text-muted">{offer.editionNote}</p>
               ) : null}
               <ShopProductCta
-                product={{ id: productId, owned, comingSoon: comingSoon || !salesOpen }}
+                product={{
+                  id: productId,
+                  owned,
+                  comingSoon: showAsComingSoon,
+                  earlyBirdOpen,
+                  slug,
+                  title,
+                }}
                 stripeReady={buyReady}
                 loggedIn={loggedIn}
+                salesOpen={salesOpen}
+                showWaitlistHint
                 className="w-full"
                 loginNext={loginNext}
               />
@@ -165,10 +166,25 @@ export default async function SklepProductPage({ params }: PageProps) {
               <p className="max-w-2xl text-[0.975rem] leading-relaxed text-muted sm:text-base">
                 {offer?.subtitle ?? shortDescription}
               </p>
-              <div className="space-y-1 lg:hidden">
-                <p className="text-xl font-semibold tabular-nums text-slate-900">
-                  {priceLabel}
+              {slug === "start-z-gitara-bez-stresu" ? (
+                <p className="text-sm leading-relaxed text-slate-600">
+                  Chcesz najpierw krótki, darmowy tekst o starcie bez bólu
+                  palców?{" "}
+                  <Link
+                    href="/pobierz-poradnik"
+                    className="font-medium text-sky-700 underline-offset-2 hover:underline"
+                  >
+                    Pobierz Gitarowy Falstart
+                  </Link>
                 </p>
+              ) : null}
+              <div className="space-y-1 lg:hidden">
+                <ShopPrice
+                  priceGrosze={priceGrosze}
+                  priceLabel={priceLabel}
+                  showEarlyBird={showEarlyBirdPrice}
+                  size="detail"
+                />
                 {offer ? (
                   <p className="text-sm text-muted">{offer.editionNote}</p>
                 ) : null}
@@ -178,10 +194,15 @@ export default async function SklepProductPage({ params }: PageProps) {
                   product={{
                     id: productId,
                     owned,
-                    comingSoon: comingSoon || !salesOpen,
+                    comingSoon: showAsComingSoon,
+                    earlyBirdOpen,
+                    slug,
+                    title,
                   }}
                   stripeReady={buyReady}
                   loggedIn={loggedIn}
+                  salesOpen={salesOpen}
+                  showWaitlistHint
                   className="w-full"
                   loginNext={loginNext}
                 />
@@ -192,11 +213,17 @@ export default async function SklepProductPage({ params }: PageProps) {
               <ShopProductOfferBody
                 offer={offer}
                 priceLabel={priceLabel}
+                priceGrosze={priceGrosze}
+                showEarlyBirdPrice={showEarlyBirdPrice}
                 productId={productId}
+                productSlug={slug}
+                productTitle={title}
                 owned={owned}
-                comingSoon={comingSoon || !salesOpen}
+                comingSoon={showAsComingSoon}
+                earlyBirdOpen={earlyBirdOpen}
                 stripeReady={buyReady}
                 loggedIn={loggedIn}
+                salesOpen={salesOpen}
                 loginNext={loginNext}
               />
             ) : productRow?.description ? (

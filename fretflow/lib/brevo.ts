@@ -1,10 +1,14 @@
 type UpsertBrevoContactInput = {
   email: string;
   firstName?: string;
+  /** Only true when user gave explicit marketing consent (e.g. free guide). */
+  addToMarketingList?: boolean;
+  marketingConsent?: boolean;
 };
 
 /**
- * Adds/updates a contact in Brevo (free CRM / marketing list).
+ * Adds/updates a contact in Brevo.
+ * Marketing list is used only when addToMarketingList is true.
  * No-ops when BREVO_API_KEY is missing. Never throws to callers.
  */
 export async function upsertBrevoContact(
@@ -19,6 +23,14 @@ export async function upsertBrevoContact(
   const listIdRaw = process.env.BREVO_LIST_ID?.trim();
   const listId = listIdRaw ? Number(listIdRaw) : undefined;
 
+  const attributes: Record<string, string> = {};
+  if (input.firstName?.trim()) {
+    attributes.FIRSTNAME = input.firstName.trim();
+  }
+  if (input.marketingConsent) {
+    attributes.MARKETING_CONSENT = "true";
+  }
+
   const body: {
     email: string;
     updateEnabled: boolean;
@@ -29,11 +41,15 @@ export async function upsertBrevoContact(
     updateEnabled: true,
   };
 
-  if (input.firstName?.trim()) {
-    body.attributes = { FIRSTNAME: input.firstName.trim() };
+  if (Object.keys(attributes).length > 0) {
+    body.attributes = attributes;
   }
 
-  if (listId !== undefined && Number.isFinite(listId)) {
+  if (
+    input.addToMarketingList &&
+    listId !== undefined &&
+    Number.isFinite(listId)
+  ) {
     body.listIds = [listId];
   }
 
@@ -48,7 +64,6 @@ export async function upsertBrevoContact(
       body: JSON.stringify(body),
     });
 
-    // 201 created, 204 updated (with updateEnabled)
     if (response.ok || response.status === 204) {
       return;
     }

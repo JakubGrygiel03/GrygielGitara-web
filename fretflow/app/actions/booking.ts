@@ -3,7 +3,6 @@
 import { randomUUID } from "node:crypto";
 
 import { getAdminSettings } from "@/lib/admin-settings";
-import { upsertBrevoContact } from "@/lib/brevo";
 import { sendBookingEmails } from "@/lib/resend";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -82,23 +81,7 @@ export async function submitBookingForm(
     };
   }
 
-  // Keep newsletter list in sync for later materials.
-  const { error: leadError } = await supabase
-    .from("newsletter_subscribers")
-    .insert({
-      email,
-      source: "booking_form",
-    });
-
-  if (leadError && leadError.code !== "23505") {
-    console.error("newsletter_subscribers insert failed:", leadError.message);
-  }
-
-  await upsertBrevoContact({
-    email,
-    firstName: studentName,
-  });
-
+  // Booking is transactional — marketing list only via free guide with consent.
   try {
     await sendBookingEmails({
       studentName,

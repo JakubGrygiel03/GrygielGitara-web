@@ -69,8 +69,8 @@ export function AdminSettingsTab({ settings }: { settings: AdminSettings }) {
             }
           />
           <span>
-            <strong>Tryb urlopowy</strong> — wstrzymaj nowe rezerwacje na
-            /rezerwacja.
+            <strong>Brak wolnych miejsc</strong> — ukryj formularz rezerwacji i
+            pokaż listę oczekujących (np. pełny semestr / trasa koncertowa).
           </span>
         </label>
 

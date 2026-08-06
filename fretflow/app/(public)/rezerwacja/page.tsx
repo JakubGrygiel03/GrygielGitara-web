@@ -3,6 +3,8 @@ import { ShieldCheck } from "lucide-react";
 import Link from "next/link";
 
 import { BookingForm } from "@/components/booking-form";
+import { Button } from "@/components/ui/button";
+import { SitePhoneCard } from "@/components/site-phone-card";
 import { getAdminSettings } from "@/lib/admin-settings";
 
 export const metadata: Metadata = {
@@ -20,10 +22,13 @@ export default async function RezerwacjaPage() {
         <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
           Zarezerwuj lekcję próbną
         </h1>
-        <p className="text-sm leading-relaxed text-muted sm:text-base lg:text-lg">
-          Wypełnij krótki formularz — odpiszę z propozycją terminu. Lekcje
-          stacjonarnie obok Galerii Forum, z dojazdem w Gdańsku albo online.
+        <p className="text-base leading-[1.65] text-slate-700 sm:text-[1.0625rem] sm:leading-relaxed">
+          Wybierz wariant ceny i miejsce — odpiszę z propozycją terminu. Lekcje
+          obok Galerii Forum, z dojazdem w Gdańsku albo online. Liczba miejsc
+          jest ograniczona kalendarzem koncertowym.
         </p>
+
+        <SitePhoneCard hint="Wolisz umówić się od razu? Zadzwoń." />
 
         <div className="flex gap-3 rounded-2xl border border-sky-200 bg-sky-50/90 px-4 py-4 sm:px-5">
           <ShieldCheck
@@ -42,27 +47,28 @@ export default async function RezerwacjaPage() {
 
       <div className="mt-8 w-full max-w-xl sm:mt-10">
         {settings.bookingPaused ? (
-          <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-5 text-sm text-amber-950 sm:px-5">
-            <p className="font-semibold">Zapisy chwilowo wstrzymane</p>
-            <p className="mt-2 leading-relaxed">
+          <div className="space-y-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-5 text-amber-950 sm:px-5">
+            <p className="font-semibold">Brak wolnych okienek na nowe starty</p>
+            <p className="text-base leading-[1.65]">
               {settings.bookingPausedMessage}
             </p>
-            <p className="mt-3">
-              <Link
-                href="/kontakt"
-                className="font-medium text-sky-700 underline-offset-2 hover:underline"
-              >
+            <p className="text-base leading-[1.65]">
+              Napisz przez kontakt z tematem listy oczekujących — odezwę się,
+              gdy zwolni się stała godzina.
+            </p>
+            <Button asChild>
+              <Link href="/kontakt?temat=lesson_waitlist">
                 Napisz przez kontakt
               </Link>
-            </p>
+            </Button>
           </div>
         ) : (
           <BookingForm />
         )}
       </div>
 
-      <p className="mt-8 max-w-xl text-sm text-muted">
-        Masz pytanie bez rezerwacji?{" "}
+      <p className="mt-8 max-w-xl text-base leading-[1.65] text-slate-700">
+        Pytanie o serwis, sklep albo coś innego niż lekcja?{" "}
         <Link
           href="/kontakt"
           className="font-medium text-sky-700 underline-offset-2 hover:underline"

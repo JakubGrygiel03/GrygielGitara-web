@@ -1,11 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000" role="img">
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000" role="img" aria-label="Ok?adka e-booka Rytm i timing na start">
   <rect width="800" height="1000" fill="#0F172A"/>
   <circle cx="560" cy="420" r="180" fill="#0EA5E9" opacity="0.25"/>
   <circle cx="560" cy="420" r="110" fill="#38BDF8" opacity="0.35"/>
   <text x="80" y="140" fill="#7DD3FC" font-family="system-ui,sans-serif" font-size="26" font-weight="700" letter-spacing="6">E-BOOK</text>
   <text x="80" y="290" fill="#FFFFFF" font-family="Georgia,serif" font-size="56" font-weight="700">Rytm i timing</text>
   <text x="80" y="360" fill="#FFFFFF" font-family="Georgia,serif" font-size="56" font-weight="700">na start</text>
-  <text x="80" y="460" fill="#94A3B8" font-family="system-ui,sans-serif" font-size="28">wiczenia, które sBycha</text>
+  <text x="80" y="460" fill="#94A3B8" font-family="system-ui,sans-serif" font-size="28">?wiczenia, które s?ycha?</text>
   <g transform="translate(120 620)" fill="#7DD3FC">
     <rect x="0" y="80" width="28" height="100" rx="4"/>
     <rect x="50" y="40" width="28" height="140" rx="4"/>

@@ -2,8 +2,13 @@
 
 import { getRequestSiteUrl } from "@/lib/env";
 import type { ProductRow } from "@/lib/shop";
+import {
+  digitalConsentCheckboxLabel,
+  regulaminCheckboxLabel,
+} from "@/lib/shop-digital-terms";
 import { isShopSalesOpen } from "@/lib/shop-sales";
 import { getStripe, isStripeConfigured } from "@/lib/stripe";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
 export type CheckoutState = {
@@ -15,7 +20,17 @@ export type CheckoutState = {
 
 export async function startProductCheckout(
   productId: string,
+  digitalConsent = false,
+  regulaminAccepted = false,
 ): Promise<CheckoutState> {
+  if (!digitalConsent || !regulaminAccepted) {
+    return {
+      ok: false,
+      message:
+        "Zaznacz obie zgody, żeby przejść do płatności: natychmiastowe dostarczenie oraz Regulamin sklepu.",
+    };
+  }
+
   if (!isShopSalesOpen()) {
     return {
       ok: false,
@@ -51,7 +66,6 @@ export async function startProductCheckout(
       };
     }
 
-    // Published products are readable via RLS (anon/authenticated) — no service role needed.
     const { data: product, error } = await supabase
       .from("products")
       .select("*")
@@ -91,6 +105,35 @@ export async function startProductCheckout(
       return { ok: false, message: "Masz już ten produkt w koncie." };
     }
 
+    const consentText = [
+      digitalConsentCheckboxLabel,
+      regulaminCheckboxLabel,
+    ].join(" | ");
+
+    try {
+      const admin = createAdminClient();
+      const { error: consentError } = await admin
+        .from("shop_digital_consents")
+        .insert({
+          user_id: user.id,
+          product_id: typed.id,
+          email: user.email ?? null,
+          immediate_delivery_consent: true,
+          regulamin_accepted: true,
+          consent_text: consentText,
+          source: "checkout_start",
+        });
+      if (consentError) {
+        console.error(
+          "shop_digital_consents insert:",
+          consentError.message,
+          "(run 20260326_shop_digital_consents.sql if table missing)",
+        );
+      }
+    } catch (consentLogError) {
+      console.error("shop_digital_consents log failed:", consentLogError);
+    }
+
     const site = await getRequestSiteUrl();
     const stripe = getStripe();
 
@@ -113,6 +156,10 @@ export async function startProductCheckout(
       metadata: {
         user_id: user.id,
         product_id: typed.id,
+        digital_consent: "1",
+        regulamin_accepted: "1",
+        digital_consent_note:
+          "immediate_delivery_waiver_of_withdrawal_accepted",
       },
       success_url: `${site}/sklep/sukces?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${site}/sklep?anulowano=1`,

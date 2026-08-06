@@ -11,24 +11,40 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  SHOP_EARLY_BIRD_PERCENT,
+  SHOP_INTEREST_FORM_HINT,
+} from "@/lib/shop-products";
+import {
   contactFormSchema,
   contactTopicLabels,
   contactTopics,
+  LESSON_WAITLIST_SUCCESS,
   type ContactFormValues,
 } from "@/lib/validations/contact";
 
 type ContactFormProps = {
   defaultTopic?: ContactFormValues["topic"];
+  defaultMessage?: string;
+  defaultProductSlug?: string;
+  defaultProductTitle?: string;
 };
 
-export function ContactForm({ defaultTopic = "lessons" }: ContactFormProps) {
+export function ContactForm({
+  defaultTopic = "other",
+  defaultMessage = "",
+  defaultProductSlug = "",
+  defaultProductTitle = "",
+}: ContactFormProps) {
   const [isPending, startTransition] = useTransition();
   const [submitted, setSubmitted] = useState(false);
+  const [wasWaitlist, setWasWaitlist] = useState(false);
+  const [wasShopInterest, setWasShopInterest] = useState(false);
 
   const {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -37,9 +53,15 @@ export function ContactForm({ defaultTopic = "lessons" }: ContactFormProps) {
       email: "",
       phone: "",
       topic: defaultTopic,
-      message: "",
+      message: defaultMessage,
+      productSlug: defaultProductSlug,
+      productTitle: defaultProductTitle,
     },
   });
+
+  const topic = watch("topic");
+  const isWaitlist = topic === "lesson_waitlist";
+  const isShopInterest = topic === "shop_support";
 
   const onSubmit = handleSubmit((values) => {
     startTransition(async () => {
@@ -50,8 +72,18 @@ export function ContactForm({ defaultTopic = "lessons" }: ContactFormProps) {
         return;
       }
 
+      setWasWaitlist(values.topic === "lesson_waitlist");
+      setWasShopInterest(values.topic === "shop_support");
       setSubmitted(true);
-      reset();
+      reset({
+        senderName: "",
+        email: "",
+        phone: "",
+        topic: defaultTopic,
+        message: defaultMessage,
+        productSlug: defaultProductSlug,
+        productTitle: defaultProductTitle,
+      });
       toast.success(result.message);
     });
   });
@@ -60,12 +92,17 @@ export function ContactForm({ defaultTopic = "lessons" }: ContactFormProps) {
     return (
       <div className="rounded-2xl border border-sky-100 bg-sky-50/80 px-6 py-8">
         <h2 className="text-xl font-semibold text-slate-900">Dzięki!</h2>
-        <p className="mt-2 text-muted">
-          Wiadomość jest u mnie. Na podany e-mail leci potwierdzenie. Sprawdź też
-          folder spam.
+        <p className="mt-2 text-slate-700">
+          {wasWaitlist
+            ? LESSON_WAITLIST_SUCCESS
+            : wasShopInterest
+              ? `Zapis na listę przyjęty. Przy premierze tego e-booka odezwę się z kodem −${SHOP_EARLY_BIRD_PERCENT}% (dotyczy tylko tego tytułu).`
+              : "Wiadomość jest u mnie. Na podany e-mail leci potwierdzenie. Sprawdź też folder spam."}
         </p>
         <Button className="mt-6" type="button" onClick={() => setSubmitted(false)}>
-          Napisz kolejną wiadomość
+          {wasWaitlist || wasShopInterest
+            ? "Wyślij kolejną wiadomość"
+            : "Napisz kolejną wiadomość"}
         </Button>
       </div>
     );
@@ -73,6 +110,9 @@ export function ContactForm({ defaultTopic = "lessons" }: ContactFormProps) {
 
   return (
     <form onSubmit={onSubmit} className="space-y-5" noValidate>
+      <input type="hidden" {...register("productSlug")} />
+      <input type="hidden" {...register("productTitle")} />
+
       <Field label="Imię" htmlFor="senderName" error={errors.senderName?.message}>
         <Input
           id="senderName"
@@ -108,24 +148,51 @@ export function ContactForm({ defaultTopic = "lessons" }: ContactFormProps) {
           className="flex h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-base text-slate-900 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
           {...register("topic")}
         >
-          {contactTopics.map((topic) => (
-            <option key={topic} value={topic}>
-              {contactTopicLabels[topic]}
+          {contactTopics.map((item) => (
+            <option key={item} value={item}>
+              {contactTopicLabels[item]}
             </option>
           ))}
         </select>
       </Field>
 
-      <Field label="Wiadomość" htmlFor="message" error={errors.message?.message}>
+      {isWaitlist ? (
+        <p className="text-sm leading-relaxed text-slate-700">
+          Dopiszesz się do prywatnej listy oczekujących na lekcję. Jak zwolni się
+          stałe okienko, odezwę się w pierwszej kolejności.
+        </p>
+      ) : null}
+
+      {isShopInterest ? (
+        <p className="text-sm leading-relaxed text-slate-700">
+          {SHOP_INTEREST_FORM_HINT}
+        </p>
+      ) : null}
+
+      <Field
+        label={isWaitlist ? "Preferencja / wiadomość" : "Wiadomość"}
+        htmlFor="message"
+        error={errors.message?.message}
+      >
         <Textarea
           id="message"
-          placeholder="Napisz, czego szukasz — lekcje, setup, pytania o materiały..."
+          placeholder={
+            isWaitlist
+              ? "np. wtorki po 17, dojazd / Forum / online…"
+              : isShopInterest
+                ? "np. interesuje mnie Start z gitarą / Setup / wszystkie…"
+                : "Napisz, czego szukasz — serwis, materiały, lekcje online..."
+          }
           {...register("message")}
         />
       </Field>
 
       <Button type="submit" size="lg" disabled={isPending} className="w-full sm:w-auto">
-        {isPending ? "Wysyłanie..." : "Wyślij wiadomość"}
+        {isPending
+          ? "Wysyłanie..."
+          : isWaitlist
+            ? "Dopisz mnie do listy oczekujących"
+            : "Wyślij wiadomość"}
       </Button>
     </form>
   );

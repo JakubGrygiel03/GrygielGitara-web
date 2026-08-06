@@ -1,24 +1,36 @@
 import Image from "next/image";
 
 import { Reveal } from "@/components/reveal";
+import {
+  SECTION_BAND_A,
+  SECTION_BODY,
+  SECTION_EYEBROW,
+  SECTION_LEAD,
+  SECTION_PAD,
+  SECTION_TITLE,
+} from "@/lib/section";
 import { cn } from "@/lib/utils";
 
 const reasons = [
   {
-    title: "Ergonomia dłoni zamiast „pułapki akordów”",
-    body: "Na start uczymy się grać luźno i świadomie — bez wpychania w twarde, frustrujące chwyty za wcześnie. Mniej bólu palców, więcej czystego dźwięku.",
+    title: "Prawidłowa ergonomia",
+    body: "Uczysz się grać luźno i świadomie. Widzisz, że Twoje palce nie bolą, dłoń nie drętwieje, a z gitary wydobywasz czysty, głęboki dźwięk.",
   },
   {
-    title: "Ulubione utwory we właściwym momencie",
-    body: "Po około 4 lekcjach wielu uczniów gra już pierwsze melodie ze swojej listy — w uproszczonej, grywalnej wersji. Frajda pojawia się szybko, bez obietnic cudów w tydzień.",
+    title: "Bez szkolnych schematów",
+    body: "Budujemy plan pod Twoje cele, tempo i ulubione utwory. Słyszysz muzykę, którą lubisz — nie ćwiczysz z przestarzałego podręcznika dla oceny.",
   },
   {
-    title: "Telegram + tablet na lekcjach online",
-    body: "Online łączymy się na Telegramie — nie zabiera rejestru dźwięku jak typowe wideokonferencje. Materiały i przykłady pokazuję na tablecie, żebyś widział dokładnie to, co ja.",
+    title: "Szczera wada startu: nie od trudnych akordów",
+    body: "Nie zaczynamy od F-dura ani pełnych chwytów, bo to niszczy zapał i boli. Startujesz od prostych melodii jednogłosowych — palce budują niezależność bez falstartu.",
   },
   {
-    title: "Sprawny instrument przyspiesza progres",
-    body: "Setup, struny i podstawowa regulacja sprawiają, że nie walczysz z twardą gitarą. Jako absolwent Technikum Budowy i Strojenia Fortepianów dbam o to, by instrument pomagał — nie przeszkadzał.",
+    title: "Stały kontakt w tygodniu",
+    body: "Nie zostajesz sam między lekcjami. Gdy ćwiczysz w domu i trafisz na trudny moment, piszesz na komunikatorze — pomagam rozwiązać problem.",
+  },
+  {
+    title: "Sprawny instrument = lżejsza gra",
+    body: "Regulacja wysokości strun i wymiana na nowe, miękkie struny pomagają grać lżej. Czujesz, że instrument współpracuje z Tobą, zamiast walczyć z twardą gitarą.",
   },
 ] as const;
 
@@ -32,13 +44,13 @@ function MethodImage({ className }: { className?: string }) {
     >
       <Image
         src="/images/jakub-casual.png"
-        alt="Jakub Grygiel — praktyczna metoda nauki gitary"
+        alt="Jakub Grygiel, bezstresowe podejście do nauki gitary"
         fill
         sizes="(max-width: 1024px) 100vw, 40vw"
         className="object-cover object-top"
       />
       <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-900/75 to-transparent px-4 py-4 text-sm text-white">
-        Jak to działa na lekcji — krok po kroku
+        Luz, praktyka i Twoje ulubione utwory od startu
       </figcaption>
     </figure>
   );
@@ -46,35 +58,30 @@ function MethodImage({ className }: { className?: string }) {
 
 export function MethodSection() {
   return (
-    <section id="metoda" className="scroll-mt-24">
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
+    <section id="metoda" className={SECTION_BAND_A}>
+      <div className={cn("mx-auto max-w-6xl", SECTION_PAD)}>
         <div className="grid items-start gap-8 lg:grid-cols-2 lg:items-center lg:gap-16">
           <Reveal variant="right" className="space-y-5 sm:space-y-6">
             <div className="space-y-2 sm:space-y-3">
-              <p className="text-base font-bold uppercase tracking-wide text-sky-600 sm:text-lg">
-                Metoda
-              </p>
-              <h2 className="text-[1.375rem] font-bold leading-snug tracking-[-0.015em] text-slate-900 sm:text-3xl lg:text-4xl">
-                Dlaczego ta metoda działa?
-              </h2>
-              <p className="text-[0.9375rem] leading-relaxed text-muted sm:text-base lg:text-lg">
-                Komfort dłoni, repertuar we właściwym momencie, jasne narzędzia
-                online i sprawny instrument — to cztery rzeczy, które realnie
-                przyspieszają start.
+              <p className={SECTION_EYEBROW}>Emocje i efekty</p>
+              <h2 className={SECTION_TITLE}>Dlaczego ta metoda działa?</h2>
+              <p className={SECTION_LEAD}>
+                Po około 4 lekcjach wielu uczniów gra już pierwsze melodie ze
+                swojej listy ulubionych piosenek. Nie obiecuję cudów w tydzień,
+                ale daję prosty przekaz, dobre narzędzia i utwory, które
+                naprawdę chcesz grać.
               </p>
             </div>
 
             <MethodImage className="mx-auto max-w-sm lg:hidden" />
 
-            <ul className="space-y-0 divide-y divide-sky-100 border-t border-sky-100">
+            <ul className="space-y-0 divide-y divide-sky-300 border-t border-sky-300">
               {reasons.map((reason) => (
                 <li key={reason.title} className="py-3 sm:py-3.5">
                   <h3 className="text-base font-semibold text-slate-900 sm:text-lg">
                     {reason.title}
                   </h3>
-                  <p className="mt-1 text-sm leading-relaxed text-muted sm:text-base">
-                    {reason.body}
-                  </p>
+                  <p className={cn("mt-1", SECTION_BODY)}>{reason.body}</p>
                 </li>
               ))}
             </ul>

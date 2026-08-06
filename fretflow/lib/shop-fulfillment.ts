@@ -4,6 +4,7 @@ import { Resend } from "resend";
 import { resolveNotifyEmail } from "@/lib/admin-settings";
 import { getSiteUrl } from "@/lib/env";
 import { resolveProductFileAbsolute, type ProductRow } from "@/lib/shop";
+import { digitalConsentEmailNotice } from "@/lib/shop-digital-terms";
 import { getShopProductOffer } from "@/lib/shop-product-details";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -152,6 +153,7 @@ async function sendPurchaseEmail(input: {
       ${attachmentBlock}
     </ul>
     <p>${escapeHtml(tip)}</p>
+    <p><strong>Ważne:</strong> ${escapeHtml(digitalConsentEmailNotice)}</p>
     <p>Gdyby podczas czytania lub pierwszych domowych ćwiczeń pojawiły się jakiekolwiek pytania lub wątpliwości techniczne — napisz do mnie śmiało, odpowiadając na tę wiadomość.</p>
     <p>Trzymam mocno kciuki za Twoje pierwsze kroki z instrumentem i do usłyszenia!</p>
     <p>Jakub Grygiel<br/>GrygielGitara</p>

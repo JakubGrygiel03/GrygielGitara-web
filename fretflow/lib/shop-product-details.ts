@@ -3,6 +3,11 @@
  * Edit here when adding a new e-book / course / workshop page.
  */
 
+import {
+  digitalDeliveryGuaranteeBody,
+  digitalDeliveryGuaranteeTitle,
+} from "@/lib/shop-digital-terms";
+
 export type ShopOfferModule = {
   title: string;
   fact: string;
@@ -50,13 +55,13 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
   "start-z-gitara-bez-stresu": {
     slug: "start-z-gitara-bez-stresu",
     subtitle:
-      "Praktyczny poradnik na pierwsze tygodnie z gitarą – bez szkolnego stresu, z konkretnymi krokami, które od razu słychać.",
+      "Kompletny handbook na pierwsze tygodnie z gitarą (ok. 40 stron + wsparcie wideo): ergonomia, strojenie, proste melodie i spokojny plan dnia.",
     whyHook:
       "Czy wiesz, dlaczego aż osiemdziesiąt procent osób porzuca gitarę w ciągu pierwszych trzech tygodni?",
     whyBody: [
       "Większość samouków popełnia ten sam błąd: odpalają internet, próbują od razu łapać trudne, wielopalcowe akordy i walczyć z twardymi strunami. Efekt? Potworny ból palców, frustracja i poczucie braku talentu.",
-      "Wierzę, że muzyka od pierwszego dnia powinna dawać wolność i czystą radość, a nie kojarzyć się z bólem i zniechęceniem. Dlatego stworzyłem ten e-book.",
-      "Kluczem do sukcesu nie są skomplikowane chwyty, ale zaczerpnięta z rzemiosła lutniczego metoda małych kroków i nauka prostych melodii jednogłosowych. Dzięki temu Twoje dłonie bezboleśnie oswoją się z instrumentem, a Ty usłyszysz muzykę od razu.",
+      "Wierzę, że muzyka od pierwszego dnia powinna dawać wolność i czystą radość, a nie kojarzyć się z bólem i zniechęceniem. Dlatego powstał ten e-book — jako pełny program na start.",
+      "Kluczem nie są skomplikowane chwyty, tylko metoda małych kroków i proste melodie jednogłosowe. Dłonie oswajają się z gryfem bez bólu, a Ty słyszysz muzykę od razu.",
     ],
     promise:
       "Zagraj swoje pierwsze, czyste melodie już w tym tygodniu — bez bólu palców, bez frustracji i bez wkuwania nudnej teorii.",
@@ -94,10 +99,9 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
     emotionFeeling:
       "Czujesz tę niesamowitą, dziecięcą radość, gdy z Twojego pokoju zamiast głuchego brzęczenia płynie piękna, rozpoznawalna melodia. Masz poczucie, że w końcu to kontrolujesz — a muzyka staje się Twoim najlepszym sposobem na relaks po ciężkim dniu.",
     notForYou:
-      "Czego NIE znajdziesz w tym e-booku? To nie jest podręcznik akademicki. Nie ma tu nauki czytania nut, historii muzyki klasycznej ani skomplikowanej teorii. Jeśli Twoim celem jest przygotowanie się do egzaminów w państwowej szkole muzycznej — ten poradnik nie jest dla Ciebie. Stworzyłem go wyłącznie z myślą o czystej, bezstresowej i praktycznej rozrywce w domowym zaciszu.",
-    guaranteeTitle: "14-dniowa gwarancja bezpiecznego startu",
-    guaranteeBody:
-      "Jestem tak pewny tej metody, że biorę całe ryzyko na siebie. Jeśli po przeczytaniu e-booka i wykonaniu ćwiczeń uznasz, że Twoja gra się nie poprawiła lub moje podejście do Ciebie nie trafia — napisz do mnie jeden krótki e-mail. Zwrócę Ci sto procent wpłaconej kwoty bez żadnych pytań i bez żalu. Masz czternaście dni na pełne przetestowanie materiału.",
+      "To nie jest podręcznik akademicki. Nie ma tu nauki czytania nut, historii muzyki ani przygotowania do egzaminów w szkole muzycznej. E-book jest dla kogoś, kto chce spokojny, prowadzony start w domu — krok po kroku, bez szkolnego rygoru.",
+    guaranteeTitle: digitalDeliveryGuaranteeTitle,
+    guaranteeBody: digitalDeliveryGuaranteeBody,
     bonusesIntro:
       "Kupując e-booka dzisiaj, otrzymujesz dwa darmowe dodatki, które rozwiążą Twoje kolejne problemy:",
     bonuses: [
@@ -116,7 +120,7 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
       "To pierwsza wersja tego e-booka. Ustawiam cenę świadomie niżej, bo zależy mi na szczerych opiniach i poprawkach od pierwszych czytelników — nie na sztucznej „promocji do północy”. Kupujesz gotowy materiał PDF z bonusami; w kolejnych wydaniach cena może wzrosnąć, gdy treść będzie dopracowana na podstawie feedbacku.",
     editionNote: "1. wersja e-booka · cena za feedback i rozwój materiału",
     ctaNote:
-      "Po płatności PDF znajdziesz w koncie (Moje kursy → Zakupy) oraz na e-mailu. Zacznij bezstresową przygodę z muzyką już za kilka minut.",
+      "Po płatności PDF znajdziesz zwykle na e-mailu oraz w „Konto” → „Zakupy”. Przed zakupem zaznaczysz zgodę na natychmiastowe dostarczenie — po udostępnieniu pliku ustawowy zwrot bez podania przyczyny nie przysługuje.",
     purchaseEmailTip:
       "Na start mam dla Ciebie jedną, małą wskazówkę: nie rzucaj się od razu na głęboką wodę i trudne akordy. Zacznij spokojnie od pierwszych rozdziałów o ergonomii dłoni i prostych, jednogłosowych melodiach. Pozwól swoim palcom bezstresowo oswoić się z gryfem, a efekty usłyszysz szybciej, niż się spodziewasz.",
   },
@@ -169,9 +173,8 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
       "Czujesz spokój i kontrolę — nie jesteś już zależny od przypadkowych filmików na YouTube. Twoja gitara jest zadbana, a Ty masz pewność, że robisz to dobrze.",
     notForYou:
       "To nie jest kurs profesjonalnego lutnictwa ani zamiennik pełnego setupu w warsztacie. Nie znajdziesz tu frezowania siodełka, prostowania gryfu ani zaawansowanej elektroniki. Jeśli chcesz zostać technikiem — idź w warsztat. Ten poradnik jest dla gracza, który chce bezpiecznie zadbać o instrument w domu.",
-    guaranteeTitle: "14-dniowa gwarancja satysfakcji",
-    guaranteeBody:
-      "Jeśli po przeczytaniu uznasz, że materiał nic Ci nie dał — napisz krótki e-mail. Zwrócę 100% kwoty bez pytań i bez żalu. Masz 14 dni na spokojne sprawdzenie.",
+    guaranteeTitle: digitalDeliveryGuaranteeTitle,
+    guaranteeBody: digitalDeliveryGuaranteeBody,
     bonusesIntro: "Do e-booka dorzucam dodatki, które rozbrajają typowe wymówki:",
     bonuses: [
       {
@@ -189,7 +192,7 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
       "To pierwsze wydanie poradnika. Cena jest niższa celowo: zbieram uwagi od osób, które realnie użyją checklisty przy własnej gitarze. Nie ma tu odliczania „było drożej, jest taniej” — jest uczciwa stawka za 1. wersję, z myślą o ulepszeniach w następnych edycjach.",
     editionNote: "1. wersja poradnika · niższa cena za feedback praktyczny",
     ctaNote:
-      "Po płatności PDF jest w Moje kursy → Zakupy oraz na e-mailu. Możesz zacząć przy gitarze jeszcze dziś.",
+      "Po płatności PDF jest zwykle na e-mailu oraz w „Konto” → „Zakupy”. Przed zakupem zaznaczysz zgodę na natychmiastowe dostarczenie — po udostępnieniu pliku ustawowy zwrot bez podania przyczyny nie przysługuje.",
     purchaseEmailTip:
       "Na start: zanim cokolwiek „regulujesz na czuja”, zrób spokojnie checklistę z e-booka — najpierw struny i czystość, potem ocena, czy coś wymaga serwisu. Małe, bezpieczne kroki chronią instrument i Twój spokój.",
   },
@@ -242,9 +245,8 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
       "Zamiast wstydu i spięcia pojawia się spokój: wiesz, że timing da się trenować. Muzyka znów jest zabawą, a nie egzaminem.",
     notForYou:
       "To nie jest podręcznik akademickiej rytmiki ani kurs na dyplom w szkole muzycznej. Nie ma tu skomplikowanych polirytmii ani teorii na egzamin. Jeśli szukasz rozrywki i praktycznego timingowego startu w domu — jesteś we właściwym miejscu.",
-    guaranteeTitle: "14-dniowa gwarancja satysfakcji",
-    guaranteeBody:
-      "Przetestuj materiał w spokoju. Jeśli podejście do Ciebie nie trafia — napisz e-mail, zwrócę 100% bez pytań. Masz 14 dni.",
+    guaranteeTitle: digitalDeliveryGuaranteeTitle,
+    guaranteeBody: digitalDeliveryGuaranteeBody,
     bonusesIntro: "Dorzucam turbo-dodatki, które rozbrajają typowe wymówki:",
     bonuses: [
       {
@@ -262,7 +264,7 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
       "To pierwsza wersja materiału o rytmie. Cenę trzymam niżej, żeby więcej osób mogło przetestować ćwiczenia i powiedzieć, co działa w domu — a co warto dopisać. Bez sztucznych przecen: płacisz za 1. wydanie, a ja inwestuję Twój feedback w kolejne poprawki.",
     editionNote: "1. wersja e-booka · cena za feedback i rozwój ćwiczeń",
     ctaNote:
-      "Po płatności materiał jest w Moje kursy → Zakupy i na e-mailu. Pierwszą sesję z metronomem możesz zrobić dziś wieczorem.",
+      "Po płatności materiał jest zwykle na e-mailu oraz w „Konto” → „Zakupy”. Przed zakupem zaznaczysz zgodę na natychmiastowe dostarczenie — po udostępnieniu pliku ustawowy zwrot bez podania przyczyny nie przysługuje.",
     purchaseEmailTip:
       "Na start: włącz metronom wolniej, niż Ci się wydaje „wygodnie”, i zrób krótką serię z pierwszych ćwiczeń. Timing buduje się małymi wygranymi — nie walką z tempem.",
   },

@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { isFreeGuideOpen } from "@/lib/free-guide";
+import { FREE_GUIDE_COMING_SOON_CTA } from "@/lib/free-guide-copy";
 
 export function Hero() {
   const freeGuideOpen = isFreeGuideOpen();
@@ -36,15 +37,16 @@ export function Hero() {
               className="hero-animate-item text-[1.375rem] font-semibold leading-snug tracking-[-0.015em] text-slate-900 sm:text-4xl sm:leading-tight md:text-[2.75rem]"
               style={{ animationDelay: "200ms" }}
             >
-              Zagraj to, co lubisz — bez szkolnego stresu
+              Zagraj swoje ulubione utwory bez nudnej teorii i szkolnego stresu
             </h1>
 
             <p
-              className="hero-animate-item text-[0.9375rem] leading-relaxed text-muted sm:text-lg md:text-xl"
+              className="hero-animate-item text-base leading-[1.65] text-slate-700 sm:text-lg md:text-xl"
               style={{ animationDelay: "280ms" }}
             >
-              Indywidualne lekcje gitary w Gdańsku: dojazd, studio obok Galerii
-              Forum albo online.
+              Lekcje w Gdańsku (dojazd / okolice Galerii Forum) i online — plus
+              rzemieślnicza opieka nad instrumentem od technika, żeby grać lżej,
+              bez zbędnego bólu palców.
             </p>
 
             <div
@@ -58,29 +60,22 @@ export function Hero() {
               >
                 <Link href="/rezerwacja">Umów lekcję próbną</Link>
               </Button>
-              {freeGuideOpen ? (
-                <Button
-                  asChild
-                  variant="secondary"
-                  size="lg"
-                  className="w-full px-5 text-[0.9375rem] leading-snug sm:w-auto sm:text-base"
-                >
-                  <Link href="/pobierz-poradnik">Pobierz darmowy poradnik</Link>
-                </Button>
-              ) : (
-                <Button
-                  asChild
-                  variant="secondary"
-                  size="lg"
-                  className="w-full px-5 text-[0.9375rem] leading-snug sm:w-auto sm:text-base"
-                >
-                  <Link href="/kontakt">Napisz wiadomość</Link>
-                </Button>
-              )}
+              <Button
+                asChild
+                variant="secondary"
+                size="lg"
+                className="w-full px-5 text-[0.9375rem] leading-snug sm:w-auto sm:text-base"
+              >
+                <Link href="/pobierz-poradnik">
+                  {freeGuideOpen
+                    ? "Darmowy PDF: Gitarowy Falstart"
+                    : `Darmowy PDF · ${FREE_GUIDE_COMING_SOON_CTA}`}
+                </Link>
+              </Button>
             </div>
 
             <p
-              className="hero-animate-item text-[0.8125rem] leading-relaxed text-slate-600 sm:text-base"
+              className="hero-animate-item text-sm leading-relaxed text-slate-700 sm:text-base"
               style={{ animationDelay: "440ms" }}
             >
               Gwarancja pierwszej lekcji. Jeśli nie złapiemy wspólnego języka,

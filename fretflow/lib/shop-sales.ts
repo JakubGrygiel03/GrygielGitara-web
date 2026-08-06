@@ -1,7 +1,7 @@
 /**
- * Public shop checkout / catalog sales.
- * Set SHOP_SALES_OPEN=true on Vercel (and .env.local) to reopen buying.
- * Admin product grants and already-owned downloads stay available either way.
+ * Public Stripe checkout.
+ * false = catalog stays visible, CTAs become „zapisz się / zniżka”.
+ * true = reopen buying. Owned downloads work either way.
  */
 export function isShopSalesOpen(): boolean {
   const raw = process.env.SHOP_SALES_OPEN?.trim().toLowerCase();

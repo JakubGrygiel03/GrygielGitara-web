@@ -9,6 +9,10 @@ import { registerStudent } from "@/app/actions/student-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  registerConfirmToast,
+  registerEmailNotice,
+} from "@/lib/auth-email-copy";
 
 export function StudentRegisterForm() {
   const router = useRouter();
@@ -16,7 +20,42 @@ export function StudentRegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [needsEmailConfirm, setNeedsEmailConfirm] = useState(false);
   const [isPending, startTransition] = useTransition();
+
+  if (needsEmailConfirm) {
+    return (
+      <div className="mx-auto w-full max-w-md space-y-6 rounded-2xl border border-sky-100 bg-white p-6 shadow-sm sm:p-8">
+        <div className="space-y-2">
+          <p className="text-xs font-semibold uppercase tracking-wide text-sky-600">
+            Moje konto
+          </p>
+          <h1 className="text-[1.375rem] font-bold leading-snug text-slate-900">
+            Sprawdź skrzynkę e-mail
+          </h1>
+        </div>
+        <div className="space-y-3 rounded-xl border border-sky-100 bg-sky-50 px-4 py-4 text-sm leading-relaxed text-sky-950">
+          <p>
+            Konto dla <strong>{email}</strong> jest założone. Wysłaliśmy (albo
+            zaraz wyślemy) mail z linkiem potwierdzającym.
+          </p>
+          <p>
+            Szukaj wiadomości od <strong>GrygielGitara</strong> (
+            <strong>kontakt@grygielgitara.pl</strong>). Czasem wpada do{" "}
+            <strong>spamu</strong>, <strong>ofert</strong> albo karty
+            powiadomień w aplikacji poczty — warto tam zajrzeć.
+          </p>
+          <p>
+            Kliknij link w mailu (to bezpieczne — aktywuje Twoje konto), potem
+            wróć tu i zaloguj się.
+          </p>
+        </div>
+        <Button asChild className="w-full">
+          <Link href="/moje-kursy/login">Przejdź do logowania</Link>
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto w-full max-w-md space-y-6 rounded-2xl border border-sky-100 bg-white p-6 shadow-sm sm:p-8">
@@ -28,10 +67,14 @@ export function StudentRegisterForm() {
           Załóż konto
         </h1>
         <p className="text-[0.9375rem] leading-relaxed text-muted">
-          Darmowe konto do materiałów, lekcji (jeśli uczysz się u mnie) i wkrótce
-          zakupów (e-booki, kursy). Hasło min. 8 znaków.
+          Darmowe konto do materiałów, lekcji (jeśli uczysz się u mnie) i
+          zakupów (e-booki). Hasło min. 8 znaków.
         </p>
       </div>
+
+      <p className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm leading-relaxed text-slate-700">
+        {registerEmailNotice}
+      </p>
 
       <form
         className="space-y-4"
@@ -46,6 +89,11 @@ export function StudentRegisterForm() {
             );
             if (!result.ok) {
               toast.error(result.message);
+              return;
+            }
+            if (result.needsEmailConfirm) {
+              setNeedsEmailConfirm(true);
+              toast.success(registerConfirmToast);
               return;
             }
             toast.success(result.message);

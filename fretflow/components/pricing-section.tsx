@@ -5,35 +5,56 @@ import { ShieldCheck } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { Button } from "@/components/ui/button";
 import { lessonPackages } from "@/lib/lesson-packages";
+import {
+  SECTION_BAND_B,
+  SECTION_BODY,
+  SECTION_EYEBROW,
+  SECTION_LEAD,
+  SECTION_PAD,
+  SECTION_TITLE,
+} from "@/lib/section";
+import { cn } from "@/lib/utils";
 
 export function PricingSection() {
   return (
-    <section id="cennik" className="scroll-mt-24 bg-surface">
-      <div className="mx-auto max-w-6xl space-y-5 px-4 py-12 sm:space-y-6 sm:px-6 sm:py-16 lg:py-20">
-        <div className="space-y-4 sm:space-y-5">
-          <div className="grid items-center gap-4 md:grid-cols-2 md:gap-6 lg:gap-8">
+    <section id="cennik" className={SECTION_BAND_B}>
+      <div className={cn("mx-auto max-w-6xl space-y-7 sm:space-y-8", SECTION_PAD)}>
+        <div className="space-y-6 sm:space-y-7">
+          <div className="grid items-center gap-6 md:grid-cols-2 md:gap-8 lg:gap-10">
             <Reveal
               variant="scale"
-              className="flex max-w-xl flex-col space-y-2 sm:space-y-3 md:max-w-none"
+              className="flex max-w-xl flex-col gap-4 sm:gap-5 md:max-w-none"
             >
-              <p className="text-base font-bold uppercase tracking-wide text-sky-600 sm:text-lg">
-                Cennik i bezpieczny start
-              </p>
-              <h2 className="text-balance text-[1.375rem] font-bold leading-snug tracking-[-0.015em] text-slate-900 sm:text-3xl lg:text-[2rem] lg:leading-snug">
-                Jasne pakiety i wartość w cenie lekcji
-              </h2>
+              <div className="space-y-3">
+                <p className={SECTION_EYEBROW}>Cennik i bezpieczny start</p>
+                <h2 className={cn("text-balance", SECTION_TITLE)}>
+                  Inwestujesz w lekcję, materiały i spokojny początek
+                </h2>
+              </div>
 
-              <div className="space-y-1.5 sm:space-y-2">
-                <h3 className="text-base font-semibold text-slate-900 sm:text-lg">
-                  Co dostajesz poza samą godziną
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-slate-900 sm:text-xl">
+                  Indywidualna lekcja i jasny plan
                 </h3>
-                <p className="text-pretty text-[0.9375rem] leading-relaxed text-muted sm:text-base">
-                  Materiały do ćwiczeń, wsparcie między spotkaniami oraz
-                  podstawowy setup / opiekę nad instrumentem dla aktywnych
-                  uczniów — żebyś nie dokładał osobno za rzeczy, które i tak
-                  potrzebujesz na start.
+                <p className={cn("text-pretty", SECTION_LEAD)}>
+                  Otrzymujesz mój pełny czas i 100% skupienia. Bez nudnych
+                  ćwiczeń z przestarzałych podręczników i bez zbędnej teorii na
+                  starcie.
+                </p>
+                <p className={cn("text-pretty", SECTION_LEAD)}>
+                  Na pierwszej lekcji nie rozpracujemy jeszcze całego trudnego
+                  utworu z radia — najpierw zdrowe podstawy i ułożenie dłoni.
+                  Zaczynamy od prostych melodii, które krok po kroku prowadzą do
+                  Twoich ulubionych piosenek.
                 </p>
               </div>
+
+              <p className={cn("text-pretty", SECTION_LEAD)}>
+                Przy pierwszej wymianie strun pomagam też wyczyścić gitarę i
+                ogarnąć podstawy opieki nad instrumentem. Online łączymy się na
+                Telegramie — lepsza barwa dźwięku, a materiały pokazuję na
+                tablecie.
+              </p>
             </Reveal>
 
             <Reveal variant="scale" delay={100}>
@@ -50,17 +71,17 @@ export function PricingSection() {
           </div>
 
           <Reveal variant="scale" delay={80}>
-            <div className="rounded-xl border border-sky-200 bg-sky-50/90 px-3 py-3 sm:px-4 sm:py-4">
-              <div className="flex gap-2.5 sm:gap-3">
+            <div className="rounded-xl border border-sky-200 bg-sky-50/90 px-4 py-4 sm:px-5 sm:py-5">
+              <div className="flex gap-3 sm:gap-3.5">
                 <ShieldCheck
                   className="mt-0.5 size-5 shrink-0 text-sky-600 sm:size-6"
                   aria-hidden
                 />
-                <div className="min-w-0 space-y-1">
-                  <h3 className="text-sm font-semibold text-slate-900 sm:text-base">
+                <div className="min-w-0 space-y-1.5">
+                  <h3 className="text-base font-semibold text-slate-900">
                     Gwarancja bezpiecznego startu
                   </h3>
-                  <p className="text-sm leading-relaxed text-slate-700">
+                  <p className={SECTION_BODY}>
                     Po pierwszej lekcji decydujesz Ty. Jeśli uznasz, że gitara
                     albo nasza współpraca to nie to, nie płacisz za te zajęcia.
                     Całe ryzyko biorę na siebie.
@@ -113,9 +134,7 @@ export function PricingSection() {
                 <p className="mt-2 text-sm font-medium text-sky-700">
                   {plan.note}
                 </p>
-                <p className="mt-3 text-sm leading-relaxed text-muted">
-                  {plan.details}
-                </p>
+                <p className={cn("mt-3", SECTION_BODY)}>{plan.details}</p>
               </Reveal>
             </li>
           ))}
@@ -124,14 +143,17 @@ export function PricingSection() {
         <Reveal
           variant="scale"
           delay={100}
-          className="mx-auto flex max-w-xl flex-col items-center space-y-3 text-center"
+          className="mx-auto flex max-w-lg flex-col items-center gap-4 text-center"
         >
           <Button asChild size="lg" className="w-full sm:w-auto">
             <Link href="/rezerwacja">Umów lekcję próbną</Link>
           </Button>
-          <p className="text-sm leading-relaxed text-muted">
-            W formularzu wybierasz wariant i cenę jak wyżej. Pierwsza lekcja z
-            gwarancją — płacisz tylko, jeśli uznasz, że warto kontynuować.
+          <p className={SECTION_BODY}>
+            W formularzu wybierasz wariant i cenę. Pierwsza lekcja z gwarancją —
+            płacisz tylko, jeśli chcesz kontynuować.
+          </p>
+          <p className={SECTION_BODY}>
+            Online przez Telegram · miejsca ograniczone kalendarzem koncertowym
           </p>
         </Reveal>
       </div>

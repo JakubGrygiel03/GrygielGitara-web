@@ -2,16 +2,18 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ShopProductCard } from "@/components/shop-product-card";
-import { Button } from "@/components/ui/button";
 import { loadShopCatalog } from "@/lib/shop";
 import { isShopSalesOpen } from "@/lib/shop-sales";
-import { shopProducts as fallbackProducts } from "@/lib/shop-products";
+import {
+  shopInterestHref,
+  shopProducts as fallbackProducts,
+} from "@/lib/shop-products";
 import { formatPricePln, isStripeConfigured } from "@/lib/stripe";
 
 export const metadata: Metadata = {
   title: "Sklep — e-booki i materiały",
   description:
-    "E-booki GrygielGitara — sprzedaż online już wkrótce. Materiały po zakupie w koncie i na e-mailu.",
+    "E-booki GrygielGitara — katalog już dostępny. Zapisz się na listę oczekujących i złap −30% przy premierze konkretnego tytułu.",
 };
 
 export default async function SklepPage({
@@ -21,39 +23,6 @@ export default async function SklepPage({
 }) {
   const params = await searchParams;
   const salesOpen = isShopSalesOpen();
-
-  if (!salesOpen) {
-    return (
-      <div className="bg-surface">
-        <section className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:py-16">
-          <div className="mx-auto max-w-xl space-y-5 text-center sm:space-y-6">
-            <p className="text-base font-bold uppercase tracking-wide text-sky-600 sm:text-lg">
-              Sklep
-            </p>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
-              Już wkrótce
-            </h1>
-            <p className="text-[0.9375rem] leading-relaxed text-muted sm:text-base">
-              Przygotowuję e-booki i materiały do sprzedaży online. Wrócę tu z
-              pełną ofertą niedługo.
-            </p>
-            <p className="text-sm leading-relaxed text-slate-700">
-              Masz już dostęp z lekcji albo dostałeś materiał ode mnie? Zaloguj
-              się — pliki są w sekcji Zakupy na koncie.
-            </p>
-            <div className="flex flex-col items-stretch justify-center gap-3 pt-2 sm:flex-row sm:items-center">
-              <Button asChild>
-                <Link href="/moje-kursy">Moje konto / Zakupy</Link>
-              </Button>
-              <Button asChild variant="secondary">
-                <Link href="/kontakt">Napisz, jeśli chcesz być powiadomiony</Link>
-              </Button>
-            </div>
-          </div>
-        </section>
-      </div>
-    );
-  }
 
   let items: Awaited<ReturnType<typeof loadShopCatalog>>["items"] = [];
   let stripeReady = isStripeConfigured();
@@ -74,14 +43,25 @@ export default async function SklepPage({
       shortDescription: product.shortDescription,
       description: "",
       priceLabel: product.priceLabel,
-      priceGrosze: 0,
+      priceGrosze: product.priceGrosze,
       badge: product.badge,
       image: product.image,
       imageAlt: product.imageAlt,
       comingSoon: product.status === "coming_soon",
+      earlyBirdOpen: product.earlyBirdOpen,
       owned: false,
     }));
   }
+
+  const catalogItems = items.map((product) => ({
+    ...product,
+    comingSoon: !salesOpen || product.comingSoon,
+    earlyBirdOpen: product.earlyBirdOpen ?? false,
+    priceLabel:
+      product.priceGrosze > 0
+        ? formatPricePln(product.priceGrosze)
+        : product.priceLabel,
+  }));
 
   return (
     <div className="bg-surface">
@@ -92,20 +72,40 @@ export default async function SklepPage({
               Sklep
             </p>
             <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
-              E-booki, które pomagają grać
+              E-booki do nauki gry
             </h1>
-            <p className="text-[0.9375rem] leading-relaxed text-muted sm:text-base">
-              Kupujesz zalogowany — po płatności Stripe PDF trafia do sekcji
-              Zakupy w koncie i na e-mail.{" "}
-              {!stripeReady
-                ? "Płatności online włączymy po dodaniu kluczy Stripe."
-                : null}
+            <p className="text-base leading-[1.65] text-slate-700 sm:text-[1.0625rem] sm:leading-relaxed">
+              {salesOpen
+                ? "Praktyczne materiały PDF na start i dalszą naukę. Kupujesz zalogowany — po płatności plik trafia do Zakupy w koncie i na e-mail."
+                : "Praktyczne materiały PDF na start i dalszą naukę. Katalog już możesz przeglądać — sprzedaż włączymy wkrótce."}
             </p>
           </div>
           <p className="shrink-0 text-sm font-medium text-slate-600">
-            {items.length} {items.length === 1 ? "pozycja" : "pozycje"}
+            {catalogItems.length}{" "}
+            {catalogItems.length === 1 ? "pozycja" : "pozycje"}
           </p>
         </div>
+
+        {!salesOpen ? (
+          <div className="mt-6 rounded-2xl border-2 border-sky-400 bg-sky-50 px-4 py-5 sm:px-6 sm:py-6">
+            <p className="text-base font-extrabold tracking-tight text-sky-900 sm:text-lg">
+              Premiera wkrótce — dołącz do listy i zgarnij -30%
+            </p>
+            <p className="mt-2 text-base leading-[1.65] text-slate-800 sm:text-[1.0625rem]">
+              Sprzedaż e-booków jeszcze nie wystartowała. Zapisz się na listę
+              zainteresowanych przy wybranym tytule, a w dniu premiery wyślemy
+              Ci kod rabatowy -30%.
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-slate-700">
+              <Link
+                href={shopInterestHref()}
+                className="font-semibold text-sky-800 underline-offset-2 hover:underline"
+              >
+                Masz pytania o materiały? Napisz do mnie.
+              </Link>
+            </p>
+          </div>
+        ) : null}
 
         {params.anulowano ? (
           <p className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
@@ -116,37 +116,32 @@ export default async function SklepPage({
         {usedFallback ? (
           <p className="mt-6 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-950">
             Katalog demo (uruchom migrację SQL sklepu w Supabase, żeby włączyć
-            prawdziwe produkty i płatności).
+            prawdziwe produkty).
           </p>
         ) : null}
 
-        {!usedFallback && !stripeReady ? (
+        {salesOpen && !usedFallback && !stripeReady ? (
           <p className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
-            Brak <code className="font-mono">STRIPE_SECRET_KEY</code> na Vercel —
-            dodaj klucz i zrób Redeploy, wtedy pojawi się „Kup teraz”.
+            Brak <code className="font-mono">STRIPE_SECRET_KEY</code> — płatności
+            będą niedostępne, dopóki nie dodasz klucza.
           </p>
         ) : null}
 
         <ul className="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
-          {items.map((product) => (
+          {catalogItems.map((product) => (
             <li key={product.id}>
               <ShopProductCard
-                product={{
-                  ...product,
-                  priceLabel:
-                    product.priceGrosze > 0
-                      ? formatPricePln(product.priceGrosze)
-                      : product.priceLabel,
-                }}
-                stripeReady={stripeReady && !usedFallback}
+                product={product}
+                stripeReady={stripeReady && salesOpen}
                 loggedIn={loggedIn}
+                salesOpen={salesOpen}
               />
             </li>
           ))}
         </ul>
 
-        <p className="mt-10 max-w-2xl text-sm leading-relaxed text-muted sm:mt-12">
-          Po zakupie materiały są w{" "}
+        <p className="mt-10 max-w-2xl text-base leading-[1.65] text-slate-700 sm:mt-12">
+          Masz już dostęp z lekcji? Pliki są w{" "}
           <Link
             href="/moje-kursy"
             className="font-medium text-sky-700 underline-offset-2 hover:underline"

@@ -41,7 +41,7 @@ export function AdminLeadsTab({ leads }: { leads: LeadRow[] }) {
             Lista e-mail ({leads.length})
           </h2>
           <p className="text-sm text-muted">
-            Osoby z poradnika PDF, kontaktu i rezerwacji — do mailingu.
+            Osoby z darmowego PDF (opcjonalna zgoda marketingowa).
           </p>
         </div>
         <button

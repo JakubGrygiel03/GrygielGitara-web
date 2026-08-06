@@ -26,6 +26,12 @@ export function SiteFooter() {
             Oferta
           </Link>
           <Link
+            href="/#materialy"
+            className="inline-flex min-h-11 items-center hover:text-sky-600"
+          >
+            Materiały
+          </Link>
+          <Link
             href="/#cennik"
             className="inline-flex min-h-11 items-center hover:text-sky-600"
           >
@@ -37,14 +43,12 @@ export function SiteFooter() {
           >
             Sklep
           </Link>
-          {freeGuideOpen ? (
-            <Link
-              href="/pobierz-poradnik"
-              className="inline-flex min-h-11 items-center hover:text-sky-600"
-            >
-              Poradnik PDF
-            </Link>
-          ) : null}
+          <Link
+            href="/pobierz-poradnik"
+            className="inline-flex min-h-11 items-center hover:text-sky-600"
+          >
+            {freeGuideOpen ? "Darmowy PDF" : "Darmowy PDF · wkrótce"}
+          </Link>
           <Link
             href="/rezerwacja"
             className="inline-flex min-h-11 items-center hover:text-sky-600"
@@ -62,6 +66,12 @@ export function SiteFooter() {
             className="inline-flex min-h-11 items-center hover:text-sky-600"
           >
             Kontakt
+          </Link>
+          <Link
+            href="/regulamin-sklepu"
+            className="inline-flex min-h-11 items-center hover:text-sky-600"
+          >
+            Regulamin sklepu
           </Link>
         </div>
       </div>

@@ -49,8 +49,14 @@ export default async function AdminPage() {
 async function loadAdminData(): Promise<AdminDashboardData> {
   const supabase = createAdminClient();
 
-  const [contactsResult, leadsResult, productsResult, settings] =
-    await Promise.all([
+  const [
+    contactsResult,
+    leadsResult,
+    waitlistResult,
+    earlyBirdResult,
+    productsResult,
+    settings,
+  ] = await Promise.all([
       supabase
         .from("contact_messages")
         .select(
@@ -64,8 +70,20 @@ async function loadAdminData(): Promise<AdminDashboardData> {
         .order("created_at", { ascending: false })
         .limit(500),
       supabase
+        .from("lesson_waitlist")
+        .select("id, created_at, full_name, email, phone, note, status")
+        .order("created_at", { ascending: false })
+        .limit(200),
+      supabase
+        .from("shop_early_bird_signups")
+        .select(
+          "id, created_at, full_name, email, phone, product_slug, product_title, discount_percent, claim_token, status, note",
+        )
+        .order("created_at", { ascending: false })
+        .limit(500),
+      supabase
         .from("products")
-        .select("id, slug, title, published, coming_soon")
+        .select("id, slug, title, published, coming_soon, early_bird_open")
         .order("title", { ascending: true }),
       getAdminSettings(),
     ]);
@@ -271,6 +289,8 @@ async function loadAdminData(): Promise<AdminDashboardData> {
     materials,
     sessionNotes,
     leads: leadsResult.error ? [] : (leadsResult.data ?? []),
+    waitlist: waitlistResult.error ? [] : (waitlistResult.data ?? []),
+    shopEarlyBird: earlyBirdResult.error ? [] : (earlyBirdResult.data ?? []),
     products: productsResult.error ? [] : (productsResult.data ?? []),
     shopAccounts,
     monthBalance,

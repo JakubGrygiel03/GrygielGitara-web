@@ -12,9 +12,9 @@ const buttonVariants = cva(
         default:
           "bg-sky-500 text-white hover:bg-sky-600 hover:shadow-md hover:shadow-sky-500/25",
         secondary:
-          "bg-sky-50 text-slate-900 border border-sky-100 hover:bg-sky-100 hover:border-sky-200",
+          "bg-white text-slate-900 border-2 border-sky-500 hover:bg-sky-50 hover:border-sky-600",
         outline:
-          "border border-slate-200 bg-white/70 text-slate-900 hover:bg-white hover:border-slate-300",
+          "border-2 border-slate-300 bg-white text-slate-900 hover:bg-slate-50 hover:border-slate-400",
         ghost: "hover:bg-sky-50 text-slate-900",
         link: "text-sky-600 underline-offset-4 hover:underline min-h-0 px-0 active:scale-100",
       },
@@ -48,7 +48,7 @@ export function Button({
 
   return (
     <Comp
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size }), className)}
       {...props}
     />
   );

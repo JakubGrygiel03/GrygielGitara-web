@@ -229,6 +229,7 @@ export function StudentPortal({ data }: { data: StudentPortalData }) {
                     image: item.image,
                     imageAlt: item.imageAlt,
                     comingSoon: false,
+                    earlyBirdOpen: false,
                     owned: true,
                   }}
                   stripeReady

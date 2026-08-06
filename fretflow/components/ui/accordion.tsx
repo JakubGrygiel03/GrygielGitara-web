@@ -70,7 +70,7 @@ export function AccordionContent({
       className="overflow-hidden text-sm data-[state=closed]:hidden"
       {...props}
     >
-      <div className={cn("pb-4 leading-relaxed text-muted", className)}>
+      <div className={cn("pb-4 text-base leading-[1.65] text-slate-700", className)}>
         {children}
       </div>
     </AccordionPrimitive.Content>

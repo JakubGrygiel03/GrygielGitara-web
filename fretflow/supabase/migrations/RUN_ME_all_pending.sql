@@ -22,7 +22,7 @@ create table if not exists public.contact_messages (
   sender_name text not null,
   email text not null,
   phone text,
-  topic text not null check (topic in ('lessons', 'setup_service', 'shop_support', 'other')),
+  topic text not null check (topic in ('lessons', 'lesson_waitlist', 'setup_service', 'shop_support', 'other')),
   message text not null,
   is_read boolean default false not null
 );
@@ -493,6 +493,148 @@ where slug in (
   'rytm-i-timing-na-start'
 )
 and (coming_soon = true or published = false);
+
+-- =============================================================================
+-- Shop: log zgód na natychmiastowe dostarczenie (art. 38 pkt 13)
+-- =============================================================================
+
+create table if not exists public.shop_digital_consents (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  product_id uuid references public.products (id) on delete set null,
+  email text,
+  immediate_delivery_consent boolean not null default true,
+  regulamin_accepted boolean not null default true,
+  consent_text text not null,
+  stripe_checkout_session_id text,
+  source text not null default 'checkout_start'
+);
+
+create index if not exists shop_digital_consents_user_id_idx
+  on public.shop_digital_consents (user_id);
+
+create index if not exists shop_digital_consents_created_at_idx
+  on public.shop_digital_consents (created_at desc);
+
+alter table public.shop_digital_consents enable row level security;
+
+grant select on table public.shop_digital_consents to authenticated;
+grant all on table public.shop_digital_consents to service_role;
+
+drop policy if exists "Users read own shop consents" on public.shop_digital_consents;
+create policy "Users read own shop consents"
+  on public.shop_digital_consents
+  for select
+  to authenticated
+  using (user_id = auth.uid());
+
+-- Marketing consent for free lead magnet (newsletter_subscribers)
+
+alter table public.newsletter_subscribers
+  add column if not exists marketing_consent boolean not null default false;
+
+alter table public.newsletter_subscribers
+  add column if not exists marketing_consent_text text;
+
+alter table public.newsletter_subscribers
+  add column if not exists marketing_consent_at timestamptz;
+
+-- Clarify Start e-book short copy (customer-facing)
+update public.products
+set
+  short_description =
+    'Pierwsze tygodnie gry w jednym handbooku (ok. 40 stron + wideo): postawa, strojenie, melodie i plan 15 minut dziennie.',
+  description =
+    'Kompletny e-book na start. Po zakupie PDF w koncie i na e-mailu.'
+where slug = 'start-z-gitara-bez-stresu';
+
+-- Lesson waitlist (full slots / concert schedule)
+create table if not exists public.lesson_waitlist (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  full_name text not null,
+  email text not null,
+  phone text,
+  note text,
+  status text not null default 'waiting'
+    check (status in ('waiting', 'contacted', 'booked', 'closed')),
+  unique (email)
+);
+
+alter table public.lesson_waitlist enable row level security;
+
+grant insert on table public.lesson_waitlist to anon, authenticated, service_role;
+grant select, update, delete on table public.lesson_waitlist to service_role;
+
+drop policy if exists "Allow public to join lesson waitlist" on public.lesson_waitlist;
+create policy "Allow public to join lesson waitlist"
+  on public.lesson_waitlist
+  for insert
+  to anon, authenticated
+  with check (true);
+
+-- Contact topic: lesson waitlist
+alter table public.contact_messages
+  drop constraint if exists contact_messages_topic_check;
+
+alter table public.contact_messages
+  add constraint contact_messages_topic_check
+  check (
+    topic in (
+      'lessons',
+      'lesson_waitlist',
+      'setup_service',
+      'shop_support',
+      'other'
+    )
+  );
+
+-- Early-bird waitlist per product (−30% frozen at signup)
+alter table public.products
+  add column if not exists early_bird_open boolean not null default false;
+
+update public.products
+set early_bird_open = true
+where slug in (
+  'start-z-gitara-bez-stresu',
+  'setup-gitary-w-domu',
+  'rytm-i-timing-na-start'
+);
+
+create table if not exists public.shop_early_bird_signups (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  full_name text not null,
+  email text not null,
+  phone text,
+  product_slug text not null,
+  product_title text not null,
+  discount_percent integer not null check (discount_percent > 0 and discount_percent <= 100),
+  claim_token text not null unique default encode(gen_random_bytes(16), 'hex'),
+  status text not null default 'waiting'
+    check (status in ('waiting', 'notified', 'redeemed', 'cancelled')),
+  note text,
+  unique (email, product_slug)
+);
+
+create index if not exists shop_early_bird_signups_product_slug_idx
+  on public.shop_early_bird_signups (product_slug);
+
+create index if not exists shop_early_bird_signups_created_at_idx
+  on public.shop_early_bird_signups (created_at desc);
+
+alter table public.shop_early_bird_signups enable row level security;
+
+grant insert on table public.shop_early_bird_signups to anon, authenticated, service_role;
+grant select, update, delete on table public.shop_early_bird_signups to service_role;
+
+drop policy if exists "Anyone can join early bird waitlist" on public.shop_early_bird_signups;
+create policy "Anyone can join early bird waitlist"
+  on public.shop_early_bird_signups
+  for insert
+  to anon, authenticated
+  with check (true);
 
 -- Odśwież cache PostgREST (API od razu widzi nowe kolumny)
 notify pgrst, 'reload schema';

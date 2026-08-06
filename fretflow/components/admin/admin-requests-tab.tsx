@@ -13,7 +13,12 @@ import {
 } from "@/app/actions/admin-data";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import type { BookingRow, ContactRow } from "@/lib/admin-types";
+import type {
+  BookingRow,
+  ContactRow,
+  ShopEarlyBirdRow,
+  WaitlistRow,
+} from "@/lib/admin-types";
 import { lessonPackageIds, lessonPackageLabel } from "@/lib/lesson-packages";
 import { bookingLocationLabels } from "@/lib/validations/booking";
 import { contactTopicLabels } from "@/lib/validations/contact";
@@ -25,14 +30,18 @@ function formatDate(value: string) {
   }).format(new Date(value));
 }
 
-type Sub = "rezerwacje" | "wiadomosci";
+type Sub = "rezerwacje" | "wiadomosci" | "waitlist" | "sklep";
 
 export function AdminRequestsTab({
   contacts,
   bookings,
+  waitlist,
+  shopEarlyBird,
 }: {
   contacts: ContactRow[];
   bookings: BookingRow[];
+  waitlist: WaitlistRow[];
+  shopEarlyBird: ShopEarlyBirdRow[];
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -40,11 +49,26 @@ export function AdminRequestsTab({
   const read = contacts.filter((c) => c.is_read);
   const pendingBookings = bookings.filter((b) => b.status === "pending");
   const handledBookings = bookings.filter((b) => b.status !== "pending");
+  const waiting = waitlist.filter((w) => w.status === "waiting");
+  const earlyWaiting = shopEarlyBird.filter((s) => s.status === "waiting");
+  const earlyByProduct = earlyWaiting.reduce<Record<string, number>>(
+    (acc, row) => {
+      acc[row.product_title] = (acc[row.product_title] ?? 0) + 1;
+      return acc;
+    },
+    {},
+  );
 
   const defaultSub: Sub =
-    pendingBookings.length > 0 || unread.length === 0
+    pendingBookings.length > 0
       ? "rezerwacje"
-      : "wiadomosci";
+      : earlyWaiting.length > 0
+        ? "sklep"
+        : waiting.length > 0
+          ? "waitlist"
+          : unread.length === 0
+            ? "rezerwacje"
+            : "wiadomosci";
   const [sub, setSub] = useState<Sub>(defaultSub);
   const [readOpen, setReadOpen] = useState(false);
   const [handledOpen, setHandledOpen] = useState(false);
@@ -54,15 +78,26 @@ export function AdminRequestsTab({
       <div>
         <h2 className="text-xl font-semibold text-slate-900">Zgłoszenia</h2>
         <p className="mt-1 text-sm text-muted">
-          Tu wpada wszystko z zewnątrz: prośby o lekcję i wiadomości z kontaktu.
+          Prośby o lekcję, lista oczekujących, zainteresowanie e-bookami i
+          wiadomości z kontaktu.
         </p>
       </div>
 
-      <div className="flex gap-2 rounded-xl bg-slate-100 p-1">
+      <div className="flex flex-wrap gap-2 rounded-xl bg-slate-100 p-1">
         <SubTab
           active={sub === "rezerwacje"}
           onClick={() => setSub("rezerwacje")}
           label={`Prośby o lekcję (${pendingBookings.length})`}
+        />
+        <SubTab
+          active={sub === "sklep"}
+          onClick={() => setSub("sklep")}
+          label={`E-booki −30% (${earlyWaiting.length})`}
+        />
+        <SubTab
+          active={sub === "waitlist"}
+          onClick={() => setSub("waitlist")}
+          label={`Lista lekcji (${waiting.length})`}
         />
         <SubTab
           active={sub === "wiadomosci"}
@@ -138,7 +173,106 @@ export function AdminRequestsTab({
             )}
           </Collapsible>
         </div>
-      ) : (
+      ) : null}
+
+      {sub === "waitlist" ? (
+        <div className="space-y-4">
+          {waitlist.length === 0 ? (
+            <p className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-center text-sm text-muted">
+              Lista pusta. Wpisy pojawią się, gdy ktoś dopisze się na stronie.
+            </p>
+          ) : (
+            <ul className="divide-y divide-sky-100 rounded-2xl border border-sky-100 bg-white">
+              {waitlist.map((entry) => (
+                <li
+                  key={entry.id}
+                  className="flex flex-wrap items-start justify-between gap-2 px-4 py-3 text-sm"
+                >
+                  <div>
+                    <p className="font-semibold text-slate-900">
+                      {entry.full_name}
+                    </p>
+                    <p className="text-muted">
+                      <a
+                        href={`mailto:${entry.email}`}
+                        className="text-sky-700 underline-offset-2 hover:underline"
+                      >
+                        {entry.email}
+                      </a>
+                      {entry.phone ? ` · ${entry.phone}` : ""}
+                    </p>
+                    {entry.note ? (
+                      <p className="mt-1 text-slate-700">{entry.note}</p>
+                    ) : null}
+                    <p className="mt-1 text-xs text-muted">
+                      {formatDate(entry.created_at)} · {entry.status}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ) : null}
+
+      {sub === "sklep" ? (
+        <div className="space-y-4">
+          <p className="rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm leading-relaxed text-sky-950">
+            Lista early-bird: zapis na konkretny slug + −% zamrożone w momencie
+            zgłoszenia. Przy premierze wyłącz{" "}
+            <code className="rounded bg-white px-1">early_bird_open</code> dla
+            tytułu i wyślij kod Stripe osobom z listy.
+          </p>
+          {Object.keys(earlyByProduct).length > 0 ? (
+            <ul className="flex flex-wrap gap-2">
+              {Object.entries(earlyByProduct).map(([title, count]) => (
+                <li
+                  key={title}
+                  className="rounded-full bg-sky-100 px-3 py-1 text-sm font-semibold text-sky-900"
+                >
+                  {title}: {count}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          {earlyWaiting.length === 0 ? (
+            <p className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-center text-sm text-muted">
+              Brak zapisów. Po odpaleniu SQL early-bird i kliknięciu CTA w sklepie
+              pojawią się tutaj.
+            </p>
+          ) : (
+            <ul className="space-y-3">
+              {earlyWaiting.map((row) => (
+                <li
+                  key={row.id}
+                  className="rounded-2xl border border-slate-200 bg-white px-4 py-4"
+                >
+                  <p className="font-semibold text-slate-900">{row.full_name}</p>
+                  <p className="text-sm text-slate-700">
+                    {row.email}
+                    {row.phone ? ` · ${row.phone}` : ""}
+                  </p>
+                  <p className="mt-1 text-sm font-medium text-sky-800">
+                    {row.product_title}{" "}
+                    <span className="text-slate-500">({row.product_slug})</span>{" "}
+                    · −{row.discount_percent}%
+                  </p>
+                  <p className="mt-1 text-xs text-slate-500">
+                    {formatDate(row.created_at)} · token {row.claim_token.slice(0, 8)}…
+                  </p>
+                  {row.note ? (
+                    <p className="mt-2 whitespace-pre-wrap text-sm text-slate-700">
+                      {row.note}
+                    </p>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ) : null}
+
+      {sub === "wiadomosci" ? (
         <div className="space-y-4">
           {unread.length === 0 ? (
             <p className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-center text-sm text-muted">
@@ -180,7 +314,7 @@ export function AdminRequestsTab({
             )}
           </Collapsible>
         </div>
-      )}
+      ) : null}
     </section>
   );
 }
@@ -419,7 +553,7 @@ function ContactCard({
           </p>
           <p className="mt-1 text-xs text-slate-500">
             {formatDate(contact.created_at)} ·{" "}
-            {contactTopicLabels[contact.topic]}
+            {contactTopicLabels[contact.topic] ?? contact.topic}
           </p>
         </div>
         {!readOnly && onRead ? (

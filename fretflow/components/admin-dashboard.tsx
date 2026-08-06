@@ -40,6 +40,8 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
     materials = [],
     sessionNotes = [],
     leads = [],
+    waitlist = [],
+    shopEarlyBird = [],
     products = [],
     shopAccounts = [],
     settings,
@@ -180,7 +182,12 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
       ) : null}
 
       {tab === "requests" ? (
-        <AdminRequestsTab contacts={contacts} bookings={bookings} />
+        <AdminRequestsTab
+          contacts={contacts}
+          bookings={bookings}
+          waitlist={waitlist}
+          shopEarlyBird={shopEarlyBird}
+        />
       ) : null}
 
       {tab === "calendar" ? (

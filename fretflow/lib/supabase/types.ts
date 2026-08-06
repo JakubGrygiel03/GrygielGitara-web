@@ -5,6 +5,7 @@
 
 export type ContactTopic =
   | "lessons"
+  | "lesson_waitlist"
   | "setup_service"
   | "shop_support"
   | "other";
@@ -390,6 +391,7 @@ export type Database = {
           file_path: string;
           published: boolean;
           coming_soon: boolean;
+          early_bird_open: boolean;
         };
         Insert: {
           id?: string;
@@ -405,6 +407,7 @@ export type Database = {
           file_path: string;
           published?: boolean;
           coming_soon?: boolean;
+          early_bird_open?: boolean;
         };
         Update: {
           id?: string;
@@ -420,6 +423,49 @@ export type Database = {
           file_path?: string;
           published?: boolean;
           coming_soon?: boolean;
+          early_bird_open?: boolean;
+        };
+        Relationships: [];
+      };
+      shop_early_bird_signups: {
+        Row: {
+          id: string;
+          created_at: string;
+          full_name: string;
+          email: string;
+          phone: string | null;
+          product_slug: string;
+          product_title: string;
+          discount_percent: number;
+          claim_token: string;
+          status: "waiting" | "notified" | "redeemed" | "cancelled";
+          note: string | null;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          full_name: string;
+          email: string;
+          phone?: string | null;
+          product_slug: string;
+          product_title: string;
+          discount_percent: number;
+          claim_token?: string;
+          status?: "waiting" | "notified" | "redeemed" | "cancelled";
+          note?: string | null;
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          full_name?: string;
+          email?: string;
+          phone?: string | null;
+          product_slug?: string;
+          product_title?: string;
+          discount_percent?: number;
+          claim_token?: string;
+          status?: "waiting" | "notified" | "redeemed" | "cancelled";
+          note?: string | null;
         };
         Relationships: [];
       };

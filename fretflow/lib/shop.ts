@@ -2,6 +2,7 @@ import path from "node:path";
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { staticEarlyBirdOpen } from "@/lib/shop-early-bird";
 import { formatPricePln, isStripeConfigured } from "@/lib/stripe";
 import type { Database } from "@/lib/supabase/types";
 
@@ -19,6 +20,8 @@ export type ShopCatalogItem = {
   image: string;
   imageAlt: string;
   comingSoon: boolean;
+  /** −30% waitlist open for this title only (frozen at signup). */
+  earlyBirdOpen: boolean;
   owned: boolean;
 };
 
@@ -103,6 +106,10 @@ export async function loadShopCatalog(): Promise<{
       image: product.image_path,
       imageAlt: `Okładka: ${product.title}`,
       comingSoon: product.coming_soon,
+      earlyBirdOpen:
+        typeof product.early_bird_open === "boolean"
+          ? product.early_bird_open
+          : staticEarlyBirdOpen(product.slug),
       owned: owned.has(product.id),
     })),
   };

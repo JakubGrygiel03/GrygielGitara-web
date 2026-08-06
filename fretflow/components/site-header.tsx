@@ -96,6 +96,20 @@ export function SiteHeader() {
     });
   };
 
+  const isActive = (href: string) => {
+    if (href.startsWith("/#")) return false;
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
+
+  const navLinkClass = (href: string) =>
+    [
+      "inline-flex min-h-10 items-center rounded-lg px-2.5 text-[0.95rem] font-bold tracking-tight transition-colors xl:min-h-11 xl:px-3 xl:text-base",
+      isActive(href)
+        ? "bg-sky-100 text-sky-900"
+        : "text-slate-900 hover:bg-sky-50 hover:text-sky-800",
+    ].join(" ");
+
   const mobileMenu =
     open && mounted
       ? createPortal(
@@ -113,10 +127,10 @@ export function SiteHeader() {
               aria-label="Menu"
               className="fixed inset-x-0 top-0 z-[110] flex max-h-[100dvh] flex-col bg-white shadow-xl lg:hidden"
             >
-              <div className="flex h-[4.5rem] shrink-0 items-center justify-between border-b border-sky-100 pl-3 pr-2 sm:h-20 sm:pl-4 sm:pr-3">
+              <div className="flex h-[4.5rem] shrink-0 items-center justify-between border-b-2 border-sky-200 pl-3 pr-2 sm:h-20 sm:pl-4 sm:pr-3">
                 <Link
                   href="/"
-                  className="text-[1.125rem] font-bold tracking-[-0.03em] text-slate-900 sm:text-[1.35rem]"
+                  className="text-[1.125rem] font-extrabold tracking-[-0.03em] text-slate-900 sm:text-[1.35rem]"
                   onClick={closeMenu}
                   aria-label="GrygielGitara — strona główna"
                 >
@@ -124,7 +138,7 @@ export function SiteHeader() {
                 </Link>
                 <button
                   type="button"
-                  className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl text-slate-700 hover:bg-sky-50"
+                  className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl text-slate-800 hover:bg-sky-50"
                   aria-label="Zamknij menu"
                   onClick={closeMenu}
                 >
@@ -136,15 +150,15 @@ export function SiteHeader() {
                 className="flex-1 overflow-y-auto px-4 py-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:px-6"
               >
                 <div className="mx-auto flex max-w-6xl flex-col gap-4">
-                  <div className="overflow-hidden rounded-2xl border border-sky-100 bg-white">
+                  <div className="overflow-hidden rounded-2xl border-2 border-sky-200 bg-white">
                     {mainNavLinks.map((link, index) => (
                       <Link
                         key={link.label}
                         href={link.href}
                         onClick={closeMenu}
-                        className={`flex min-h-12 items-center px-4 text-base font-semibold text-slate-800 transition-colors hover:bg-sky-50 active:bg-sky-100 sm:min-h-14 sm:text-lg ${
-                          index > 0 ? "border-t border-sky-100" : ""
-                        }`}
+                        className={`flex min-h-12 items-center px-4 text-base font-bold text-slate-900 transition-colors hover:bg-sky-50 active:bg-sky-100 sm:min-h-14 sm:text-lg ${
+                          index > 0 ? "border-t border-sky-200" : ""
+                        } ${isActive(link.href) ? "bg-sky-50 text-sky-900" : ""}`}
                       >
                         {link.label}
                       </Link>
@@ -153,9 +167,9 @@ export function SiteHeader() {
                   <Link
                     href="/moje-kursy/login"
                     onClick={closeMenu}
-                    className="inline-flex min-h-12 items-center gap-2 rounded-2xl border border-sky-200 bg-sky-50 px-4 text-base font-semibold text-sky-800 transition-colors hover:bg-sky-100 sm:min-h-14 sm:text-lg"
+                    className="inline-flex min-h-12 items-center gap-2 rounded-2xl border-2 border-sky-500 bg-white px-4 text-base font-bold text-slate-900 transition-colors hover:bg-sky-50 sm:min-h-14 sm:text-lg"
                   >
-                    <BookOpen className="size-5 shrink-0" aria-hidden />
+                    <BookOpen className="size-5 shrink-0 text-sky-600" aria-hidden />
                     Konto — zaloguj / załóż
                   </Link>
                   <Button asChild size="lg" className="w-full text-base">
@@ -173,18 +187,18 @@ export function SiteHeader() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-sky-100/80 bg-white/95 backdrop-blur-md">
+      <header className="sticky top-0 z-50 border-b-2 border-sky-200 bg-white/95 backdrop-blur-md">
         <div className="relative z-[60] flex h-[4.5rem] w-full items-center bg-white/95 pl-3 pr-2 sm:h-20 sm:pl-4 sm:pr-3 lg:pl-5 lg:pr-4">
           <Link
             href="/"
-            className="shrink-0 text-[1.125rem] font-bold leading-none tracking-[-0.03em] text-slate-900 sm:text-[1.35rem] lg:text-[1.45rem]"
+            className="shrink-0 text-[1.125rem] font-extrabold leading-none tracking-[-0.03em] text-slate-900 sm:text-[1.35rem] lg:text-[1.45rem]"
             onClick={closeMenu}
             aria-label="GrygielGitara — strona główna"
           >
             Grygiel<span className="text-sky-500">Gitara</span>
           </Link>
 
-          <div className="ml-auto flex min-w-0 items-center gap-1.5 sm:gap-2">
+          <div className="ml-auto flex min-w-0 items-center gap-2 sm:gap-2.5">
             <nav
               aria-label="Główne"
               className="hidden min-w-0 items-center gap-0.5 lg:flex xl:gap-1"
@@ -193,7 +207,8 @@ export function SiteHeader() {
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="inline-flex min-h-10 items-center rounded-lg px-2 text-[0.95rem] font-semibold text-slate-700 transition-colors hover:bg-sky-50 hover:text-slate-900 xl:min-h-11 xl:px-2.5 xl:text-base"
+                  className={navLinkClass(link.href)}
+                  aria-current={isActive(link.href) ? "page" : undefined}
                 >
                   {link.label}
                 </Link>
@@ -202,11 +217,11 @@ export function SiteHeader() {
 
             <Link
               href="/moje-kursy/login"
-              className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-sky-200/90 bg-sky-50 px-2.5 text-sm font-semibold text-sky-800 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] transition-colors hover:border-sky-300 hover:bg-sky-100 sm:min-h-11 sm:px-3 sm:text-[0.95rem]"
+              className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border-2 border-sky-500 bg-white px-2.5 text-sm font-bold text-slate-900 transition-colors hover:bg-sky-50 sm:min-h-11 sm:px-3 sm:text-[0.95rem]"
               onClick={closeMenu}
             >
               <BookOpen
-                className="size-4 shrink-0 sm:size-[1.1rem]"
+                className="size-4 shrink-0 text-sky-600 sm:size-[1.1rem]"
                 aria-hidden
               />
               <span>Konto</span>
@@ -215,7 +230,7 @@ export function SiteHeader() {
             <Button
               asChild
               size="default"
-              className="hidden text-base lg:inline-flex xl:text-lg"
+              className="hidden text-base font-bold lg:inline-flex xl:text-lg"
             >
               <Link href="/rezerwacja" onClick={closeMenu}>
                 Umów lekcję próbną
@@ -224,7 +239,7 @@ export function SiteHeader() {
 
             <button
               type="button"
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl text-slate-700 transition-colors hover:bg-sky-50 lg:hidden"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl text-slate-800 transition-colors hover:bg-sky-50 lg:hidden"
               aria-expanded={open}
               aria-controls="mobile-nav"
               aria-label={open ? "Zamknij menu" : "Otwórz menu"}
