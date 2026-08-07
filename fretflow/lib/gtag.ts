@@ -17,13 +17,31 @@ declare global {
   }
 }
 
-/** Fire Google Ads conversion after a successful contact/booking form. */
-export function trackGoogleConversion() {
-  if (typeof window === "undefined" || !window.gtag) return;
+function fireConversion(): boolean {
+  if (typeof window === "undefined" || !window.gtag) return false;
 
   window.gtag("event", "conversion", {
     send_to: GOOGLE_ADS_CONVERSION_SEND_TO,
   });
+  return true;
+}
+
+/**
+ * Fire Google Ads conversion after a successful contact/booking form.
+ * Retries briefly if gtag.js is still loading.
+ */
+export function trackGoogleConversion() {
+  if (typeof window === "undefined") return;
+
+  if (fireConversion()) return;
+
+  let attempts = 0;
+  const timer = window.setInterval(() => {
+    attempts += 1;
+    if (fireConversion() || attempts >= 20) {
+      window.clearInterval(timer);
+    }
+  }, 250);
 }
 
 /** @deprecated Use trackGoogleConversion */
