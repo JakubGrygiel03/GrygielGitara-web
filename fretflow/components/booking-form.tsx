@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { trackGoogleAdsContactConversion } from "@/lib/google-ads";
+import { trackGoogleConversion } from "@/lib/gtag";
 import { lessonPackageById } from "@/lib/lesson-packages";
 import {
   bookingFormSchema,
@@ -59,7 +59,7 @@ export function BookingForm() {
       }
 
       setSubmitted(true);
-      trackGoogleAdsContactConversion();
+      trackGoogleConversion();
       reset();
       toast.success(result.message);
     });

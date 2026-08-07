@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import Script from "next/script";
 import { Toaster } from "sonner";
 
 import { AuthReturnCatcher } from "@/components/auth-return-catcher";
-import { GoogleAdsTag } from "@/components/google-ads-tag";
+import { GOOGLE_ADS_ID } from "@/lib/gtag";
 import {
   SITE_CANONICAL_ORIGIN,
   SITE_DEFAULT_DESCRIPTION,
@@ -83,7 +84,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body
         className={`${plusJakarta.className} flex min-h-full flex-col bg-background text-foreground`}
       >
-        <GoogleAdsTag />
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-ads-gtag" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GOOGLE_ADS_ID}');
+          `}
+        </Script>
         <AuthReturnCatcher />
         {children}
         <Toaster richColors position="top-center" closeButton />
