@@ -185,7 +185,7 @@ export function Faq() {
         <Reveal variant="fade" className="max-w-2xl space-y-3 sm:space-y-4">
           <p className={SECTION_EYEBROW}>FAQ</p>
           <h2 className={SECTION_TITLE}>
-            Najczęściej zadawane pytania
+            Odpowiedzi na najczęściej zadawane pytania…
           </h2>
           <p className={SECTION_LEAD}>
             Pytania podzieliłem na dwie grupy: naukę gry oraz obsługę konta,
