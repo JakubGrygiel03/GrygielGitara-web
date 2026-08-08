@@ -133,12 +133,64 @@ export type AdminShopProduct = {
   published: boolean;
   coming_soon: boolean;
   early_bird_open?: boolean;
+  price_grosze?: number;
 };
 
 /** Auth accounts available for shop access grant (autocomplete). */
 export type AdminShopAccountOption = {
   email: string;
   label: string | null;
+};
+
+export type ShopRevenueEntry = {
+  id: string;
+  occurred_on: string;
+  category: string;
+  amount: number;
+  note: string | null;
+};
+
+export type ShopEntitlementRow = {
+  id: string;
+  created_at: string;
+  product_id: string;
+  source: string;
+  stripe_checkout_session_id: string | null;
+};
+
+export type ShopProductPerf = {
+  id: string;
+  slug: string;
+  title: string;
+  priceGrosze: number;
+  published: boolean;
+  comingSoon: boolean;
+  earlyBirdOpen: boolean;
+  stripeSales: number;
+  adminGrants: number;
+  monthStripeSales: number;
+  monthAdminGrants: number;
+  earlyBirdWaiting: number;
+};
+
+export type AdminShopStats = {
+  monthLabel: string;
+  monthRevenue: number;
+  lastMonthRevenue: number;
+  allTimeRevenue: number;
+  monthStripeRevenue: number;
+  monthManualRevenue: number;
+  allTimeStripeRevenue: number;
+  allTimeManualRevenue: number;
+  monthUnits: number;
+  allTimeUnits: number;
+  monthStripeUnits: number;
+  monthAdminGrants: number;
+  avgOrderValueMonth: number;
+  monthVsLastPct: number | null;
+  earlyBirdWaitingTotal: number;
+  products: ShopProductPerf[];
+  recentSales: ShopRevenueEntry[];
 };
 
 export type MonthBalance = {
@@ -163,6 +215,7 @@ export type AdminDashboardData = {
   shopEarlyBird: ShopEarlyBirdRow[];
   products: AdminShopProduct[];
   shopAccounts: AdminShopAccountOption[];
+  shopStats: AdminShopStats;
   monthBalance: MonthBalance;
   settings: AdminSettings;
   calendarError?: string | null;

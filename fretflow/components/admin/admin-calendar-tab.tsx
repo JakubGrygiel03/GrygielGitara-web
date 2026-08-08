@@ -93,7 +93,7 @@ export function AdminCalendarTab({
     <section className="space-y-6">
       <div>
         <h2 className="text-xl font-semibold text-slate-900">Lekcje</h2>
-        <p className="mt-1 text-sm text-muted">
+        <p className="mt-1 text-sm text-slate-600">
           Zaplanuj termin, wyślij info do ucznia, pilnuj tygodnia.
         </p>
       </div>
@@ -105,9 +105,9 @@ export function AdminCalendarTab({
       ) : null}
 
       {students.length === 0 ? (
-        <div className="rounded-2xl border border-sky-100 bg-sky-50 px-4 py-5 text-sm">
+        <div className="rounded-2xl border border-slate-300 bg-sky-50 px-4 py-5 text-sm">
           <p className="font-semibold text-slate-900">Najpierw dodaj ucznia</p>
-          <p className="mt-1 text-muted">
+          <p className="mt-1 text-slate-600">
             Bez ucznia nie zaplanujesz lekcji. Zrób to w zakładce Uczniowie.
           </p>
           <Button type="button" className="mt-3" onClick={onGoStudents}>
@@ -116,7 +116,7 @@ export function AdminCalendarTab({
         </div>
       ) : (
         <form
-          className="space-y-3 rounded-2xl border border-sky-100 bg-white p-4 sm:p-5"
+          className="space-y-3 rounded-2xl border border-slate-300 bg-white p-4 shadow-sm sm:p-5"
           onSubmit={(event) => {
             event.preventDefault();
             startTransition(async () => {
@@ -164,7 +164,7 @@ export function AdminCalendarTab({
             <select
               id="studentId"
               required
-              className="flex h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-base"
+              className="flex h-11 w-full rounded-xl border border-slate-300 bg-white shadow-sm px-3.5 text-base"
               value={lessonStudentId}
               onChange={(event) => {
                 const id = event.target.value;
@@ -245,7 +245,7 @@ export function AdminCalendarTab({
             </button>
 
             {moreOpen ? (
-              <div className="space-y-3 rounded-xl border border-slate-100 bg-slate-50/80 p-3">
+              <div className="space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
                 <label className="flex items-start gap-2 text-sm">
                   <input
                     type="checkbox"
@@ -360,7 +360,7 @@ export function AdminCalendarTab({
                 className={
                   isToday
                     ? "min-h-36 rounded-2xl border-2 border-sky-400 bg-sky-50/50 p-3"
-                    : "min-h-36 rounded-2xl border border-sky-100 bg-white p-3"
+                    : "min-h-36 rounded-2xl border border-slate-300 bg-white p-3"
                 }
               >
                 <p className="text-xs font-semibold uppercase tracking-wide text-sky-700">
@@ -372,7 +372,7 @@ export function AdminCalendarTab({
                 </p>
                 <ul className="mt-2 space-y-2">
                   {dayLessons.length === 0 ? (
-                    <li className="text-xs text-muted">—</li>
+                    <li className="text-xs text-slate-600">—</li>
                   ) : (
                     dayLessons.map((lesson) => (
                       <li
@@ -392,7 +392,7 @@ export function AdminCalendarTab({
                         </p>
                         <div className="mt-1 flex flex-wrap gap-x-2 gap-y-1">
                           <select
-                            className="h-7 rounded-md border border-slate-200 px-1 text-[11px]"
+                            className="h-7 rounded-md border border-slate-300 px-1 text-[11px]"
                             value={lesson.payment_status}
                             disabled={isPending}
                             onChange={(event) => {

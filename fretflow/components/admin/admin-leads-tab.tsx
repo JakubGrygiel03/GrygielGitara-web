@@ -40,7 +40,7 @@ export function AdminLeadsTab({ leads }: { leads: LeadRow[] }) {
           <h2 className="text-xl font-semibold text-slate-900">
             Lista e-mail ({leads.length})
           </h2>
-          <p className="text-sm text-muted">
+          <p className="text-sm text-slate-600">
             Osoby z darmowego PDF (opcjonalna zgoda marketingowa).
           </p>
         </div>
@@ -55,9 +55,9 @@ export function AdminLeadsTab({ leads }: { leads: LeadRow[] }) {
       </div>
 
       {leads.length === 0 ? (
-        <p className="text-sm text-muted">Brak zapisanych leadów.</p>
+        <p className="text-sm text-slate-600">Brak zapisanych leadów.</p>
       ) : (
-        <ul className="divide-y divide-sky-100 rounded-2xl border border-sky-100 bg-white">
+        <ul className="divide-y divide-slate-200 rounded-2xl border border-slate-300 bg-white">
           {leads.map((lead) => (
             <li
               key={lead.id}
@@ -65,7 +65,7 @@ export function AdminLeadsTab({ leads }: { leads: LeadRow[] }) {
             >
               <div>
                 <p className="font-semibold text-slate-900">{lead.email}</p>
-                <p className="text-muted">
+                <p className="text-slate-600">
                   {lead.source || "—"} · {formatDate(lead.created_at)}
                 </p>
               </div>

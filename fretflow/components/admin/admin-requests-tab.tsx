@@ -77,7 +77,7 @@ export function AdminRequestsTab({
     <section className="space-y-5">
       <div>
         <h2 className="text-xl font-semibold text-slate-900">Zgłoszenia</h2>
-        <p className="mt-1 text-sm text-muted">
+        <p className="mt-1 text-sm text-slate-600">
           Prośby o lekcję, lista oczekujących, zainteresowanie e-bookami i
           wiadomości z kontaktu.
         </p>
@@ -109,7 +109,7 @@ export function AdminRequestsTab({
       {sub === "rezerwacje" ? (
         <div className="space-y-4">
           {pendingBookings.length === 0 ? (
-            <p className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-center text-sm text-muted">
+            <p className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-center text-sm text-slate-600">
               Brak nowych próśb. Jak ktoś wypełni /rezerwacja — pojawi się tutaj.
             </p>
           ) : (
@@ -144,7 +144,7 @@ export function AdminRequestsTab({
             onToggle={() => setHandledOpen((v) => !v)}
           >
             {handledBookings.length === 0 ? (
-              <p className="text-sm text-muted">Pusto.</p>
+              <p className="text-sm text-slate-600">Pusto.</p>
             ) : (
               <ul className="space-y-3">
                 {handledBookings.map((booking) => (
@@ -178,11 +178,11 @@ export function AdminRequestsTab({
       {sub === "waitlist" ? (
         <div className="space-y-4">
           {waitlist.length === 0 ? (
-            <p className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-center text-sm text-muted">
+            <p className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-center text-sm text-slate-600">
               Lista pusta. Wpisy pojawią się, gdy ktoś dopisze się na stronie.
             </p>
           ) : (
-            <ul className="divide-y divide-sky-100 rounded-2xl border border-sky-100 bg-white">
+            <ul className="divide-y divide-slate-200 rounded-2xl border border-slate-300 bg-white">
               {waitlist.map((entry) => (
                 <li
                   key={entry.id}
@@ -192,7 +192,7 @@ export function AdminRequestsTab({
                     <p className="font-semibold text-slate-900">
                       {entry.full_name}
                     </p>
-                    <p className="text-muted">
+                    <p className="text-slate-600">
                       <a
                         href={`mailto:${entry.email}`}
                         className="text-sky-700 underline-offset-2 hover:underline"
@@ -204,7 +204,7 @@ export function AdminRequestsTab({
                     {entry.note ? (
                       <p className="mt-1 text-slate-700">{entry.note}</p>
                     ) : null}
-                    <p className="mt-1 text-xs text-muted">
+                    <p className="mt-1 text-xs text-slate-600">
                       {formatDate(entry.created_at)} · {entry.status}
                     </p>
                   </div>
@@ -236,7 +236,7 @@ export function AdminRequestsTab({
             </ul>
           ) : null}
           {earlyWaiting.length === 0 ? (
-            <p className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-center text-sm text-muted">
+            <p className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-center text-sm text-slate-600">
               Brak zapisów. Po odpaleniu SQL early-bird i kliknięciu CTA w sklepie
               pojawią się tutaj.
             </p>
@@ -245,7 +245,7 @@ export function AdminRequestsTab({
               {earlyWaiting.map((row) => (
                 <li
                   key={row.id}
-                  className="rounded-2xl border border-slate-200 bg-white px-4 py-4"
+                  className="rounded-2xl border border-slate-300 bg-white shadow-sm px-4 py-4"
                 >
                   <p className="font-semibold text-slate-900">{row.full_name}</p>
                   <p className="text-sm text-slate-700">
@@ -275,7 +275,7 @@ export function AdminRequestsTab({
       {sub === "wiadomosci" ? (
         <div className="space-y-4">
           {unread.length === 0 ? (
-            <p className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-center text-sm text-muted">
+            <p className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-center text-sm text-slate-600">
               Brak nowych wiadomości z /kontakt.
             </p>
           ) : (
@@ -306,7 +306,7 @@ export function AdminRequestsTab({
             onToggle={() => setReadOpen((v) => !v)}
           >
             {read.length === 0 ? (
-              <p className="text-sm text-muted">Pusto.</p>
+              <p className="text-sm text-slate-600">Pusto.</p>
             ) : (
               read.map((contact) => (
                 <ContactCard key={contact.id} contact={contact} readOnly />
@@ -355,7 +355,7 @@ function Collapsible({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white">
+    <div className="rounded-2xl border border-slate-300 bg-white shadow-sm">
       <button
         type="button"
         className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
@@ -369,7 +369,7 @@ function Collapsible({
         )}
       </button>
       {open ? (
-        <div className="space-y-3 border-t border-slate-100 px-4 py-4">
+        <div className="space-y-3 border-t border-slate-200 px-4 py-4">
           {children}
         </div>
       ) : null}
@@ -403,14 +403,14 @@ function BookingCard({
     <li
       className={
         muted
-          ? "rounded-2xl border border-slate-100 bg-slate-50/80 p-4"
-          : "rounded-2xl border border-sky-100 bg-white p-4"
+          ? "rounded-2xl border border-slate-200 bg-slate-50 p-4"
+          : "rounded-2xl border border-slate-300 bg-white p-4 shadow-sm"
       }
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="font-semibold text-slate-900">{booking.student_name}</p>
-          <p className="text-sm text-muted">
+          <p className="text-sm text-slate-600">
             {booking.email}
             {booking.phone ? ` · ${booking.phone}` : ""}
           </p>
@@ -419,7 +419,7 @@ function BookingCard({
           </p>
         </div>
         <select
-          className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm"
+          className="h-10 rounded-xl border border-slate-300 bg-white shadow-sm px-3 text-sm"
           value={booking.status}
           disabled={busy}
           onChange={(e) =>
@@ -437,7 +437,7 @@ function BookingCard({
         <Label htmlFor={`pkg-${booking.id}`}>Interesujący pakiet</Label>
         <select
           id={`pkg-${booking.id}`}
-          className="flex h-10 w-full max-w-md rounded-xl border border-slate-200 bg-white px-3 text-sm"
+          className="flex h-10 w-full max-w-md rounded-xl border border-slate-300 bg-white shadow-sm px-3 text-sm"
           disabled={busy}
           value={booking.interest_package ?? ""}
           onChange={(event) => {
@@ -469,7 +469,7 @@ function BookingCard({
 
       <dl className="mt-3 grid gap-1 text-sm text-slate-700 sm:grid-cols-2">
         <div>
-          <dt className="inline text-muted">Miejsce: </dt>
+          <dt className="inline text-slate-600">Miejsce: </dt>
           <dd className="inline">
             {booking.location_type
               ? bookingLocationLabels[booking.location_type]
@@ -477,7 +477,7 @@ function BookingCard({
           </dd>
         </div>
         <div>
-          <dt className="inline text-muted">Termin: </dt>
+          <dt className="inline text-slate-600">Termin: </dt>
           <dd className="inline">{booking.preferred_day || "—"}</dd>
         </div>
       </dl>
@@ -510,12 +510,12 @@ function BookingCard({
             : ""}
         </Button>
         {!muted ? (
-          <p className="text-xs text-muted sm:max-w-sm">
+          <p className="text-xs text-slate-600 sm:max-w-sm">
             Przepisuje dane do „Uczniowie”, przy pakiecie 4 lekcji zakłada
             karnet, status → dogadane. Potem ustaw termin w „Lekcje”.
           </p>
         ) : (
-          <p className="text-xs text-muted">
+          <p className="text-xs text-slate-600">
             Możesz dodać ponownie — przy tym samym e-mailu uzupełni istniejącego
             ucznia.
           </p>
@@ -540,14 +540,14 @@ function ContactCard({
     <li
       className={
         contact.is_read
-          ? "rounded-2xl border border-slate-100 bg-slate-50/80 p-4"
-          : "rounded-2xl border border-sky-200 bg-sky-50/50 p-4"
+          ? "rounded-2xl border border-slate-200 bg-slate-50 p-4"
+          : "rounded-2xl border border-slate-400 bg-white p-4"
       }
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="font-semibold text-slate-900">{contact.sender_name}</p>
-          <p className="text-sm text-muted">
+          <p className="text-sm text-slate-600">
             {contact.email}
             {contact.phone ? ` · ${contact.phone}` : ""}
           </p>

@@ -13,7 +13,14 @@ import { AdminSettingsTab } from "@/components/admin/admin-settings-tab";
 import { AdminShopTab } from "@/components/admin/admin-shop-tab";
 import { AdminStudentsTab } from "@/components/admin/admin-students-tab";
 import { Button } from "@/components/ui/button";
-import type { AdminDashboardData } from "@/lib/admin-types";
+import { EMPTY_ADMIN_SHOP_STATS } from "@/lib/admin-shop-stats";
+import {
+  adminInner,
+  adminNavTrack,
+  adminShell,
+} from "@/lib/admin-ui";
+import type { AdminDashboardData, MonthBalance } from "@/lib/admin-types";
+import { cn } from "@/lib/utils";
 
 type AdminDashboardProps = {
   data: AdminDashboardData;
@@ -24,10 +31,36 @@ type Tab =
   | "requests"
   | "calendar"
   | "students"
+  | "shop"
   | "service"
   | "leads"
-  | "shop"
   | "settings";
+
+const EMPTY_MONTH_BALANCE: MonthBalance = {
+  lessons: 0,
+  service: 0,
+  shop: 0,
+  total: 0,
+  monthLabel: "",
+};
+
+function navBtn(active: boolean) {
+  return cn(
+    "rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-colors sm:px-4",
+    active
+      ? "bg-sky-600 text-white shadow-sm"
+      : "bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900",
+  );
+}
+
+function navBtnMuted(active: boolean) {
+  return cn(
+    "rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors",
+    active
+      ? "bg-slate-800 text-white"
+      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
+  );
+}
 
 export function AdminDashboard({ data }: AdminDashboardProps) {
   const {
@@ -44,6 +77,8 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
     shopEarlyBird = [],
     products = [],
     shopAccounts = [],
+    shopStats = EMPTY_ADMIN_SHOP_STATS,
+    monthBalance = EMPTY_MONTH_BALANCE,
     settings,
     calendarError,
     opsError,
@@ -52,13 +87,15 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [tab, setTab] = useState<Tab>("dashboard");
-  const [moreOpen, setMoreOpen] = useState(false);
 
   const unreadCount = contacts.filter((c) => !c.is_read).length;
   const pendingBookings = bookings.filter((b) => b.status === "pending").length;
   const requestsBadge = unreadCount + pendingBookings;
+  const openService = serviceOrders.filter(
+    (o) => o.status !== "delivered",
+  ).length;
 
-  const primaryNav: { id: Tab; label: string; hint?: string }[] = [
+  const workNav: { id: Tab; label: string }[] = [
     { id: "dashboard", label: "Start" },
     {
       id: "requests",
@@ -66,159 +103,134 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
     },
     { id: "calendar", label: "Lekcje" },
     { id: "students", label: "Uczniowie" },
-    { id: "service", label: "Serwis" },
+    { id: "shop", label: "Sklep" },
+    {
+      id: "service",
+      label: openService > 0 ? `Serwis (${openService})` : "Serwis",
+    },
   ];
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6 px-4 py-8 sm:px-6 sm:py-12">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">
-            Panel GrygielGitara
-          </h1>
-          <p className="mt-1 max-w-xl text-sm text-muted">
-            Start → co ogarnąć · Zgłoszenia → nowe osoby · Lekcje → plan ·
-            Uczniowie → pakiety i notatki
-          </p>
-        </div>
-        <Button
-          type="button"
-          variant="secondary"
-          disabled={isPending}
-          onClick={() => {
-            startTransition(async () => {
-              await logoutAdmin();
-              router.refresh();
-            });
-          }}
-        >
-          Wyloguj
-        </Button>
-      </div>
-
-      <nav className="flex flex-wrap gap-2" aria-label="Główne menu">
-        {primaryNav.map((item) => (
-          <button
-            key={item.id}
+    <div data-admin className={adminShell}>
+      <div className={adminInner}>
+        <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-300 pb-5">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+              Panel GrygielGitara
+            </h1>
+          </div>
+          <Button
             type="button"
+            variant="secondary"
+            disabled={isPending}
             onClick={() => {
-              setTab(item.id);
-              setMoreOpen(false);
+              startTransition(async () => {
+                await logoutAdmin();
+                router.refresh();
+              });
             }}
-            className={
-              tab === item.id
-                ? "rounded-xl bg-sky-500 px-4 py-2.5 text-sm font-semibold text-white"
-                : "rounded-xl border border-sky-100 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-sky-50"
-            }
           >
-            {item.label}
-          </button>
-        ))}
-        <button
-          type="button"
-          onClick={() => setMoreOpen((v) => !v)}
-          className={
-            tab === "leads" || tab === "shop" || tab === "settings"
-              ? "rounded-xl bg-slate-800 px-4 py-2.5 text-sm font-semibold text-white"
-              : "rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50"
-          }
-        >
-          Więcej {moreOpen ? "▴" : "▾"}
-        </button>
-      </nav>
-
-      {moreOpen ? (
-        <div className="flex flex-wrap gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3">
-          <button
-            type="button"
-            onClick={() => setTab("leads")}
-            className={
-              tab === "leads"
-                ? "rounded-lg bg-white px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm"
-                : "rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white"
-            }
-          >
-            Lista e-mail ({leads.length})
-          </button>
-          <button
-            type="button"
-            onClick={() => setTab("shop")}
-            className={
-              tab === "shop"
-                ? "rounded-lg bg-white px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm"
-                : "rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white"
-            }
-          >
-            Sklep — dostęp
-          </button>
-          <button
-            type="button"
-            onClick={() => setTab("settings")}
-            className={
-              tab === "settings"
-                ? "rounded-lg bg-white px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm"
-                : "rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white"
-            }
-          >
-            Ustawienia
-          </button>
+            Wyloguj
+          </Button>
         </div>
-      ) : null}
 
-      {opsError ? (
-        <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-          {opsError}
-        </p>
-      ) : null}
+        <div className={cn(adminNavTrack, "space-y-2")}>
+          <nav className="flex flex-wrap gap-1.5" aria-label="Praca dzienna">
+            {workNav.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setTab(item.id)}
+                className={navBtn(tab === item.id)}
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
+          <div className="flex flex-wrap items-center gap-1 border-t border-slate-200 pt-2">
+            <span className="mr-1 px-1 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              Inne
+            </span>
+            <button
+              type="button"
+              onClick={() => setTab("leads")}
+              className={navBtnMuted(tab === "leads")}
+            >
+              Lista e-mail ({leads.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setTab("settings")}
+              className={navBtnMuted(tab === "settings")}
+            >
+              Ustawienia
+            </button>
+          </div>
+        </div>
 
-      {tab === "dashboard" ? (
-        <AdminOverviewTab
-          contacts={contacts}
-          bookings={bookings}
-          lessons={lessons}
-          serviceOrders={serviceOrders}
-          onGo={(next) => setTab(next as Tab)}
-        />
-      ) : null}
+        {opsError ? (
+          <p className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-950">
+            {opsError}
+          </p>
+        ) : null}
 
-      {tab === "requests" ? (
-        <AdminRequestsTab
-          contacts={contacts}
-          bookings={bookings}
-          waitlist={waitlist}
-          shopEarlyBird={shopEarlyBird}
-        />
-      ) : null}
+        {tab === "dashboard" ? (
+          <AdminOverviewTab
+            contacts={contacts}
+            bookings={bookings}
+            lessons={lessons}
+            serviceOrders={serviceOrders}
+            shopStats={shopStats}
+            monthBalance={monthBalance}
+            shopEarlyBird={shopEarlyBird}
+            leadsCount={leads.length}
+            onGo={(next) => setTab(next as Tab)}
+          />
+        ) : null}
 
-      {tab === "calendar" ? (
-        <AdminCalendarTab
-          students={students}
-          lessons={lessons}
-          calendarError={calendarError}
-          onGoStudents={() => setTab("students")}
-        />
-      ) : null}
+        {tab === "requests" ? (
+          <AdminRequestsTab
+            contacts={contacts}
+            bookings={bookings}
+            waitlist={waitlist}
+            shopEarlyBird={shopEarlyBird}
+          />
+        ) : null}
 
-      {tab === "students" ? (
-        <AdminStudentsTab
-          students={students}
-          packages={packages}
-          materials={materials}
-          sessionNotes={sessionNotes}
-        />
-      ) : null}
+        {tab === "calendar" ? (
+          <AdminCalendarTab
+            students={students}
+            lessons={lessons}
+            calendarError={calendarError}
+            onGoStudents={() => setTab("students")}
+          />
+        ) : null}
 
-      {tab === "service" ? (
-        <AdminServiceTab orders={serviceOrders} students={students} />
-      ) : null}
+        {tab === "students" ? (
+          <AdminStudentsTab
+            students={students}
+            packages={packages}
+            materials={materials}
+            sessionNotes={sessionNotes}
+          />
+        ) : null}
 
-      {tab === "leads" ? <AdminLeadsTab leads={leads} /> : null}
+        {tab === "shop" ? (
+          <AdminShopTab
+            products={products}
+            shopAccounts={shopAccounts}
+            shopStats={shopStats}
+          />
+        ) : null}
 
-      {tab === "shop" ? (
-        <AdminShopTab products={products} shopAccounts={shopAccounts} />
-      ) : null}
+        {tab === "service" ? (
+          <AdminServiceTab orders={serviceOrders} students={students} />
+        ) : null}
 
-      {tab === "settings" ? <AdminSettingsTab settings={settings} /> : null}
+        {tab === "leads" ? <AdminLeadsTab leads={leads} /> : null}
+
+        {tab === "settings" ? <AdminSettingsTab settings={settings} /> : null}
+      </div>
     </div>
   );
 }

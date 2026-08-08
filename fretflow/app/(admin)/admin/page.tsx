@@ -7,10 +7,13 @@ import {
   DEFAULT_ADMIN_SETTINGS,
   getAdminSettings,
 } from "@/lib/admin-settings";
+import { buildAdminShopStats } from "@/lib/admin-shop-stats";
 import type {
   AdminDashboardData,
   AdminShopAccountOption,
   LessonRow,
+  ShopEntitlementRow,
+  ShopRevenueEntry,
 } from "@/lib/admin-types";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -83,7 +86,9 @@ async function loadAdminData(): Promise<AdminDashboardData> {
         .limit(500),
       supabase
         .from("products")
-        .select("id, slug, title, published, coming_soon, early_bird_open")
+        .select(
+          "id, slug, title, published, coming_soon, early_bird_open, price_grosze",
+        )
         .order("title", { ascending: true }),
       getAdminSettings(),
     ]);
@@ -180,7 +185,7 @@ async function loadAdminData(): Promise<AdminDashboardData> {
     }
   }
 
-  const [svc, pkgs, mats, notes, revenue] = await Promise.all([
+  const [svc, pkgs, mats, notes, revenue, entitlements] = await Promise.all([
     supabase
       .from("service_orders")
       .select(
@@ -204,9 +209,14 @@ async function loadAdminData(): Promise<AdminDashboardData> {
       .limit(300),
     supabase
       .from("revenue_entries")
-      .select("id, occurred_on, category, amount")
+      .select("id, occurred_on, category, amount, note")
       .order("occurred_on", { ascending: false })
-      .limit(200),
+      .limit(500),
+    supabase
+      .from("user_entitlements")
+      .select("id, created_at, product_id, source, stripe_checkout_session_id")
+      .order("created_at", { ascending: false })
+      .limit(1000),
   ]);
 
   if (svc.error || pkgs.error || mats.error || notes.error) {
@@ -277,6 +287,39 @@ async function loadAdminData(): Promise<AdminDashboardData> {
     monthLabel,
   };
 
+  const products = productsResult.error ? [] : (productsResult.data ?? []);
+  const shopEarlyBird = earlyBirdResult.error
+    ? []
+    : (earlyBirdResult.data ?? []);
+
+  const shopRevenueRows: ShopRevenueEntry[] = (revenue.data ?? []).map(
+    (row) => ({
+      id: row.id,
+      occurred_on: row.occurred_on,
+      category: row.category,
+      amount: Number(row.amount),
+      note: row.note ?? null,
+    }),
+  );
+
+  const shopEntitlementRows: ShopEntitlementRow[] = (
+    entitlements.error ? [] : (entitlements.data ?? [])
+  ).map((row) => ({
+    id: row.id,
+    created_at: row.created_at,
+    product_id: row.product_id,
+    source: row.source ?? "stripe",
+    stripe_checkout_session_id: row.stripe_checkout_session_id ?? null,
+  }));
+
+  const shopStats = buildAdminShopStats({
+    products,
+    revenue: shopRevenueRows,
+    entitlements: shopEntitlementRows,
+    earlyBird: shopEarlyBird,
+    now,
+  });
+
   const shopAccounts = await loadShopAccountOptions(supabase, students);
 
   return {
@@ -290,9 +333,10 @@ async function loadAdminData(): Promise<AdminDashboardData> {
     sessionNotes,
     leads: leadsResult.error ? [] : (leadsResult.data ?? []),
     waitlist: waitlistResult.error ? [] : (waitlistResult.data ?? []),
-    shopEarlyBird: earlyBirdResult.error ? [] : (earlyBirdResult.data ?? []),
-    products: productsResult.error ? [] : (productsResult.data ?? []),
+    shopEarlyBird,
+    products,
     shopAccounts,
+    shopStats,
     monthBalance,
     settings: settings ?? DEFAULT_ADMIN_SETTINGS,
     calendarError,

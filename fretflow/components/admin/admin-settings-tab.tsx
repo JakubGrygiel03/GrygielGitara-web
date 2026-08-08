@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { updateAdminSettingsAction } from "@/app/actions/admin-settings";
-import { addRevenueEntry } from "@/app/actions/admin-students-extra";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,16 +15,11 @@ export function AdminSettingsTab({ settings }: { settings: AdminSettings }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [form, setForm] = useState(settings);
-  const [cash, setCash] = useState({
-    amount: "",
-    note: "",
-    occurredOn: new Date().toISOString().slice(0, 10),
-  });
 
   return (
     <section className="space-y-6">
       <form
-        className="space-y-4 rounded-2xl border border-sky-100 bg-white p-4 sm:p-5"
+        className="space-y-4 rounded-2xl border border-slate-300 bg-white p-4 shadow-sm sm:p-5"
         onSubmit={(event) => {
           event.preventDefault();
           startTransition(async () => {
@@ -40,7 +34,7 @@ export function AdminSettingsTab({ settings }: { settings: AdminSettings }) {
         }}
       >
         <h2 className="text-lg font-semibold text-slate-900">Ustawienia</h2>
-        <p className="text-sm text-muted">
+        <p className="text-sm text-slate-600">
           Proste przełączniki — bez grzebania w kodzie.
         </p>
 
@@ -103,7 +97,7 @@ export function AdminSettingsTab({ settings }: { settings: AdminSettings }) {
                 setForm((p) => ({ ...p, notifyEmail: e.target.value }))
               }
             />
-            <p className="text-xs text-muted">
+            <p className="text-xs text-slate-600">
               Główny adres to <code className="font-mono">CONTACT_TO_EMAIL</code>{" "}
               na Vercel. To pole używane tylko, gdy env jest puste.
             </p>
@@ -126,70 +120,10 @@ export function AdminSettingsTab({ settings }: { settings: AdminSettings }) {
         </Button>
       </form>
 
-      <form
-        className="space-y-3 rounded-2xl border border-sky-100 bg-white p-4 sm:p-5"
-        onSubmit={(event) => {
-          event.preventDefault();
-          startTransition(async () => {
-            const result = await addRevenueEntry({
-              category: "shop",
-              amount: cash.amount,
-              note: cash.note,
-              occurredOn: cash.occurredOn,
-            });
-            if (!result.ok) {
-              toast.error(result.message);
-              return;
-            }
-            toast.success(result.message);
-            setCash((p) => ({ ...p, amount: "", note: "" }));
-            router.refresh();
-          });
-        }}
-      >
-        <h2 className="text-lg font-semibold text-slate-900">
-          Sprzedaż ze sklepu
-        </h2>
-        <p className="text-sm text-muted">
-          Lekcje prowadzisz w Google Sheets — tu tylko szybka notatka z e-booków /
-          kursów, jeśli chcesz.
-        </p>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div className="space-y-1">
-            <Label htmlFor="cashAmount">Kwota (zł)</Label>
-            <Input
-              id="cashAmount"
-              required
-              value={cash.amount}
-              onChange={(e) => setCash((p) => ({ ...p, amount: e.target.value }))}
-            />
-          </div>
-          <div className="space-y-1">
-            <Label htmlFor="cashDate">Data</Label>
-            <Input
-              id="cashDate"
-              type="date"
-              required
-              value={cash.occurredOn}
-              onChange={(e) =>
-                setCash((p) => ({ ...p, occurredOn: e.target.value }))
-              }
-            />
-          </div>
-        </div>
-        <div className="space-y-1">
-          <Label htmlFor="cashNote">Co sprzedane</Label>
-          <Input
-            id="cashNote"
-            placeholder="np. e-book strojenie"
-            value={cash.note}
-            onChange={(e) => setCash((p) => ({ ...p, note: e.target.value }))}
-          />
-        </div>
-        <Button type="submit" disabled={isPending}>
-          Zapisz sprzedaż sklepową
-        </Button>
-      </form>
+      <p className="rounded-2xl border border-slate-300 bg-sky-50/60 px-4 py-3 text-sm text-slate-700">
+        Sprzedaż sklepową (KPI, Stripe, ręczny wpis kasowy) znajdziesz w{" "}
+        <strong>Więcej → Sklep</strong>.
+      </p>
     </section>
   );
 }

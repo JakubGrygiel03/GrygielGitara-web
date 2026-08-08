@@ -51,13 +51,13 @@ export function AdminServiceTab({
     <section className="space-y-6">
       <div>
         <h2 className="text-xl font-semibold text-slate-900">Serwis gitary</h2>
-        <p className="mt-1 text-sm text-muted">
+        <p className="mt-1 text-sm text-slate-600">
           Przyjęte instrumenty: kolejka → praca → odbiór → wydane.
         </p>
       </div>
 
       <form
-        className="space-y-3 rounded-2xl border border-sky-100 bg-white p-4 sm:p-5"
+        className="space-y-3 rounded-2xl border border-slate-300 bg-white p-4 shadow-sm sm:p-5"
         onSubmit={(event) => {
           event.preventDefault();
           startTransition(async () => {
@@ -88,7 +88,7 @@ export function AdminServiceTab({
           <Label htmlFor="svcStudent">Uczeń (opcjonalnie)</Label>
           <select
             id="svcStudent"
-            className="flex h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm"
+            className="flex h-11 w-full rounded-xl border border-slate-300 bg-white shadow-sm px-3.5 text-sm"
             value={form.studentId}
             onChange={(event) => {
               const id = event.target.value;
@@ -228,7 +228,7 @@ function OrderList({
     <div className="space-y-3">
       <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
       {orders.length === 0 ? (
-        <p className="text-sm text-muted">Brak pozycji.</p>
+        <p className="text-sm text-slate-600">Brak pozycji.</p>
       ) : (
         <ul className="space-y-3">
           {orders.map((order) => (
@@ -236,8 +236,8 @@ function OrderList({
               key={order.id}
               className={
                 muted
-                  ? "rounded-2xl border border-slate-100 bg-slate-50/80 p-4"
-                  : "rounded-2xl border border-sky-100 bg-white p-4"
+                  ? "rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                  : "rounded-2xl border border-slate-300 bg-white p-4 shadow-sm"
               }
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
@@ -245,7 +245,7 @@ function OrderList({
                   <p className="font-semibold text-slate-900">
                     {order.guitar_model}
                   </p>
-                  <p className="text-sm text-muted">
+                  <p className="text-sm text-slate-600">
                     {order.client_name}
                     {order.phone ? ` · ${order.phone}` : ""}
                     {order.email ? ` · ${order.email}` : ""}
@@ -256,7 +256,7 @@ function OrderList({
                   </p>
                 </div>
                 <select
-                  className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm"
+                  className="h-10 rounded-xl border border-slate-300 bg-white shadow-sm px-3 text-sm"
                   value={order.status}
                   disabled={busy}
                   onChange={(event) => {
@@ -327,7 +327,7 @@ function OrderList({
                   Usuń
                 </Button>
                 {order.notify_ready_sent ? (
-                  <span className="self-center text-xs text-muted">
+                  <span className="self-center text-xs text-slate-600">
                     powiadomiono
                   </span>
                 ) : null}

@@ -4,9 +4,15 @@ import { Resend } from "resend";
 import { resolveNotifyEmail } from "@/lib/admin-settings";
 import { getSiteUrl } from "@/lib/env";
 import { resolveProductFileAbsolute, type ProductRow } from "@/lib/shop";
-import { digitalConsentEmailNotice } from "@/lib/shop-digital-terms";
+import {
+  digitalConsentEmailNotice,
+  digitalConsentEmailNoticeVipPs,
+  VIP_PURCHASE_EMAIL_SUBJECT,
+} from "@/lib/shop-digital-terms";
 import { getShopProductOffer } from "@/lib/shop-product-details";
 import { createAdminClient } from "@/lib/supabase/admin";
+
+const VIP_PACKAGE_SLUG = "start-bez-stresu-feedback-vip";
 
 /**
  * Grant product access after successful Stripe checkout (idempotent).
@@ -68,6 +74,14 @@ export async function fulfillShopPurchase(input: {
     return { ok: false, message: entitlementError.message };
   }
 
+  if (typed.slug === VIP_PACKAGE_SLUG) {
+    await grantBonusProductBySlug({
+      userId: input.userId,
+      slug: "setup-gitary-w-domu",
+      checkoutSessionId: input.checkoutSessionId,
+    });
+  }
+
   const amountZl =
     typeof input.amountTotalGrosze === "number"
       ? input.amountTotalGrosze / 100
@@ -91,6 +105,39 @@ export async function fulfillShopPurchase(input: {
   }
 
   return { ok: true };
+}
+
+/** Bonus title included with VIP (mentioned in purchase e-mail). Idempotent. */
+async function grantBonusProductBySlug(input: {
+  userId: string;
+  slug: string;
+  checkoutSessionId: string;
+}): Promise<void> {
+  const admin = createAdminClient();
+  const { data: bonus } = await admin
+    .from("products")
+    .select("id")
+    .eq("slug", input.slug)
+    .maybeSingle();
+  if (!bonus?.id) return;
+
+  const { data: owned } = await admin
+    .from("user_entitlements")
+    .select("id")
+    .eq("user_id", input.userId)
+    .eq("product_id", bonus.id)
+    .maybeSingle();
+  if (owned) return;
+
+  const { error } = await admin.from("user_entitlements").insert({
+    user_id: input.userId,
+    product_id: bonus.id,
+    stripe_checkout_session_id: `${input.checkoutSessionId}:bonus:${input.slug}`,
+    source: "stripe",
+  });
+  if (error && error.code !== "23505") {
+    console.error("grantBonusProductBySlug:", error.message);
+  }
 }
 
 function escapeHtml(value: string) {
@@ -121,6 +168,30 @@ async function loadProductPdfAttachment(product: ProductRow) {
   }
 }
 
+function buildVipPurchaseEmailHtml(portalUrl: string) {
+  return `
+    <p>Cześć!</p>
+    <p>Bardzo się cieszę, że zaczynamy tę drogę razem. Wybór pakietu z indywidualną konsultacją to najlepszy krok, jaki mogłeś zrobić na starcie.</p>
+    <p>Najczęstszą barierą na początku nauki gry na gitarze jest lęk: „czy na pewno dobrze układam dłonie?” albo „co jeśli nauczę się złych nawyków i nabawię bólu?”. Dzięki analizie wideo całkowicie zdejmujemy ten problem z Twoich barków. Na moich lekcjach jesteśmy partnerami – dbam o Twoją technikę po to, abyś od samego początku czuł wolność i czystą radość z wydobywania dźwięków.</p>
+    <p>W tym mailu znajdziesz prostą instrukcję, jak krok po kroku odebrać swoje osobiste wsparcie. Bez pośpiechu i w Twoim własnym tempie.</p>
+    <p><strong>Twój plan działania VIP:</strong></p>
+    <p><strong>Krok 1: Przeczytaj rozdział o ergonomii</strong><br/>
+    Otwórz e-book „Start z gitarą bez stresu” i zacznij od rozdziału poświęconego prawidłowej postawie oraz układaniu dłoni. To nasz absolutny fundament. Zależy mi, aby Twoje palce od pierwszych minut pracowały luźno, bez niepotrzebnego napięcia i bólu.</p>
+    <p><strong>Krok 2: Poćwicz spokojnie przez kilka dni</strong><br/>
+    Daj sobie i swoim dłoniom czas na oswojenie się z instrumentem. Spróbuj zagrać pierwsze proste, jednogłosowe melodie z tabulatury. Pamiętaj, że całkowicie omijamy na start trudne akordy (jak F-dur) – skupiamy się wyłącznie na czystości dźwięku i Twoim komforcie.</p>
+    <p><strong>Krok 3: Nagraj krótkie wideo smartfonem</strong><br/>
+    Kiedy poczujesz, że Twoje palce zaczynają łapać o co chodzi, nagraj krótki filmik (wystarczą 2–3 minuty). Ustaw telefon tak, aby było dobrze widać Twoją postawę, ułożenie gitary oraz obie dłonie na gryfie i strunach.<br/>
+    <strong>Ważna wskazówka:</strong> Nie przejmuj się potknięciami czy puszczeniem nieczystego dźwięku. To nagranie nie ma być idealnym występem scenicznym. Ma pokazać Twój naturalny stan gry, żebym wiedział, jak mogę Ci najlepiej pomóc.</p>
+    <p><strong>Krok 4: Prześlij nagranie do mnie</strong><br/>
+    Odpowiedz bezpośrednio na tego maila i załącz swoje wideo. Jeśli plik jest za duży, możesz wrzucić go na swój Dysk Google, Dropbox, WeTransfer lub wysłać mi go bezpośrednio na Telegramie.</p>
+    <p><strong>Co wydarzy się dalej?</strong><br/>
+    Dokładnie przyjrzę się Twojej technice, postawie oraz rytmowi. W ciągu maksymalnie 3 dni roboczych odeślę do Ciebie moje osobiste nagranie wideo z informacją zwrotną. Pokażę Ci w nim, co już teraz robisz super, a jakie drobne detale w ułożeniu palców warto skorygować, aby grało Ci się jeszcze lżej i przyjemniej.</p>
+    <p>Twoje materiały cyfrowe są już gotowe i czekają na Ciebie w sekcji <strong>Zakupy</strong> w Twoim koncie ucznia: <a href="${portalUrl}">${portalUrl}</a>. Dorzuciłem tam dla Ciebie również drugi e-book: „Setup i dbanie o gitarę w domu”, który pomoże Ci zadbać o to, aby struny były miękkie i blisko gryfu.</p>
+    <p>Do usłyszenia przy strunach!<br/>Jakub Grygiel</p>
+    <p><strong>P.S. (Informacja prawna):</strong> ${escapeHtml(digitalConsentEmailNoticeVipPs)}</p>
+  `;
+}
+
 async function sendPurchaseEmail(input: {
   to: string;
   product: ProductRow;
@@ -131,18 +202,27 @@ async function sendPurchaseEmail(input: {
 
   const portalUrl = portalPurchasesUrl();
   const title = input.product.title;
-  const offer = getShopProductOffer(input.product.slug);
-  const tip =
-    offer?.purchaseEmailTip ??
-    "Na start: idź spokojnie rozdział po rozdziale i daj sobie czas na oswojenie materiału — małe kroki dają najszybszy efekt.";
-
+  const isVip = input.product.slug === VIP_PACKAGE_SLUG;
   const attachment = await loadProductPdfAttachment(input.product);
 
-  const attachmentBlock = attachment
-    ? `<li>Pobierając plik PDF, który dla Twojej wygody dołączyłem jako załącznik do tej wiadomości.</li>`
-    : `<li>Pobierając PDF z sekcji Zakupy w koncie (załącznik wyślemy, gdy plik będzie dostępny na serwerze).</li>`;
+  let subject: string;
+  let html: string;
 
-  const html = `
+  if (isVip) {
+    subject = VIP_PURCHASE_EMAIL_SUBJECT;
+    html = buildVipPurchaseEmailHtml(portalUrl);
+  } else {
+    const offer = getShopProductOffer(input.product.slug);
+    const tip =
+      offer?.purchaseEmailTip ??
+      "Na start: idź spokojnie rozdział po rozdziale i daj sobie czas na oswojenie materiału — małe kroki dają najszybszy efekt.";
+
+    const attachmentBlock = attachment
+      ? `<li>Pobierając plik PDF, który dla Twojej wygody dołączyłem jako załącznik do tej wiadomości.</li>`
+      : `<li>Pobierając PDF z sekcji Zakupy w koncie (załącznik wyślemy, gdy plik będzie dostępny na serwerze).</li>`;
+
+    subject = `Dzięki za zaufanie! Twój e-book „${title}” jest już gotowy`;
+    html = `
     <p>Cześć!</p>
     <p>Niezmiernie dziękuję Ci za zakup e-booka i za to, że doceniasz moją pracę oraz rzemieślnicze podejście do nauki gry na instrumencie.</p>
     <p>Ponieważ buduję markę <strong>GrygielGitara</strong> w pełni niezależnie, pracując wyłącznie na własne nazwisko i odrzucając masowe, szkolne schematy, każde takie zamówienie ma dla mnie ogromne znaczenie. To dla mnie najlepszy dowód na to, że pokazywanie muzyki jako bezstresowej przygody i czystej radości ma ogromny sens. Twój sukces i komfort są dla mnie absolutnym priorytetem, dlatego włożyłem w ten poradnik całe moje pedagogiczne i techniczne doświadczenie.</p>
@@ -152,12 +232,13 @@ async function sendPurchaseEmail(input: {
       <li>Bezpośrednio w panelu studenta: <a href="${portalUrl}">${portalUrl}</a> (sekcja <strong>Zakupy</strong>).</li>
       ${attachmentBlock}
     </ul>
+    <p><strong>Potwierdzenie utraty prawa odstąpienia od umowy:</strong> ${escapeHtml(digitalConsentEmailNotice)}</p>
     <p>${escapeHtml(tip)}</p>
-    <p><strong>Ważne:</strong> ${escapeHtml(digitalConsentEmailNotice)}</p>
     <p>Gdyby podczas czytania lub pierwszych domowych ćwiczeń pojawiły się jakiekolwiek pytania lub wątpliwości techniczne — napisz do mnie śmiało, odpowiadając na tę wiadomość.</p>
     <p>Trzymam mocno kciuki za Twoje pierwsze kroki z instrumentem i do usłyszenia!</p>
     <p>Jakub Grygiel<br/>GrygielGitara</p>
   `;
+  }
 
   const replyTo = resolveNotifyEmail() || undefined;
 
@@ -166,7 +247,7 @@ async function sendPurchaseEmail(input: {
     from,
     to: input.to,
     ...(replyTo ? { replyTo } : {}),
-    subject: `Dzięki za zaufanie! Twój e-book „${title}” jest już gotowy`,
+    subject,
     html,
     attachments: attachment
       ? [{ filename: attachment.filename, content: attachment.content }]

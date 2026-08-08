@@ -266,7 +266,7 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
     ctaNote:
       "Po płatności e-book trafia zwykle na e-mail i do „Konto” → „Zakupy”. Instrukcję Feedback VIP dostajesz w wiadomości — tam umawiamy nagranie / analizę. Przed zakupem zaznaczysz zgodę na natychmiastowe dostarczenie treści cyfrowej.",
     purchaseEmailTip:
-      "Najpierw otwórz e-book i rozdział o ergonomii, potem nagraj krótkie wideo według instrukcji VIP. Im spokojniej pokażesz dłonie i postawę, tym celniejszy będzie feedback.",
+      "Pełna instrukcja Feedback VIP idzie osobnym mailem po zakupie (temat: „Twój bilet VIP…”).",
   },
 };
 

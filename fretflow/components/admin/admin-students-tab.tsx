@@ -89,15 +89,17 @@ export function AdminStudentsTab({
   return (
     <section className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold text-slate-900">Uczniowie</h2>
-        <p className="mt-1 text-sm text-muted">
+        <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+          Uczniowie
+        </h2>
+        <p className="mt-1.5 text-sm leading-relaxed text-slate-600">
           Najważniejsze: jaki wariant ceny wybrał (400 / 100 / 120 / online 80).
           Reszta — materiały i notatki po lekcji.
         </p>
       </div>
 
       <form
-        className="space-y-3 rounded-2xl border border-sky-100 bg-white p-4 sm:p-5"
+        className="space-y-4 rounded-2xl border border-slate-300 bg-white p-4 shadow-sm sm:p-5"
         onSubmit={(event) => {
           event.preventDefault();
           startTransition(async () => {
@@ -156,7 +158,7 @@ export function AdminStudentsTab({
           <div className="space-y-1 sm:col-span-2">
             <Label>Co wybrał / jaki wariant go interesuje</Label>
             <select
-              className="flex h-11 w-full rounded-xl border border-sky-200 bg-sky-50/50 px-3.5 text-sm font-medium text-sky-900"
+              className="flex h-11 w-full rounded-xl border border-slate-400 bg-white px-3.5 text-sm font-medium text-sky-900"
               value={form.interestPackage}
               onChange={(e) =>
                 setForm((p) => ({ ...p, interestPackage: e.target.value }))
@@ -221,7 +223,7 @@ export function AdminStudentsTab({
           <Label htmlFor="stuSort">Sortuj</Label>
           <select
             id="stuSort"
-            className="flex h-11 rounded-xl border border-slate-200 bg-white px-3.5 text-sm"
+            className="flex h-11 rounded-xl border border-slate-300 bg-white shadow-sm px-3.5 text-sm"
             value={sort}
             onChange={(e) => setSort(e.target.value as "asc" | "desc")}
           >
@@ -242,7 +244,7 @@ export function AdminStudentsTab({
           return (
             <li
               key={student.id}
-              className="rounded-2xl border border-sky-100 bg-white p-4"
+              className="rounded-2xl border border-slate-300 bg-white p-4 shadow-sm"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -253,7 +255,7 @@ export function AdminStudentsTab({
                     {lessonPackageLabel(student.interest_package) ||
                       "Wariant: nie ustawiony"}
                   </p>
-                  <p className="text-sm text-muted">
+                  <p className="text-sm text-slate-600">
                     {student.email}
                     {student.phone ? ` · ${student.phone}` : ""}
                   </p>
@@ -382,7 +384,7 @@ function StudentExtras({
   const [noteBody, setNoteBody] = useState("");
 
   return (
-    <div className="mt-4 space-y-4 border-t border-sky-50 pt-4 text-sm">
+    <div className="mt-4 space-y-4 border-t border-slate-200 pt-4 text-sm">
       <div className="space-y-2">
         <p className="font-semibold text-slate-900">Dodaj pakiet / wariant</p>
         <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
@@ -410,7 +412,7 @@ function StudentExtras({
                   "flex h-full w-full flex-col rounded-2xl border bg-white p-3 text-left transition-colors hover:border-sky-400",
                   catalog.highlight
                     ? "border-sky-400 ring-1 ring-sky-200"
-                    : "border-sky-100",
+                    : "border-slate-300",
                 )}
               >
                 {catalog.highlight ? (
@@ -424,7 +426,7 @@ function StudentExtras({
                 <span className="mt-1 text-xl font-bold text-sky-600">
                   {catalog.priceLabel}
                 </span>
-                <span className="text-[11px] text-muted">
+                <span className="text-[11px] text-slate-600">
                   {catalog.totalLessons}{" "}
                   {catalog.totalLessons === 1 ? "lekcja" : "lekcje"} · kliknij,
                   aby dodać
@@ -584,7 +586,7 @@ function StudentExtras({
               key={note.id}
               className="rounded-xl bg-slate-50 px-3 py-2 text-slate-700"
             >
-              <p className="text-xs text-muted">
+              <p className="text-xs text-slate-600">
                 {new Date(note.created_at).toLocaleString("pl-PL")}
               </p>
               <p className="whitespace-pre-wrap">{note.body}</p>
