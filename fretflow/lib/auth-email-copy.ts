@@ -3,7 +3,7 @@
 export const AUTH_FROM_HINT = "GrygielGitara <kontakt@grygielgitara.pl>";
 
 export const registerEmailNotice =
-  "Po założeniu konta możesz dostać mail z linkiem potwierdzającym. Nadawca to GrygielGitara (kontakt@grygielgitara.pl) albo tymczasowo wiadomość z systemu konta — to ten sam proces, bezpiecznie kliknij link. Sprawdź skrzynkę odbiorczą, powiadomienia i folder spam / oferty.";
+  "Po założeniu konta wyślemy mail z linkiem potwierdzającym od GrygielGitara (kontakt@grygielgitara.pl). Sprawdź skrzynkę odbiorczą, powiadomienia i folder spam / oferty — potem kliknij link i zaloguj się.";
 
 export const registerConfirmToast =
   "Konto utworzone. Sprawdź e-mail (także spam / powiadomienia): kliknij link potwierdzający od GrygielGitara, potem wróć i zaloguj się.";

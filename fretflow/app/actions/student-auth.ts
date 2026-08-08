@@ -49,7 +49,8 @@ export async function signInStudent(
 
 /**
  * Open registration — anyone can create an account (lessons + future shop).
- * If e-mail already exists as a lesson student, link user_id.
+ * Confirmation mail goes through Resend (not Supabase Auth SMTP), so a broken
+ * SMTP config no longer blocks signup with "Error sending confirmation email".
  */
 export async function registerStudent(
   emailRaw: string,
@@ -71,54 +72,161 @@ export async function registerStudent(
 
   try {
     const admin = createAdminClient();
+    const siteUrl = await getRequestSiteUrl();
+    const redirectTo = `${siteUrl}/auth/callback?next=/moje-kursy`;
+
     const { data: existingStudent } = await admin
       .from("students")
       .select("id, full_name, user_id")
       .eq("email", email)
       .maybeSingle();
 
-    const supabase = await createClient();
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: fullName || existingStudent?.full_name || email.split("@")[0],
-        },
-        emailRedirectTo: `${getSiteUrl()}/auth/callback?next=/moje-kursy`,
-      },
-    });
+    const displayName =
+      fullName || existingStudent?.full_name || email.split("@")[0] || "Użytkowniku";
 
-    if (error) {
-      if (error.message.toLowerCase().includes("already")) {
+    const existingAuth = await findAuthUserByEmail(admin, email);
+    if (existingAuth?.email_confirmed_at) {
+      return {
+        ok: false,
+        message: "To konto już istnieje — zaloguj się.",
+      };
+    }
+
+    let userId = existingAuth?.id ?? null;
+    let actionLink: string | null = null;
+
+    if (existingAuth && !existingAuth.email_confirmed_at) {
+      // Leftover from a previous failed Supabase SMTP signup — finish it via Resend.
+      const { error: updateError } = await admin.auth.admin.updateUserById(
+        existingAuth.id,
+        {
+          password,
+          email_confirm: false,
+          user_metadata: { full_name: displayName },
+        },
+      );
+      if (updateError) {
+        return { ok: false, message: friendlyAuthError(updateError.message) };
+      }
+
+      const { data: linkData, error: linkError } =
+        await admin.auth.admin.generateLink({
+          type: "magiclink",
+          email,
+          options: { redirectTo },
+        });
+      if (linkError || !linkData.properties?.action_link) {
+        // Last resort: confirm + sign in so the user is not stuck.
+        await admin.auth.admin.updateUserById(existingAuth.id, {
+          email_confirm: true,
+        });
+        const supabase = await createClient();
+        const { error: signError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (signError) {
+          return {
+            ok: false,
+            message:
+              "Konto istnieje, ale aktywacja nie doszła. Spróbuj „Zapomniane hasło” albo napisz na kontakt@grygielgitara.pl.",
+          };
+        }
+        await resolveStudentForAuthUser({
+          userId: existingAuth.id,
+          email,
+        });
         return {
-          ok: false,
-          message: "To konto już istnieje — zaloguj się.",
+          ok: true,
+          needsEmailConfirm: false,
+          message: "Konto aktywowane — jesteś zalogowany.",
         };
       }
-      return { ok: false, message: error.message };
+      actionLink = linkData.properties.action_link;
+      userId = linkData.user?.id ?? existingAuth.id;
+    } else {
+      const { data: linkData, error: linkError } =
+        await admin.auth.admin.generateLink({
+          type: "signup",
+          email,
+          password,
+          options: {
+            data: { full_name: displayName },
+            redirectTo,
+          },
+        });
+
+      if (linkError) {
+        const lower = linkError.message.toLowerCase();
+        if (
+          lower.includes("already") ||
+          lower.includes("registered") ||
+          lower.includes("exists")
+        ) {
+          return {
+            ok: false,
+            message: "To konto już istnieje — zaloguj się.",
+          };
+        }
+        return { ok: false, message: friendlyAuthError(linkError.message) };
+      }
+
+      actionLink = linkData.properties?.action_link ?? null;
+      userId = linkData.user?.id ?? null;
     }
 
-    if (data.user) {
-      await resolveStudentForAuthUser({
-        userId: data.user.id,
-        email,
-      });
-    }
-
-    if (!data.session) {
+    if (!actionLink) {
       return {
-        ok: true,
-        needsEmailConfirm: true,
+        ok: false,
+        message: "Nie udało się wygenerować linku aktywacyjnego.",
+      };
+    }
+
+    if (userId) {
+      await resolveStudentForAuthUser({ userId, email });
+    }
+
+    const mail = await sendEmail({
+      to: email,
+      subject: "Potwierdź konto — GrygielGitara",
+      html: buildConfirmAccountEmailHtml({
+        name: displayName,
+        actionLink,
+        siteUrl,
+      }),
+    });
+
+    if (!mail.ok) {
+      console.error("registerStudent Resend error:", mail.message);
+      // Don't leave the user locked out if Resend fails after Auth user exists.
+      if (userId) {
+        await admin.auth.admin.updateUserById(userId, { email_confirm: true });
+        const supabase = await createClient();
+        const { error: signError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (!signError) {
+          return {
+            ok: true,
+            needsEmailConfirm: false,
+            message:
+              "Konto utworzone i zalogowane. Mail aktywacyjny chwilowo nie doszedł — możesz korzystać z konta.",
+          };
+        }
+      }
+      return {
+        ok: false,
         message:
-          "Konto utworzone. Sprawdź e-mail (także spam / powiadomienia): kliknij link potwierdzający od GrygielGitara, potem zaloguj się.",
+          "Nie udało się wysłać maila aktywacyjnego. Sprawdź RESEND na serwerze albo napisz na kontakt@grygielgitara.pl.",
       };
     }
 
     return {
       ok: true,
-      needsEmailConfirm: false,
-      message: "Konto gotowe — jesteś zalogowany.",
+      needsEmailConfirm: true,
+      message:
+        "Konto utworzone. Sprawdź e-mail (także spam / powiadomienia): kliknij link potwierdzający od GrygielGitara, potem zaloguj się.",
     };
   } catch (error) {
     console.error("registerStudent error:", error);
@@ -324,7 +432,7 @@ export async function inviteStudentToPortal(
   }
 }
 
-/** Public: send Supabase recovery mail (uses Auth SMTP, not Resend). */
+/** Public: recovery link generated by Auth admin API, delivered via Resend. */
 export async function requestStudentPasswordReset(
   emailRaw: string,
 ): Promise<{ ok: boolean; message: string }> {
@@ -333,20 +441,47 @@ export async function requestStudentPasswordReset(
     return { ok: false, message: "Podaj poprawny e-mail." };
   }
 
+  const genericOk = {
+    ok: true as const,
+    message:
+      "Jeśli konto istnieje, wyślemy link do resetu hasła (sprawdź skrzynkę i spam).",
+  };
+
   try {
-    const site = await getRequestSiteUrl();
-    const supabase = await createClient();
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${site}/auth/callback?next=/moje-kursy/ustaw-haslo`,
-    });
-    if (error) {
-      return { ok: false, message: error.message };
+    const admin = createAdminClient();
+    const existing = await findAuthUserByEmail(admin, email);
+    if (!existing) {
+      return genericOk;
     }
-    return {
-      ok: true,
-      message:
-        "Jeśli konto istnieje, wyślemy link do resetu hasła (sprawdź skrzynkę i spam).",
-    };
+
+    const site = await getRequestSiteUrl();
+    const { data: linkData, error } = await admin.auth.admin.generateLink({
+      type: "recovery",
+      email,
+      options: {
+        redirectTo: `${site}/auth/callback?next=/moje-kursy/ustaw-haslo`,
+      },
+    });
+
+    if (error || !linkData.properties?.action_link) {
+      console.error("requestStudentPasswordReset generateLink:", error?.message);
+      return genericOk;
+    }
+
+    const mail = await sendEmail({
+      to: email,
+      subject: "Nowe hasło — GrygielGitara",
+      html: buildResetPasswordEmailHtml({
+        actionLink: linkData.properties.action_link,
+        siteUrl: site,
+      }),
+    });
+
+    if (!mail.ok) {
+      console.error("requestStudentPasswordReset Resend:", mail.message);
+    }
+
+    return genericOk;
   } catch (error) {
     console.error("requestStudentPasswordReset error:", error);
     return { ok: false, message: "Nie udało się wysłać linku." };
@@ -393,4 +528,72 @@ function escapeHtml(value: string) {
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
+}
+
+function friendlyAuthError(message: string) {
+  const lower = message.toLowerCase();
+  if (lower.includes("confirmation email") || lower.includes("sending")) {
+    return "Nie udało się wysłać maila aktywacyjnego. Spróbuj za chwilę albo napisz na kontakt@grygielgitara.pl.";
+  }
+  if (lower.includes("rate") || lower.includes("security")) {
+    return "Zbyt wiele prób — odczekaj minutę i spróbuj ponownie.";
+  }
+  return message;
+}
+
+async function findAuthUserByEmail(
+  admin: ReturnType<typeof createAdminClient>,
+  email: string,
+) {
+  const normalized = email.trim().toLowerCase();
+  for (let page = 1; page <= 10; page += 1) {
+    const { data, error } = await admin.auth.admin.listUsers({
+      page,
+      perPage: 200,
+    });
+    if (error) {
+      console.error("findAuthUserByEmail listUsers:", error.message);
+      return null;
+    }
+    const found = data.users.find((u) => u.email?.toLowerCase() === normalized);
+    if (found) return found;
+    if (data.users.length < 200) break;
+  }
+  return null;
+}
+
+function buildConfirmAccountEmailHtml(input: {
+  name: string;
+  actionLink: string;
+  siteUrl: string;
+}) {
+  const safeName = escapeHtml(input.name);
+  const safeLink = escapeHtml(input.actionLink);
+  const loginUrl = escapeHtml(`${input.siteUrl}/moje-kursy/login`);
+  return `
+    <p>Cześć ${safeName},</p>
+    <p>Dziękujemy za założenie konta w <strong>GrygielGitara</strong>.</p>
+    <p><a href="${safeLink}" style="display:inline-block;padding:12px 18px;background:#0ea5e9;color:#fff;text-decoration:none;border-radius:10px;font-weight:700">Potwierdź konto</a></p>
+    <p>Albo wklej ten link w przeglądarce:<br/><a href="${safeLink}">${safeLink}</a></p>
+    <p>Po kliknięciu wróć do logowania: <a href="${loginUrl}">${loginUrl}</a></p>
+    <p>Jeśli to nie Ty zakładałeś konto — zignoruj tę wiadomość.</p>
+    <p>— Jakub, GrygielGitara</p>
+  `;
+}
+
+function buildResetPasswordEmailHtml(input: {
+  actionLink: string;
+  siteUrl: string;
+}) {
+  const safeLink = escapeHtml(input.actionLink);
+  const loginUrl = escapeHtml(`${input.siteUrl}/moje-kursy/login`);
+  return `
+    <p>Cześć,</p>
+    <p>Otrzymaliśmy prośbę o reset hasła do konta <strong>GrygielGitara</strong>.</p>
+    <p><a href="${safeLink}" style="display:inline-block;padding:12px 18px;background:#0ea5e9;color:#fff;text-decoration:none;border-radius:10px;font-weight:700">Ustaw nowe hasło</a></p>
+    <p>Albo wklej ten link w przeglądarce:<br/><a href="${safeLink}">${safeLink}</a></p>
+    <p>Potem zaloguj się tutaj: <a href="${loginUrl}">${loginUrl}</a></p>
+    <p>Jeśli to nie Ty — zignoruj maila, hasło się nie zmieni.</p>
+    <p>— Jakub, GrygielGitara</p>
+  `;
 }
