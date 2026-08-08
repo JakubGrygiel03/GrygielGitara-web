@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { HashLink } from "@/components/hash-link";
 import { isFreeGuideOpen } from "@/lib/free-guide";
 
 export function SiteFooter() {
@@ -19,24 +20,24 @@ export function SiteFooter() {
         </div>
 
         <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm font-medium text-slate-700">
-          <Link
+          <HashLink
             href="/#oferta"
             className="inline-flex min-h-11 items-center hover:text-sky-600"
           >
             Oferta
-          </Link>
-          <Link
+          </HashLink>
+          <HashLink
             href="/#materialy"
             className="inline-flex min-h-11 items-center hover:text-sky-600"
           >
             Materiały
-          </Link>
-          <Link
+          </HashLink>
+          <HashLink
             href="/#cennik"
             className="inline-flex min-h-11 items-center hover:text-sky-600"
           >
             Cennik
-          </Link>
+          </HashLink>
           <Link
             href="/sklep"
             className="inline-flex min-h-11 items-center hover:text-sky-600"

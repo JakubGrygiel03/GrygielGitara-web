@@ -13,11 +13,21 @@ export const SITE_NAME = "GrygielGitara";
 export const SITE_DEFAULT_TITLE =
   "Lekcje gitary Gdańsk i online · e-booki | GrygielGitara";
 
+/**
+ * Meta / OG pitch — Start with Why, then how/what (Blue Ocean vs „szkolna” gitara).
+ * Why: muzyka = wolność i radość. How: bez rygoru, utwory które lubisz. What: lekcje + e-booki.
+ */
 export const SITE_DEFAULT_DESCRIPTION =
-  "Bezstresowe lekcje gitary w Gdańsku (dojazd / okolice Forum) i online. Sklep z e-bookami: start gry, setup instrumentu, pakiet Feedback VIP. Jakub Grygiel — praktyka zamiast szkolnego stresu.";
+  "Muzyka ma dawać wolność, ujście dla emocji i radość — nie stres, nudną teorię ani szkolny rygor. Dlatego GrygielGitara to inna ścieżka: indywidualne lekcje gitary w Gdańsku (dojazd / okolice Forum) i online, na utworach które naprawdę chcesz grać, z praktyką zamiast egzaminacyjnego strachu. Na stronie umówisz lekcję próbną (z gwarancją pierwszej lekcji), znajdziesz sklep z e-bookami — start gry bez stresu, setup i dbanie o gitarę w domu, pakiet Feedback VIP — oraz materiały od Jakuba Grygiela, muzyka i technika instrumentów.";
 
 /** Absolute OG/Twitter image path (served from /public). */
 export const SITE_OG_IMAGE_PATH = "/images/jakub-portrait.png";
+
+/** Square brand mark for favicon / Organization.logo (readable at small sizes). */
+export const SITE_LOGO_PATH = "/images/logo-grygielgitara-square.png";
+
+/** Full wordmark asset. */
+export const SITE_WORDMARK_PATH = "/images/logo-grygielgitara.png";
 
 export function absoluteUrl(path = "/"): string {
   const base = SITE_CANONICAL_ORIGIN.replace(/\/$/, "");
@@ -149,7 +159,7 @@ export function siteJsonLd() {
         url: SITE_CANONICAL_ORIGIN,
         email: SITE_EMAIL,
         telephone: SITE_PHONE_E164,
-        logo: absoluteUrl(SITE_OG_IMAGE_PATH),
+        logo: absoluteUrl(SITE_LOGO_PATH),
         description: SITE_DEFAULT_DESCRIPTION,
       },
       {
@@ -161,6 +171,7 @@ export function siteJsonLd() {
         email: SITE_EMAIL,
         telephone: SITE_PHONE_E164,
         image: absoluteUrl(SITE_OG_IMAGE_PATH),
+        logo: absoluteUrl(SITE_LOGO_PATH),
         areaServed: [
           { "@type": "City", name: "Gdańsk" },
           { "@type": "AdministrativeArea", name: "Pomorskie" },

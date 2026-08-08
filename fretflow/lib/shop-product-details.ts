@@ -57,7 +57,7 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
     subtitle:
       "Kompletny handbook na pierwsze tygodnie z gitarą (ok. 40 stron + wsparcie wideo): ergonomia, strojenie, proste melodie i spokojny plan dnia.",
     whyHook:
-      "Czy wiesz, dlaczego aż osiemdziesiąt procent osób porzuca gitarę w ciągu pierwszych trzech tygodni?",
+      "Czy wiesz, dlaczego aż **80%** osób porzuca gitarę w ciągu pierwszych trzech tygodni?",
     whyBody: [
       "Większość samouków popełnia ten sam błąd: odpalają internet, próbują od razu łapać trudne, wielopalcowe akordy i walczyć z twardymi strunami. Efekt? Potworny ból palców, frustracja i poczucie braku talentu.",
       "Wierzę, że muzyka od pierwszego dnia powinna dawać wolność i czystą radość, a nie kojarzyć się z bólem i zniechęceniem. Dlatego powstał ten e-book — jako pełny program na start.",

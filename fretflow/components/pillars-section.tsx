@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Guitar, HandHeart, Music2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
+import { HashLink } from "@/components/hash-link";
 import { Reveal } from "@/components/reveal";
 import { Button } from "@/components/ui/button";
 import {
@@ -52,7 +53,7 @@ const pillars: {
     points: [
       "Bez szablonów korporacyjnych szkół",
       "Pracuję na własną markę",
-      "Osobista odpowiedzialność za Twój progres, komfort i radość z gry",
+      "Moja odpowiedzialność za Twój progres, komfort i radość z gry",
     ],
     cta: { href: "/#materialy", label: "Darmowy PDF i e-booki" },
     icon: HandHeart,
@@ -117,7 +118,13 @@ export function PillarsSection() {
 
                   <div className="mt-auto pt-2">
                     <Button asChild className="w-full">
-                      <Link href={pillar.cta.href}>{pillar.cta.label}</Link>
+                      {pillar.cta.href.includes("#") ? (
+                        <HashLink href={pillar.cta.href}>
+                          {pillar.cta.label}
+                        </HashLink>
+                      ) : (
+                        <Link href={pillar.cta.href}>{pillar.cta.label}</Link>
+                      )}
                     </Button>
                   </div>
                 </article>

@@ -13,6 +13,7 @@ import {
   SITE_OG_IMAGE_PATH,
 } from "@/lib/seo";
 
+
 import "./globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -63,6 +64,14 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/images/favicon-48.png", sizes: "48x48", type: "image/png" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
   verification: {
     google: "rUQBiXO_NdbaGwQwhgizWIoHNqOne_GHPxHyd_Rrd0c",

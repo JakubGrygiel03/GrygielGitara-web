@@ -6,6 +6,7 @@ import { BookOpen, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { HashLink } from "@/components/hash-link";
 import { Button } from "@/components/ui/button";
 import { mainNavLinks } from "@/lib/nav";
 
@@ -151,18 +152,21 @@ export function SiteHeader() {
               >
                 <div className="mx-auto flex max-w-6xl flex-col gap-4">
                   <div className="overflow-hidden rounded-2xl border-2 border-sky-200 bg-white">
-                    {mainNavLinks.map((link, index) => (
-                      <Link
-                        key={link.label}
-                        href={link.href}
-                        onClick={closeMenu}
-                        className={`flex min-h-12 items-center px-4 text-base font-bold text-slate-900 transition-colors hover:bg-sky-50 active:bg-sky-100 sm:min-h-14 sm:text-lg ${
-                          index > 0 ? "border-t border-sky-200" : ""
-                        } ${isActive(link.href) ? "bg-sky-50 text-sky-900" : ""}`}
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
+                    {mainNavLinks.map((link, index) => {
+                      const NavTag = link.href.includes("#") ? HashLink : Link;
+                      return (
+                        <NavTag
+                          key={link.label}
+                          href={link.href}
+                          onClick={closeMenu}
+                          className={`flex min-h-12 items-center px-4 text-base font-bold text-slate-900 transition-colors hover:bg-sky-50 active:bg-sky-100 sm:min-h-14 sm:text-lg ${
+                            index > 0 ? "border-t border-sky-200" : ""
+                          } ${isActive(link.href) ? "bg-sky-50 text-sky-900" : ""}`}
+                        >
+                          {link.label}
+                        </NavTag>
+                      );
+                    })}
                   </div>
                   <Link
                     href="/moje-kursy/login"
@@ -203,16 +207,19 @@ export function SiteHeader() {
               aria-label="Główne"
               className="hidden min-w-0 items-center gap-0.5 lg:flex xl:gap-1"
             >
-              {mainNavLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className={navLinkClass(link.href)}
-                  aria-current={isActive(link.href) ? "page" : undefined}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {mainNavLinks.map((link) => {
+                const NavTag = link.href.includes("#") ? HashLink : Link;
+                return (
+                  <NavTag
+                    key={link.label}
+                    href={link.href}
+                    className={navLinkClass(link.href)}
+                    aria-current={isActive(link.href) ? "page" : undefined}
+                  >
+                    {link.label}
+                  </NavTag>
+                );
+              })}
             </nav>
 
             <Link

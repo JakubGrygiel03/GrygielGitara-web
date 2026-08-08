@@ -48,7 +48,13 @@ export function ShopProductOfferBody({
           Dlaczego to powstało
         </p>
         <p className="text-lg font-semibold leading-snug text-slate-900 sm:text-xl">
-          {offer.whyHook}
+          {offer.whyHook.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
+            part.startsWith("**") && part.endsWith("**") ? (
+              <strong key={i}>{part.slice(2, -2)}</strong>
+            ) : (
+              <span key={i}>{part}</span>
+            ),
+          )}
         </p>
         <div className="space-y-3 text-[0.9375rem] leading-relaxed text-slate-700">
           {offer.whyBody.map((paragraph) => (

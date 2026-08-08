@@ -138,7 +138,7 @@ export async function sendBookingEmails(input: BookingMailInput): Promise<void> 
     html: `
       <p>Cześć ${input.studentName},</p>
       <p>Dzięki za zgłoszenie lekcji próbnej. Odezwę się wkrótce, żeby ustalić dokładny termin.</p>
-      <p><strong>Interesujący wariant:</strong> ${packageLabel}</p>
+      <p><strong>Wybrany wariant:</strong> ${packageLabel}</p>
       <p><strong>Wybrane miejsce:</strong> ${locationLabel}</p>
       ${
         input.preferredDay
@@ -146,6 +146,7 @@ export async function sendBookingEmails(input: BookingMailInput): Promise<void> 
           : ""
       }
       <p>Przypomnienie: pierwsza lekcja z gwarancją — jeśli nie złapiemy wspólnego języka, nie płacisz za te zajęcia.</p>
+      <p>Jeśli zmienią Ci się plany albo godziny — <strong>nie musisz wysyłać formularza ponownie</strong>. Poczekaj na mój kontakt (telefon / wiadomość) i ustalimy wszystko w rozmowie.</p>
       <p>Do usłyszenia,<br/>Jakub · GrygielGitara</p>
     `,
   });

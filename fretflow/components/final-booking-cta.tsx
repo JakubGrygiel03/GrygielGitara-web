@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { HashLink } from "@/components/hash-link";
 import { Reveal } from "@/components/reveal";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,12 +34,12 @@ export function FinalBookingCta() {
             <Button asChild size="lg" className="w-full sm:w-auto">
               <Link href="/rezerwacja">Przejdź do rezerwacji</Link>
             </Button>
-            <Link
+            <HashLink
               href="/#materialy"
               className="text-sm font-medium text-sky-700 underline-offset-4 transition hover:text-sky-800 hover:underline"
             >
               Albo zajrzyj, jakie materiały mogę Ci zaproponować
-            </Link>
+            </HashLink>
           </div>
         </Reveal>
       </div>
