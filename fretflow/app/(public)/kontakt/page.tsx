@@ -3,7 +3,8 @@ import Link from "next/link";
 
 import { ContactForm } from "@/components/contact-form";
 import { SitePhoneCard } from "@/components/site-phone-card";
-import { isFreeGuideOpen } from "@/lib/free-guide";
+import { FREE_GUIDE_HREF, isFreeGuideOpen } from "@/lib/free-guide";
+import { FREE_GUIDE_SHORT_TITLE } from "@/lib/free-guide-copy";
 import {
   shopInterestPrefillMessage,
   shopProducts,
@@ -70,25 +71,25 @@ export default async function KontaktPage({ searchParams }: KontaktPageProps) {
         <SitePhoneCard hint="Albo zadzwoń — ogarniemy temat na żywo." />
 
         <p className="text-base leading-[1.65] text-slate-700">
-          Darmowy PDF „Gitarowy Falstart”{" "}
+          Darmowy PDF „{FREE_GUIDE_SHORT_TITLE}”{" "}
           {freeGuideOpen ? (
             <>
-              jest na stronie{" "}
+              jest w{" "}
               <Link
-                href="/pobierz-poradnik"
+                href={FREE_GUIDE_HREF}
                 className="font-medium text-sky-700 underline-offset-2 hover:underline"
               >
-                pobierz poradnik
+                sklepie
               </Link>
             </>
           ) : (
             <>
-              pojawi się wkrótce na stronie{" "}
+              pojawi się wkrótce w{" "}
               <Link
-                href="/pobierz-poradnik"
+                href={FREE_GUIDE_HREF}
                 className="font-medium text-sky-700 underline-offset-2 hover:underline"
               >
-                pobierz poradnik
+                sklepie
               </Link>
             </>
           )}
@@ -97,7 +98,7 @@ export default async function KontaktPage({ searchParams }: KontaktPageProps) {
             href="/sklep/start-z-gitara-bez-stresu"
             className="font-medium text-sky-700 underline-offset-2 hover:underline"
           >
-            sklepie
+            ofercie płatnej
           </Link>
           .
         </p>

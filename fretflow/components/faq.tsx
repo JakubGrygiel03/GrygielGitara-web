@@ -17,7 +17,7 @@ import { shopPriceShortZl } from "@/lib/shop-products";
 import { cn } from "@/lib/utils";
 
 const START_EBOOK_PRICE =
-  shopPriceShortZl("start-z-gitara-bez-stresu") ?? "59 zł";
+  shopPriceShortZl("start-z-gitara-bez-stresu") ?? "79 zł";
 
 type FaqItem = {
   q: string;
@@ -78,7 +78,7 @@ const lessonFaqs: FaqItem[] = [
 const platformFaqs: FaqItem[] = [
   {
     q: "Czym różni się darmowy PDF od płatnego e-booka?",
-    a: `Darmowy PDF „Gitarowy Falstart” to krótki tekst o tym, dlaczego start od akordów boli i jak zacząć od prostych melodii. E-book „Start z gitarą bez stresu” (${START_EBOOK_PRICE}) to pełniejszy plan na pierwsze tygodnie — ok. 40 stron i wsparcie wideo.`,
+    a: `Darmowy PDF „Gitarowy Reset” to praktyczny przewodnik: ściana akordów, biomechanika dłoni, pułapki sprzętu i nawyki na start. E-book „Start z gitarą bez stresu” (${START_EBOOK_PRICE}) to pełniejszy plan na pierwsze tygodnie — ok. 40 stron i wsparcie wideo.`,
   },
   {
     q: "Jak założyć konto i gdzie je znajdę?",

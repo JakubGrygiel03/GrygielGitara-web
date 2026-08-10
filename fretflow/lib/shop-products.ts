@@ -31,8 +31,8 @@ export const shopProducts: ShopProduct[] = [
   {
     slug: "setup-gitary-w-domu",
     title: "Setup i dbanie o gitarę w domu",
-    priceLabel: "19,00 zł",
-    priceGrosze: 1900,
+    priceLabel: "29,00 zł",
+    priceGrosze: 2900,
     badge: "E-book",
     shortDescription:
       "Wymiana strun, czyszczenie i podstawowa regulacja — konkret lutniczy bez warsztatu. Kwota jak za kawę — bez długiego namysłu.",
@@ -44,9 +44,8 @@ export const shopProducts: ShopProduct[] = [
   {
     slug: "start-z-gitara-bez-stresu",
     title: "Start z gitarą bez stresu",
-    priceLabel: "59,00 zł",
-    priceGrosze: 5900,
-    compareAtGrosze: 7900,
+    priceLabel: "79,00 zł",
+    priceGrosze: 7900,
     badge: "E-book",
     shortDescription:
       "Pierwsze tygodnie gry w jednym handbooku (ok. 40 stron + wideo): postawa, strojenie, melodie i plan 15 minut dziennie — gotowy plan zamiast chaosu w internecie.",
@@ -102,7 +101,7 @@ export function getShopProductBySlug(slug: string): ShopProduct | undefined {
   return shopProducts.find((p) => p.slug === slug);
 }
 
-/** Short price for marketing copy, e.g. "59 zł". */
+/** Short price for marketing copy, e.g. "79 zł". */
 export function shopPriceShortZl(slug: string): string | null {
   const product = getShopProductBySlug(slug);
   if (!product) return null;

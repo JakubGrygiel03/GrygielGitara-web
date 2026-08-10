@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { HashLink } from "@/components/hash-link";
-import { isFreeGuideOpen } from "@/lib/free-guide";
+import { FREE_GUIDE_HREF, isFreeGuideOpen } from "@/lib/free-guide";
 
 export function SiteFooter() {
   const freeGuideOpen = isFreeGuideOpen();
@@ -45,7 +45,7 @@ export function SiteFooter() {
             Sklep
           </Link>
           <Link
-            href="/pobierz-poradnik"
+            href={FREE_GUIDE_HREF}
             className="inline-flex min-h-11 items-center hover:text-sky-600"
           >
             {freeGuideOpen ? "Darmowy PDF" : "Darmowy PDF · wkrótce"}

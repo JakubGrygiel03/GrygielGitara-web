@@ -1,18 +1,19 @@
 import type { MetadataRoute } from "next";
 
+import { FREE_GUIDE_HREF } from "@/lib/free-guide";
 import { SITE_CANONICAL_ORIGIN } from "@/lib/seo";
 import { shopProducts } from "@/lib/shop-products";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
 
-  /** Priority: home → lessons booking → shop → lead magnet → contact. */
+  /** Priority: home → lessons booking → shop → free PDF offer → contact. */
   const staticRoutes: MetadataRoute.Sitemap = [
     { path: "", priority: 1, changeFrequency: "weekly" as const },
     { path: "/rezerwacja", priority: 0.95, changeFrequency: "weekly" as const },
     { path: "/sklep", priority: 0.95, changeFrequency: "weekly" as const },
     {
-      path: "/pobierz-poradnik",
+      path: FREE_GUIDE_HREF,
       priority: 0.85,
       changeFrequency: "monthly" as const,
     },

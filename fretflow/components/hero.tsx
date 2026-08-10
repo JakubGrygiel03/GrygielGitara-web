@@ -2,8 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { isFreeGuideOpen } from "@/lib/free-guide";
-import { FREE_GUIDE_COMING_SOON_CTA } from "@/lib/free-guide-copy";
+import { FREE_GUIDE_HREF, isFreeGuideOpen } from "@/lib/free-guide";
+import {
+  FREE_GUIDE_COMING_SOON_CTA,
+  FREE_GUIDE_SHORT_TITLE,
+} from "@/lib/free-guide-copy";
 
 export function Hero() {
   const freeGuideOpen = isFreeGuideOpen();
@@ -67,9 +70,9 @@ export function Hero() {
                 size="lg"
                 className="w-full px-5 text-[0.9375rem] leading-snug sm:w-auto sm:text-base"
               >
-                <Link href="/pobierz-poradnik">
+                <Link href={FREE_GUIDE_HREF}>
                   {freeGuideOpen
-                    ? "Darmowy PDF: Gitarowy Falstart"
+                    ? `Darmowy PDF: ${FREE_GUIDE_SHORT_TITLE}`
                     : `Darmowy PDF · ${FREE_GUIDE_COMING_SOON_CTA}`}
                 </Link>
               </Button>

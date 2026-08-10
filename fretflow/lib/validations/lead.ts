@@ -12,7 +12,7 @@ export const leadMagnetSchema = z.object({
     .trim()
     .min(1)
     .max(80)
-    .default("gitarowy_falstart_free_guide"),
+    .default("gitarowy_reset_free_guide"),
 });
 
 export type LeadMagnetValues = z.infer<typeof leadMagnetSchema>;

@@ -22,7 +22,7 @@ const reasons = [
   },
   {
     title: "Szczera wada startu: nie od trudnych akordów",
-    body: "Nie zaczynamy od F-dura ani pełnych chwytów, bo to niszczy zapał i boli. Startujesz od prostych melodii jednogłosowych — palce budują niezależność bez falstartu.",
+    body: "Nie zaczynamy od F-dura ani pełnych chwytów, bo to niszczy zapał i boli. Startujesz od prostych melodii jednogłosowych — palce budują niezależność bez ściany akordów.",
   },
   {
     title: "Stały kontakt w tygodniu",

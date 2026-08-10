@@ -1,7 +1,20 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  async redirects() {
+    return [
+      {
+        source: "/pobierz-poradnik",
+        destination: "/sklep/gitarowy-reset",
+        permanent: true,
+      },
+      {
+        source: "/sklep/gitarowy-falstart",
+        destination: "/sklep/gitarowy-reset",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

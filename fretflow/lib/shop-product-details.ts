@@ -117,8 +117,8 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
       },
     ],
     priceStory:
-      "Sugerowana cena to 79 zł. Aktualnie 59 zł — za gotowy plan na pierwsze tygodnie zamiast godzin szukania po internecie. Nadal wyraźnie taniej niż jedna lekcja stacjonarna. Kupujesz raz, wracasz do PDF kiedy chcesz.",
-    editionNote: "Cena 59 zł · sugerowana 79 zł",
+      "79 zł za gotowy plan na pierwsze tygodnie zamiast godzin szukania po internecie. Nadal wyraźnie taniej niż jedna lekcja stacjonarna. Kupujesz raz, wracasz do PDF kiedy chcesz.",
+    editionNote: "Cena 79 zł",
     ctaNote:
       "Po płatności PDF znajdziesz zwykle na e-mailu oraz w „Konto” → „Zakupy”. Przed zakupem zaznaczysz zgodę na natychmiastowe dostarczenie — po udostępnieniu pliku ustawowy zwrot bez podania przyczyny nie przysługuje.",
     purchaseEmailTip:
@@ -189,8 +189,8 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
       },
     ],
     priceStory:
-      "19 zł to kwota praktycznie niezauważalna — jak kawa na mieście. Kupujesz bez długiego namysłu, dostajesz konkret lutniczy, a ja buduję z Tobą zaufanie do mojej wiedzy o instrumencie.",
-    editionNote: "Wejście impulsowe · 19 zł",
+      "29 zł to kwota praktycznie niezauważalna — jak kawa na mieście. Kupujesz bez długiego namysłu, dostajesz konkret lutniczy, a ja buduję z Tobą zaufanie do mojej wiedzy o instrumencie.",
+    editionNote: "Wejście impulsowe · 29 zł",
     ctaNote:
       "Po płatności PDF jest zwykle na e-mailu oraz w „Konto” → „Zakupy”. Przed zakupem zaznaczysz zgodę na natychmiastowe dostarczenie — po udostępnieniu pliku ustawowy zwrot bez podania przyczyny nie przysługuje.",
     purchaseEmailTip:
@@ -213,7 +213,7 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
     forWhom: [
       "Dla samouków z całej Polski, którzy chcą mojego oka na technikę, nie tylko plik PDF.",
       "Dla osób, które boją się „wdrukować” błędy dłoni / postawy na pierwsze tygodnie.",
-      "Dla tych, którzy czują, że sam e-book za 59 zł to mało wsparcia — i wolą dopłacić za bezpośrednią analizę.",
+      "Dla tych, którzy czują, że sam e-book za 79 zł to mało wsparcia — i wolą dopłacić za bezpośrednią analizę.",
     ],
     modules: [
       {
@@ -261,7 +261,7 @@ export const shopProductOffers: Record<string, ShopProductOffer> = {
       },
     ],
     priceStory:
-      "119 zł za handbook + mój personalny komentarz do Twojego wideo — a środkowa karta za 59 zł zostaje oczywistym wyborem „na start samemu”. VIP jest dla osób, które chcą korekty techniki od razu.",
+      "119 zł za handbook + mój personalny komentarz do Twojego wideo — a środkowa karta za 79 zł zostaje oczywistym wyborem „na start samemu”. VIP jest dla osób, które chcą korekty techniki od razu.",
     editionNote: "Pakiet VIP · e-book + feedback · 119 zł",
     ctaNote:
       "Po płatności e-book trafia zwykle na e-mail i do „Konto” → „Zakupy”. Instrukcję Feedback VIP dostajesz w wiadomości — tam umawiamy nagranie / analizę. Przed zakupem zaznaczysz zgodę na natychmiastowe dostarczenie treści cyfrowej.",

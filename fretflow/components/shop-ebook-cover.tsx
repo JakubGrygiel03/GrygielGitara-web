@@ -22,6 +22,13 @@ const THEMES: Record<string, CoverTheme> = {
     accent: "text-lime-100",
     muted: "text-emerald-100/90",
   },
+  "gitarowy-reset": {
+    stage: "from-cyan-900 via-slate-950 to-slate-950",
+    cover: "from-cyan-400 via-teal-600 to-slate-900",
+    accent: "text-cyan-100",
+    muted: "text-cyan-100/90",
+  },
+  /** Legacy slug — keep theme if old links hit cover before redirect. */
   "gitarowy-falstart": {
     stage: "from-cyan-900 via-slate-950 to-slate-950",
     cover: "from-cyan-400 via-teal-600 to-slate-900",

@@ -170,7 +170,7 @@ export default async function SklepPage({
                 Za darmo
               </h2>
               <p className="mt-1 max-w-xl text-sm text-slate-600">
-                Krótki PDF „{FREE_GUIDE_SHORT_TITLE}” — zostaw e-mail i pobierz
+                Darmowy PDF „{FREE_GUIDE_SHORT_TITLE}” — zostaw e-mail i pobierz
                 bez płatności.
               </p>
             </div>

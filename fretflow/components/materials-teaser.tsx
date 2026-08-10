@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { Reveal } from "@/components/reveal";
 import { Button } from "@/components/ui/button";
-import { isFreeGuideOpen } from "@/lib/free-guide";
+import { FREE_GUIDE_HREF, isFreeGuideOpen } from "@/lib/free-guide";
 import {
   FREE_GUIDE_COMING_SOON_CTA,
   FREE_GUIDE_SHORT_TITLE,
@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
 export function MaterialsTeaser() {
   const freeGuideOpen = isFreeGuideOpen();
   const startEbook = getShopProductBySlug("start-z-gitara-bez-stresu");
-  const startPrice = shopPriceShortZl("start-z-gitara-bez-stresu") ?? "59 zł";
+  const startPrice = shopPriceShortZl("start-z-gitara-bez-stresu") ?? "79 zł";
 
   return (
     <section id="materialy" className={SECTION_BAND_A}>
@@ -52,9 +52,8 @@ export function MaterialsTeaser() {
                   {FREE_GUIDE_SHORT_TITLE}
                 </h3>
                 <p className={SECTION_BODY}>
-                  Prezent na start. Tłumaczę, dlaczego łapanie chwytów (jak
-                  F-dur) na początku boli i zniechęca — oraz jak tego uniknąć.
-                  Bez haczyków.
+                  Prezent na start. Jak ominąć „ścianę akordów”, odciążyć dłonie
+                  i grać z satysfakcją od pierwszych minut — bez nudnej teorii.
                 </p>
               </div>
               <div className="mt-auto pt-1">
@@ -63,7 +62,7 @@ export function MaterialsTeaser() {
                     asChild
                     className="w-full border-2 border-emerald-700 bg-emerald-600 text-white hover:bg-emerald-700 hover:shadow-md hover:shadow-emerald-600/25 sm:w-auto"
                   >
-                    <Link href="/pobierz-poradnik">Pobierz darmowy PDF</Link>
+                    <Link href={FREE_GUIDE_HREF}>Pobierz darmowy PDF</Link>
                   </Button>
                 ) : (
                   <Button
@@ -71,7 +70,7 @@ export function MaterialsTeaser() {
                     variant="secondary"
                     className="w-full border-2 border-emerald-600 bg-white text-emerald-900 hover:bg-emerald-50 sm:w-auto"
                   >
-                    <Link href="/pobierz-poradnik">
+                    <Link href={FREE_GUIDE_HREF}>
                       {FREE_GUIDE_COMING_SOON_CTA}
                     </Link>
                   </Button>

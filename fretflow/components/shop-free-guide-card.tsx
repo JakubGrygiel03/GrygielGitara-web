@@ -2,7 +2,11 @@ import Link from "next/link";
 
 import { ShopEbookCover } from "@/components/shop-ebook-cover";
 import { Button } from "@/components/ui/button";
-import { isFreeGuideOpen } from "@/lib/free-guide";
+import {
+  FREE_GUIDE_HREF,
+  FREE_GUIDE_SLUG,
+  isFreeGuideOpen,
+} from "@/lib/free-guide";
 import {
   FREE_GUIDE_BLURB,
   FREE_GUIDE_COMING_SOON_CTA,
@@ -11,13 +15,11 @@ import {
 } from "@/lib/free-guide-copy";
 import { cn } from "@/lib/utils";
 
-const FREE_GUIDE_SLUG = "gitarowy-falstart";
-
 type ShopFreeGuideCardProps = {
   className?: string;
 };
 
-/** Catalog card for the free PDF — sits with paid e-books in /sklep. */
+/** Catalog card for the free PDF — links to the same offer as the homepage. */
 export function ShopFreeGuideCard({ className }: ShopFreeGuideCardProps) {
   const open = isFreeGuideOpen();
 
@@ -32,7 +34,7 @@ export function ShopFreeGuideCard({ className }: ShopFreeGuideCardProps) {
         100% za darmo
       </p>
 
-      <Link href="/pobierz-poradnik" className="relative block">
+      <Link href={FREE_GUIDE_HREF} className="relative block">
         <ShopEbookCover
           slug={FREE_GUIDE_SLUG}
           title={FREE_GUIDE_SHORT_TITLE}
@@ -48,7 +50,7 @@ export function ShopFreeGuideCard({ className }: ShopFreeGuideCardProps) {
       <div className="flex flex-1 flex-col px-4 py-4 sm:px-5 sm:py-5">
         <h2 className="text-base font-bold leading-snug tracking-[-0.015em] text-slate-900 sm:text-lg">
           <Link
-            href="/pobierz-poradnik"
+            href={FREE_GUIDE_HREF}
             className="transition-colors hover:text-cyan-800"
           >
             {FREE_GUIDE_SHORT_TITLE}
@@ -59,7 +61,7 @@ export function ShopFreeGuideCard({ className }: ShopFreeGuideCardProps) {
         </p>
 
         <Link
-          href="/pobierz-poradnik"
+          href={FREE_GUIDE_HREF}
           className="mt-3 text-sm font-semibold text-cyan-800 underline-offset-2 hover:underline"
         >
           Dowiedz się więcej
@@ -79,7 +81,7 @@ export function ShopFreeGuideCard({ className }: ShopFreeGuideCardProps) {
             asChild
             className="w-full border-2 border-cyan-800 bg-cyan-600 text-white hover:bg-cyan-700"
           >
-            <Link href="/pobierz-poradnik">
+            <Link href={FREE_GUIDE_HREF}>
               {open ? FREE_GUIDE_CTA_LABEL : FREE_GUIDE_COMING_SOON_CTA}
             </Link>
           </Button>

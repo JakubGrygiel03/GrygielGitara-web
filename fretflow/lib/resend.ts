@@ -52,7 +52,7 @@ type ContactMailInput = {
 
 /**
  * Transactional confirmation + owner notification.
- * Free PDF is only via /pobierz-poradnik (email for delivery; marketing optional).
+ * Free PDF is only via /sklep/gitarowy-reset (email for delivery; marketing optional).
  */
 export async function sendContactEmails(input: ContactMailInput): Promise<void> {
   const resend = getResendClient();

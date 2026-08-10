@@ -18,6 +18,7 @@ import {
   shopProducts as fallbackProducts,
   staticCompareAtGrosze,
 } from "@/lib/shop-products";
+import { FREE_GUIDE_HREF } from "@/lib/free-guide";
 import { pageMetadata } from "@/lib/seo";
 import { formatPricePln, isStripeConfigured } from "@/lib/stripe";
 import { createClient } from "@/lib/supabase/server";
@@ -187,10 +188,10 @@ export default async function SklepProductPage({ params }: PageProps) {
                   Chcesz najpierw krótki, darmowy tekst o starcie bez bólu
                   palców?{" "}
                   <Link
-                    href="/pobierz-poradnik"
+                    href={FREE_GUIDE_HREF}
                     className="font-medium text-sky-700 underline-offset-2 hover:underline"
                   >
-                    Pobierz Gitarowy Falstart
+                    Pobierz Gitarowy Reset
                   </Link>
                 </p>
               ) : null}

@@ -28,7 +28,7 @@ export async function submitLeadMagnet(
   const parsed = leadMagnetSchema.safeParse({
     email,
     marketingConsent,
-    source: "gitarowy_falstart_free_guide",
+    source: "gitarowy_reset_free_guide",
   });
 
   if (!parsed.success) {
