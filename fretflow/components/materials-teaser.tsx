@@ -14,6 +14,10 @@ import {
   SECTION_PAD,
   SECTION_TITLE,
 } from "@/lib/section";
+import {
+  getShopProductBySlug,
+  shopPriceShortZl,
+} from "@/lib/shop-products";
 import { cn } from "@/lib/utils";
 
 /**
@@ -21,6 +25,8 @@ import { cn } from "@/lib/utils";
  */
 export function MaterialsTeaser() {
   const freeGuideOpen = isFreeGuideOpen();
+  const startEbook = getShopProductBySlug("start-z-gitara-bez-stresu");
+  const startPrice = shopPriceShortZl("start-z-gitara-bez-stresu") ?? "59 zł";
 
   return (
     <section id="materialy" className={SECTION_BAND_A}>
@@ -78,10 +84,10 @@ export function MaterialsTeaser() {
             <article className="flex h-full flex-col gap-4 rounded-2xl border border-sky-300 bg-sky-100/80 px-5 py-6 sm:px-6">
               <div className="space-y-2">
                 <p className="text-sm font-extrabold uppercase tracking-wide text-sky-800 sm:text-base">
-                  Opcja 2 · E-book · 59 zł
+                  Opcja 2 · E-book · {startPrice}
                 </p>
                 <h3 className="text-lg font-semibold text-slate-900 sm:text-xl">
-                  Start z gitarą bez stresu
+                  {startEbook?.title ?? "Start z gitarą bez stresu"}
                 </h3>
                 <p className={SECTION_BODY}>
                   Kompletny, ok. 40-stronicowy plan na pierwsze tygodnie.
@@ -92,7 +98,7 @@ export function MaterialsTeaser() {
               <div className="mt-auto pt-1">
                 <Button asChild className="w-full sm:w-auto">
                   <Link href="/sklep/start-z-gitara-bez-stresu">
-                    Zobacz e-booka · wkrótce
+                    Zobacz e-booka w sklepie
                   </Link>
                 </Button>
               </div>

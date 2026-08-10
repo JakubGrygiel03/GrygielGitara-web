@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ShopFreeGuideCard } from "@/components/shop-free-guide-card";
 import { ShopProductCard } from "@/components/shop-product-card";
+import { FREE_GUIDE_SHORT_TITLE } from "@/lib/free-guide-copy";
 import { loadShopCatalog } from "@/lib/shop";
 import { isShopSalesOpen } from "@/lib/shop-sales";
 import {
   shopInterestHref,
+  shopPriceShortZl,
   shopProducts as fallbackProducts,
 } from "@/lib/shop-products";
 import { pageMetadata } from "@/lib/seo";
@@ -13,8 +16,7 @@ import { formatPricePln, isStripeConfigured } from "@/lib/stripe";
 
 export const metadata: Metadata = pageMetadata({
   title: "Sklep e-booków gitarowych — Start, Setup, Feedback VIP",
-  description:
-    "Kup e-booki GrygielGitara: Setup i dbanie o gitarę (19 zł), Start z gitarą bez stresu (59 zł) oraz pakiet Feedback VIP (119 zł). Lista −30% przed premierą. Zakupy w koncie na stronie.",
+  description: `Darmowy PDF „${FREE_GUIDE_SHORT_TITLE}” oraz e-booki GrygielGitara: Setup (${shopPriceShortZl("setup-gitary-w-domu")}), Start bez stresu (${shopPriceShortZl("start-z-gitara-bez-stresu")}), Feedback VIP (${shopPriceShortZl("start-bez-stresu-feedback-vip")}).`,
   path: "/sklep",
 });
 
@@ -83,10 +85,6 @@ export default async function SklepPage({
                 : "Praktyczne materiały PDF na start i dalszą naukę. Katalog już możesz przeglądać — sprzedaż włączymy wkrótce."}
             </p>
           </div>
-          <p className="shrink-0 text-sm font-medium text-slate-600">
-            {catalogItems.length}{" "}
-            {catalogItems.length === 1 ? "pozycja" : "pozycje"}
-          </p>
         </div>
 
         {!salesOpen ? (
@@ -130,18 +128,59 @@ export default async function SklepPage({
           </p>
         ) : null}
 
-        <ul className="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
-          {catalogItems.map((product) => (
-            <li key={product.id}>
-              <ShopProductCard
-                product={product}
-                stripeReady={stripeReady && salesOpen}
-                loggedIn={loggedIn}
-                salesOpen={salesOpen}
-              />
-            </li>
-          ))}
-        </ul>
+        <div className="mt-8 space-y-12 sm:mt-10 sm:space-y-14">
+          <section aria-labelledby="sklep-platne">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h2
+                  id="sklep-platne"
+                  className="text-lg font-bold tracking-tight text-slate-900 sm:text-xl"
+                >
+                  E-booki płatne
+                </h2>
+                <p className="mt-1 text-sm text-slate-600">
+                  Pełne materiały PDF — dostęp po zakupie w koncie.
+                </p>
+              </div>
+              <p className="shrink-0 text-sm font-medium text-slate-600">
+                {catalogItems.length}{" "}
+                {catalogItems.length === 1 ? "pozycja" : "pozycje"}
+              </p>
+            </div>
+            <ul className="mt-5 grid gap-4 sm:mt-6 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
+              {catalogItems.map((product) => (
+                <li key={product.id}>
+                  <ShopProductCard
+                    product={product}
+                    stripeReady={stripeReady && salesOpen}
+                    loggedIn={loggedIn}
+                    salesOpen={salesOpen}
+                  />
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section aria-labelledby="sklep-darmowe">
+            <div>
+              <h2
+                id="sklep-darmowe"
+                className="text-lg font-bold tracking-tight text-slate-900 sm:text-xl"
+              >
+                Za darmo
+              </h2>
+              <p className="mt-1 max-w-xl text-sm text-slate-600">
+                Krótki PDF „{FREE_GUIDE_SHORT_TITLE}” — zostaw e-mail i pobierz
+                bez płatności.
+              </p>
+            </div>
+            <ul className="mt-5 grid gap-4 sm:mt-6 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
+              <li>
+                <ShopFreeGuideCard />
+              </li>
+            </ul>
+          </section>
+        </div>
 
         <p className="mt-10 max-w-2xl text-base leading-[1.65] text-slate-700 sm:mt-12">
           Masz już dostęp z lekcji? Pliki są w{" "}

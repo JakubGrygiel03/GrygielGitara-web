@@ -128,7 +128,7 @@ export function SiteHeader() {
               aria-label="Menu"
               className="fixed inset-x-0 top-0 z-[110] flex max-h-[100dvh] flex-col bg-white shadow-xl lg:hidden"
             >
-              <div className="flex h-[4.5rem] shrink-0 items-center justify-between border-b-2 border-sky-200 pl-3 pr-2 sm:h-20 sm:pl-4 sm:pr-3">
+              <div className="flex h-[4.5rem] shrink-0 items-center justify-between border-b-2 border-sky-200 px-4 sm:h-20 sm:px-6">
                 <Link
                   href="/"
                   className="text-[1.125rem] font-extrabold tracking-[-0.03em] text-slate-900 sm:text-[1.35rem]"
@@ -192,7 +192,7 @@ export function SiteHeader() {
   return (
     <>
       <header className="sticky top-0 z-50 border-b-2 border-sky-200 bg-white/95 backdrop-blur-md">
-        <div className="relative z-[60] flex h-[4.5rem] w-full items-center bg-white/95 pl-3 pr-2 sm:h-20 sm:pl-4 sm:pr-3 lg:pl-5 lg:pr-4">
+        <div className="relative z-[60] mx-auto flex h-[4.5rem] w-full max-w-6xl items-center bg-white/95 px-4 sm:h-20 sm:px-6 lg:max-w-none lg:px-5 xl:px-8">
           <Link
             href="/"
             className="shrink-0 text-[1.125rem] font-extrabold leading-none tracking-[-0.03em] text-slate-900 sm:text-[1.35rem] lg:text-[1.45rem]"

@@ -17,10 +17,16 @@ const THEMES: Record<string, CoverTheme> = {
     muted: "text-sky-200/85",
   },
   "setup-gitary-w-domu": {
-    stage: "from-emerald-800 via-teal-900 to-slate-950",
-    cover: "from-emerald-500 via-teal-700 to-slate-900",
-    accent: "text-emerald-100",
-    muted: "text-emerald-100/85",
+    stage: "from-emerald-700 via-emerald-900 to-slate-950",
+    cover: "from-lime-500 via-emerald-600 to-slate-900",
+    accent: "text-lime-100",
+    muted: "text-emerald-100/90",
+  },
+  "gitarowy-falstart": {
+    stage: "from-cyan-900 via-slate-950 to-slate-950",
+    cover: "from-cyan-400 via-teal-600 to-slate-900",
+    accent: "text-cyan-100",
+    muted: "text-cyan-100/90",
   },
   "start-bez-stresu-feedback-vip": {
     stage: "from-[#2a1038] via-[#120818] to-black",

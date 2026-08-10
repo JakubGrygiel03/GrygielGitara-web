@@ -97,3 +97,15 @@ export function shopInterestPrefillMessage(title: string): string {
 export function staticCompareAtGrosze(slug: string): number | undefined {
   return shopProducts.find((p) => p.slug === slug)?.compareAtGrosze;
 }
+
+export function getShopProductBySlug(slug: string): ShopProduct | undefined {
+  return shopProducts.find((p) => p.slug === slug);
+}
+
+/** Short price for marketing copy, e.g. "59 zł". */
+export function shopPriceShortZl(slug: string): string | null {
+  const product = getShopProductBySlug(slug);
+  if (!product) return null;
+  const zl = product.priceGrosze / 100;
+  return Number.isInteger(zl) ? `${zl} zł` : `${zl.toFixed(2).replace(".", ",")} zł`;
+}

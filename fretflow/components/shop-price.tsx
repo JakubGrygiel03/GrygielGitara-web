@@ -36,12 +36,16 @@ export function ShopPrice({
   const displayLabel =
     displayGrosze > 0 ? formatPricePln(displayGrosze) : priceLabel;
 
-  const strikeGrosze =
-    compareAtGrosze && compareAtGrosze > displayGrosze
+  // Early-bird: strike the real sell price (e.g. 59 → 41.30), not the
+  // marketing anchor (79). Otherwise the catalog looks inconsistent with
+  // homepage / FAQ copy that quotes the shop price.
+  const strikeGrosze = showEarlyBird
+    ? sellingGrosze > displayGrosze
+      ? sellingGrosze
+      : 0
+    : compareAtGrosze && compareAtGrosze > displayGrosze
       ? compareAtGrosze
-      : showEarlyBird && sellingGrosze > displayGrosze
-        ? sellingGrosze
-        : 0;
+      : 0;
 
   if (strikeGrosze <= 0) {
     return (
