@@ -51,11 +51,11 @@ export default function GitarowyResetPage() {
               size="detail"
             />
 
-            <div className="hidden rounded-2xl border border-cyan-200 bg-white p-5 lg:block">
-              <p className="text-base font-bold tabular-nums text-cyan-900">
+            <div className="hidden rounded-2xl border border-orange-200 bg-white p-5 lg:block">
+              <p className="text-base font-bold tabular-nums text-orange-900">
                 0,00 zł
               </p>
-              <p className="mt-1 text-sm font-semibold text-cyan-800">
+              <p className="mt-1 text-sm font-semibold text-orange-800">
                 Zostaw e-mail i pobierz
               </p>
               <div className="mt-4">
@@ -66,7 +66,7 @@ export default function GitarowyResetPage() {
 
           <div className="space-y-8">
             <header className="space-y-3">
-              <p className="text-sm font-bold uppercase tracking-wide text-cyan-700">
+              <p className="text-sm font-bold uppercase tracking-wide text-orange-700">
                 Oferta darmowa
               </p>
               <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
@@ -76,14 +76,14 @@ export default function GitarowyResetPage() {
                 {FREE_GUIDE_BLURB}
               </p>
               <div className="space-y-1 lg:hidden">
-                <p className="text-base font-bold tabular-nums text-cyan-900">
+                <p className="text-base font-bold tabular-nums text-orange-900">
                   0,00 zł
                 </p>
-                <p className="text-sm font-semibold text-cyan-800">
+                <p className="text-sm font-semibold text-orange-800">
                   Zostaw e-mail i pobierz
                 </p>
               </div>
-              <div className="rounded-2xl border border-cyan-200 bg-white p-5 lg:hidden">
+              <div className="rounded-2xl border border-orange-200 bg-white p-5 lg:hidden">
                 {open ? <LeadMagnetForm /> : <ComingSoonBlock />}
               </div>
             </header>
