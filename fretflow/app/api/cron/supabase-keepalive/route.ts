@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { runLessonReminders } from "@/lib/lesson-reminders";
 import { pingSupabaseKeepAlive } from "@/lib/supabase-keepalive";
 
 function isAuthorized(request: NextRequest) {
@@ -19,15 +18,8 @@ async function handle(request: NextRequest) {
     return NextResponse.json({ ok: false, message: "Unauthorized" }, { status: 401 });
   }
 
-  // Always touch the DB — reminder window often skips without a query.
-  const keepAlive = await pingSupabaseKeepAlive();
-
-  const force = request.nextUrl.searchParams.get("force") === "1";
-  const result = await runLessonReminders({ force });
-  return NextResponse.json(
-    { ...result, keepAlive },
-    { status: result.ok && keepAlive.ok ? 200 : 500 },
-  );
+  const result = await pingSupabaseKeepAlive();
+  return NextResponse.json(result, { status: result.ok ? 200 : 500 });
 }
 
 export async function GET(request: NextRequest) {
