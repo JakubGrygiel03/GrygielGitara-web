@@ -32,104 +32,174 @@ export type FreeGuideChapter = {
 
 export const FREE_GUIDE_CHAPTERS: FreeGuideChapter[] = [
   {
-    title: "Rozdział 1: Ściana akordów vs. Dopaminowy Hak",
+    title: "Wstęp: Jak przełamać trudny start?",
     topics: [
       {
-        title: "Metoda Jednogłosowa (Dopaminowy Hak)",
-        body: "Zapomnij na start o skomplikowanych chwytach. Pokazuję, jak za pomocą tylko jednego palca i jednej struny zagrać kultowy, rozpoznawalny motyw (np. Smoke on the Water) w pierwsze 60 sekund. Twój mózg od razu dostaje nagrodę dźwiękową i uwalnia dopaminę, dając Ci motywację do dalszych ćwiczeń.",
+        title: "Dlaczego 90% początkujących porzuca gitarę?",
+        body: "Nie chodzi o brak talentu. Pokazuję, co naprawdę odcina zapał w pierwszych tygodniach — i jak nie wylądować w tej statystyce.",
       },
       {
-        title: "Dźwięki Podstawowe (Root Notes)",
-        body: "Prosty sposób na to, by zacząć grać do ulubionych utworów ze Spotify czy YouTube, używając jedynie pojedynczych dźwięków basowych na strunach E i A, zamiast uczyć się kilkunastu trudnych chwytów.",
+        title: "Najczęstsze błędy uczniów i wady tradycyjnej metodyki",
+        body: "Dlaczego „najpierw wszystkie chwyty, potem frajda” tak często kończy się gitarą w kącie.",
+      },
+      {
+        title: "Jak określić swój cel i utrzymać motywację do ćwiczeń?",
+        body: "Prosty sposób, by wiedzieć po co ćwiczysz i nie gasić się po pierwszym trudniejszym dniu.",
+      },
+      {
+        title: "Struktura poradnika — jak z niego efektywnie korzystać?",
+        body: "Kolejność kroków, żeby nie skakać po książce na oślep i od razu czuć postęp.",
       },
     ],
   },
   {
-    title: "Rozdział 2: Biomechaniczny Reset – Koniec walki z własnym ciałem",
+    title: "Rozdział 1: Dlaczego tradycyjna nauka akordów zniechęca na starcie?",
     topics: [
       {
-        title: "Test 5% Siły (Zasada Minimalnego Nacisku)",
-        body: "Proste ćwiczenie, które pokazuje, jak lekko dociskać strunę, by dźwięk był idealnie czysty. Koniec z bolesnym, kurczowym „wściekłym uściskiem” (Death Grip), który rani palce, spina przedramię i kark.",
+        title: "Pułapka trudnych chwytów — dlaczego nie warto zaczynać od akordów?",
+        body: "Ściana F-dur i innych „pełnych” chwytów na starcie to najszybsza droga do bolących palców i rezygnacji.",
       },
       {
-        title: "Gitarowa Termoterapia",
-        body: "Szybki, fizjoterapeutyczny trik z ciepłą wodą przed grą, który błyskawicznie uelastycznia mięśnie i chroni przed mikrourazami.",
+        title: "Stara szkoła kontra sprytne podejście",
+        body: "Co zostawić z tradycyjnej metodyki, a co odłożyć, dopóki dźwięk i frajda nie wejdą w krew.",
       },
       {
-        title: "Pułapka „Latających Palców” i odrywanie wzroku",
-        body: "Jak oduczyć się obsesyjnego wpatrywania się w gryf i trzymać nieużywane palce tuż nad strunami, co automatycznie przyspiesza grę i zdejmuje napięcie z karku.",
+        title: "Twój nowy model nauki",
+        body: "Jak uczyć się tak, żeby mózg dostawał nagrodę dźwiękową od pierwszych minut, a nie po miesiącach walki.",
+      },
+      {
+        title: "Krok 1: Dopaminowy Hak — pojedyncze dźwięki (Single-Note)",
+        body: "Zapomnij na start o skomplikowanych chwytach. Pokazuję, jak za pomocą tylko jednego palca i jednej struny zagrać kultowy, rozpoznawalny motyw (np. Smoke on the Water) w pierwsze 60 sekund.",
+      },
+      {
+        title: "Krok 2: Dźwięki podstawowe (Root Notes) i granie z utworami",
+        body: "Prosty sposób, by zacząć grać do ulubionych utworów ze Spotify czy YouTube, używając pojedynczych dźwięków basowych na strunach E i A.",
       },
     ],
   },
   {
-    title: "Rozdział 3: Trzy gitary, trzy różne pułapki (Zderzenie ze sprzętem)",
+    title: "Rozdział 2: Ulga dla dłoni — jak grać lekko i bez bólu?",
     topics: [
       {
-        title: "Obalenie mitu „zacznij od klasyka”",
-        body: "Wyjaśniam, dlaczego szeroki gryf (aż 52 mm!) i nylonowe struny w gitarze klasycznej to często katorga dla drobniejszych dłoni, a nie ułatwienie.",
+        title: "Dlaczego gitara stawia opór i męczy Twoje ręce?",
+        body: "Skąd bierze się ból, spięcie przedramienia i „wściekły uścisk” — zanim obwinisz swoje palce.",
       },
       {
-        title: "Wysoka akcja strun na akustyku",
-        body: "Dowiesz się, jak zbyt wysoko zawieszone struny (często 5–6 mm nad progiem) celowo utrudniają Ci naukę i dlaczego regulacja u lutnika za kilkadziesiąt złotych potrafi uratować Twój zapał.",
+        title: "Pigułka 1: Test 5% Siły (minimalny docisk strun)",
+        body: "Proste ćwiczenie, które pokazuje, jak lekko dociskać strunę, by dźwięk był czysty. Koniec z kurczowym Death Grip, który rani palce i kark.",
       },
       {
-        title: "Pułapki elektryka",
-        body: "Jak nie przepalić całego budżetu na samo wiosło (podział 60/40 ze wzmacniaczem), dlaczego na start kategorycznie unikać mostka Floyd Rose oraz jak humbuckery chronią Cię przed irytującym szumem.",
+        title: "Pigułka 2: Szybka rozgrzewka dłoni (Gitarowa termoterapia)",
+        body: "Fizjoterapeutyczny trik z ciepłą wodą przed grą, który uelastycznia mięśnie i chroni przed mikrourazami.",
+      },
+      {
+        title: "Pigułka 3: Wygodna postawa i swobodny oddech",
+        body: "Jak usiąść, trzymać instrument i oddychać, żeby dłonie nie walczyły z całym ciałem.",
+      },
+      {
+        title: "Pigułka 4: Co zrobić, gdy palce „uciekają” od gryfu?",
+        body: "Jak oduczyć się obsesyjnego wpatrywania w gryf i trzymać nieużywane palce tuż nad strunami — szybciej, luźniej, bez spinania karku.",
       },
     ],
   },
   {
-    title: "Rozdział 4: Architektura Codziennego Rytmu – Hakowanie nawyków",
+    title: "Rozdział 3: Wybór i ocena sprzętu — jak uniknąć wad fabrycznych?",
+    topics: [
+      {
+        title: "Gitara klasyczna i pułapka szerokiego gryfu",
+        body: "Dlaczego szeroki gryf (często ok. 52 mm) i nylon to dla wielu dłoni katorga na start, a nie ułatwienie.",
+      },
+      {
+        title: "Gitara akustyczna i pułapka twardych strun",
+        body: "Zbyt twarde struny i wysoka akcja (często 5–6 mm) celowo utrudniają naukę — zanim stwierdzisz, że „nie masz predyspozycji”.",
+      },
+      {
+        title: "Gitara elektryczna i pułapka złych wydatków",
+        body: "Jak nie przepalić budżetu na samo wiosło (podział 60/40 ze wzmacniaczem), dlaczego na start unikać Floyd Rose i jak humbuckery chronią przed szumem.",
+      },
+      {
+        title: "Jak uratować każdy instrument? (regulacja u lutnika)",
+        body: "Kilkadziesiąt złotych za ustawienie akcji i strun potrafi odzyskać zapał szybciej niż nowa gitara.",
+      },
+    ],
+  },
+  {
+    title: "Rozdział 4: Organizacja treningu — jak ćwiczyć regularnie i widzieć postępy?",
     topics: [
       {
         title: "Syndrom „gitary w szafie”",
-        body: "Wyjaśniam psychologiczne pojęcie tarcia (friction). Jeśli instrument leży schowany w pokrowcu głęboko w szafie, Twój mózg zawsze wybierze telefon. Postaw gitarę na widoku na stojaku, a nawyk zbuduje się sam.",
+        body: "Jeśli instrument leży w pokrowcu głęboko w szafie, mózg zawsze wybierze telefon. Postaw gitarę na widoku — nawyk zbuduje się sam.",
       },
       {
-        title: "Reguła 10 minut vs. weekendowy maraton",
-        body: "Dlaczego codzienne 10 minut każdego dnia da Ci o 300% lepsze rezultaty i mniej bólu niż 2 godziny katowania się w sobotę.",
+        title: "Reguła 10 minut zamiast męczących maratonów",
+        body: "Codzienne 10 minut da Ci znacznie lepsze rezultaty i mniej bólu niż dwie godziny katowania się w sobotę.",
       },
       {
-        title: "Pętla 4 Perfekcyjnych Powtórzeń",
-        body: "Koniec z popełnianiem błędu i zaczynaniem piosenki od początku. Pokazuję, jak izolować trudne przejścia i uczyć palce wyłącznie bezbłędnych ruchów.",
+        title: "Pułapka wiecznego zaczynania od zera (Pętla Frustracji)",
+        body: "Koniec z błędem i odpalaniem piosenki od nowa. Izolujesz trudne przejścia i uczysz palce wyłącznie bezbłędnych ruchów.",
       },
       {
-        title: "Zasada Parcia do Przodu (Keep Going)",
-        body: "Jak nauczyć mózg płynięcia z muzyką i utrzymania stałego pulsu rytmicznego bez zatrzymywania się przy każdym potknięciu.",
-      },
-    ],
-  },
-  {
-    title: "Rozdział 5: BHP Psychologiczne – Ochrona przed toksycznym środowiskiem",
-    topics: [
-      {
-        title: "Ofiary „amnezji eksperckiej”",
-        body: "Jak rozpoznać toksycznego nauczyciela (który zapomniał, jak to jest nie potrafić grać) i gotowy Arkusz Przesłuchania Mentora z 3 kluczowymi pytaniami przed pierwszą lekcją.",
-      },
-      {
-        title: "Patent na Cichy Trening",
-        body: "Mój ulubiony, darmowy trik ze złożoną skarpetką lub gąbką kuchenną pod strunami przy mostku, który wycisza gitarę o 80%, pozwalając Ci bezstresowo ćwiczyć o każdej porze, bez strachu przed sąsiadami czy oceną domowników.",
-      },
-      {
-        title: "Ucieczka od samotności",
-        body: "Jak zacząć od razu grać z darmowymi podkładami (Backing Tracks) z internetu, co zamienia nudne brzdąkanie w tworzenie muzyki w pełnym zespole.",
+        title: "Jak rozpracować trudne fragmenty i nie tracić płynności",
+        body: "Jak utrzymać puls i płynąć z muzyką, zamiast zatrzymywać się przy każdym potknięciu.",
       },
     ],
   },
   {
-    title: "Rozdział 6: Mit doskonałości i Test Sprawności Bojowej",
+    title: "Rozdział 5: BHP psychologiczne — ochrona zapału przed otoczeniem",
     topics: [
       {
-        title: "Krzywa postępu i płaskowyż (plateau)",
-        body: "Dlaczego nauka gry nie jest liniowa, regres to normalna neurobiologia i jak nie poddać się tuż przed kolejnym skokiem umiejętności.",
+        title: "Zły nauczyciel — kto zapomniał, jak to jest być początkującym",
+        body: "Jak rozpoznać toksycznego mentora z „amnezją ekspercką”, zanim odbierze Ci radość z gry.",
       },
       {
-        title: "Koncepcja brakującego stopnia",
-        body: "Jak mały, zlekceważony błąd (np. chwyt szafiarski czy zła pozycja kciuka) blokuje rozwój i jak go zdiagnozować.",
+        title: "Prosty test na sprawdzenie mentora",
+        body: "Gotowe pytania przed pierwszą lekcją — żebyś wiedział, czy ktoś umie prowadzić początkującego.",
       },
       {
-        title: "Szybki Test Sprawności Bojowej",
-        body: "Trzyetapowy sprawdzian (w tym słynny Test Monety 5 zł na wysokość strun), który wykonasz w 3 minuty bez grania ani jednego dźwięku, by sprawdzić, czy Twój instrument nie próbuje Cię po cichu sabotować.",
+        title: "Patenty na cichy trening w mieszkaniu",
+        body: "Darmowy trik ze skarpetką lub gąbką pod strunami przy mostku: gitara ciszej o ok. 80%, bez strachu przed sąsiadami.",
+      },
+      {
+        title: "Jak przełamać wstyd przed graniem przy innych",
+        body: "Od sypialnianej samotności do grania z podkładami — tak, żeby ćwiczenie znów było muzyką, nie ukrywaniem się.",
+      },
+    ],
+  },
+  {
+    title: "Rozdział 6: Zastój w nauce — dlaczego nagle idzie gorzej i jak to przetrwać?",
+    topics: [
+      {
+        title: "Zderzenie ze ścianą (plateau) i jak je pokonać",
+        body: "Nauka nie jest liniowa. Regres to normalna neurobiologia — pokazuję, jak nie poddać się tuż przed kolejnym skokiem.",
+      },
+      {
+        title: "Co się dzieje z palcami po przerwie? („Rdzewienie palców”)",
+        body: "Dlaczego po urlopie wszystko „siada” i jak wrócić bez paniki i bez katowania dłoni.",
+      },
+      {
+        title: "Jak samemu wyłapać ukryte błędy (Brakujący Stopień)",
+        body: "Mały, zlekceważony nawyk (chwyt szafiarski, zła pozycja kciuka) potrafi zablokować rozwój — tu jest, jak go znaleźć.",
+      },
+    ],
+  },
+  {
+    title: "Zakończenie: Co dalej?",
+    topics: [
+      {
+        title: "Szybki test sprawności Twojej gitary",
+        body: "Trzyetapowy sprawdzian (w tym Test Monety 5 zł na wysokość strun) w kilka minut, bez grania ani jednego dźwięku.",
+      },
+      {
+        title: "Jak mądrze uczyć się z filmów w internecie?",
+        body: "Żeby YouTube pomagał, a nie dokładał chaosu i złych nawyków.",
+      },
+      {
+        title: "Dlaczego te metody działają?",
+        body: "Krótko: praktyka pedagogiczna i biomechanika, nie motywacyjne hasła.",
+      },
+      {
+        title: "Plan na kolejne tygodnie (7-dniowa checklista)",
+        body: "Konkretne „co robić jutro”, żeby reset nie skończył się na samym przeczytaniu PDF.",
       },
     ],
   },

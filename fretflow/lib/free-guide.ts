@@ -12,6 +12,8 @@ export const FREE_GUIDE_STORAGE_OBJECT = "Ebook gitarowy reset.pdf";
 /** Gitignored local copy under public/products/. */
 export const FREE_GUIDE_LOCAL_OBJECT = "gitarowy-reset.pdf";
 export const FREE_GUIDE_DOWNLOAD_FILENAME = "Gitarowy-Reset.pdf";
+/** Same-origin download so the browser starts the file on the submit click. */
+export const FREE_GUIDE_DOWNLOAD_HREF = "/api/free-guide/download" as const;
 
 /**
  * Free PDF download form.

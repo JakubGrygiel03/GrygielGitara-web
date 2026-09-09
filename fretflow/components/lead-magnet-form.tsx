@@ -17,7 +17,10 @@ import {
   FREE_GUIDE_FORM_INTRO,
   FREE_GUIDE_SUCCESS,
 } from "@/lib/free-guide-copy";
-import { FREE_GUIDE_DOWNLOAD_FILENAME } from "@/lib/free-guide";
+import {
+  FREE_GUIDE_DOWNLOAD_FILENAME,
+  FREE_GUIDE_DOWNLOAD_HREF,
+} from "@/lib/free-guide";
 import {
   MARKETING_CONSENT_LABEL,
   MARKETING_CONSENT_REQUIRED,
@@ -36,10 +39,16 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-function startBrowserDownload(url: string) {
+/** Must run in the same click as submit — after await the browser blocks downloads. */
+function startImmediateDownload() {
+  const url = FREE_GUIDE_DOWNLOAD_HREF;
+  const opened = window.open(url, "_blank", "noopener,noreferrer");
+  if (opened) return;
+
   const link = document.createElement("a");
   link.href = url;
   link.download = FREE_GUIDE_DOWNLOAD_FILENAME;
+  link.target = "_blank";
   link.rel = "noopener noreferrer";
   document.body.appendChild(link);
   link.click();
@@ -76,6 +85,10 @@ export function LeadMagnetForm() {
   };
 
   const onSubmit = handleSubmit((values) => {
+    startImmediateDownload();
+    setDownloadUrl(FREE_GUIDE_DOWNLOAD_HREF);
+    setDone(true);
+
     startTransition(async () => {
       try {
         const result = await submitLeadMagnet(
@@ -87,15 +100,12 @@ export function LeadMagnetForm() {
           toast.error(result.message);
           return;
         }
-        if (result.downloadUrl) {
-          setDownloadUrl(result.downloadUrl);
-          startBrowserDownload(result.downloadUrl);
-        }
-        setDone(true);
         toast.success(result.message);
       } catch (error) {
         console.error("submitLeadMagnet:", error);
-        toast.error("Nie udało się wysłać. Odśwież stronę i spróbuj ponownie.");
+        toast.error(
+          "E-book powinien się pobierać. Mail mógł nie wyjść — spróbuj ponownie albo sprawdź skrzynkę za chwilę.",
+        );
       }
     });
   });
@@ -112,6 +122,7 @@ export function LeadMagnetForm() {
             <a
               href={downloadUrl}
               download={FREE_GUIDE_DOWNLOAD_FILENAME}
+              target="_blank"
               rel="noopener noreferrer"
             >
               {FREE_GUIDE_DOWNLOAD_LABEL}
