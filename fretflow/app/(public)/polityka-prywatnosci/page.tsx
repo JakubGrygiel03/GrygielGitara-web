@@ -91,8 +91,16 @@ export default function PolitykaPrywatnosciPage() {
                 10 ustawy o świadczeniu usług drogą elektroniczną. Zgoda jest
                 dobrowolna, ale bez niej darmowy PDF nie jest udostępniany,
                 ponieważ e-book jest świadczeniem w zamian za zapis na listę.
-                Zgodę możesz wycofać w każdej chwili; wycofanie nie wpływa na
-                zgodność z prawem przetwarzania przed jej wycofaniem.
+                Zgodę możesz wycofać w każdej chwili (link „Wypisz się z listy”
+                w stopce maila albo strona{" "}
+                <Link
+                  href="/wypisz-sie"
+                  className="font-medium text-sky-700 hover:underline"
+                >
+                  Wypisz się z listy
+                </Link>
+                ); wycofanie nie wpływa na zgodność z prawem przetwarzania przed
+                jej wycofaniem.
               </li>
               <li>
                 <strong>Lekcje, serwis, sklep</strong> — art. 6 ust. 1 lit. b

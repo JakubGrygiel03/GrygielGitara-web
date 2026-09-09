@@ -17,6 +17,7 @@ import {
   FREE_GUIDE_FORM_INTRO,
   FREE_GUIDE_SUCCESS,
 } from "@/lib/free-guide-copy";
+import { FREE_GUIDE_DOWNLOAD_FILENAME } from "@/lib/free-guide";
 import {
   MARKETING_CONSENT_LABEL,
   MARKETING_CONSENT_REQUIRED,
@@ -34,6 +35,16 @@ const formSchema = z.object({
 });
 
 type FormValues = z.infer<typeof formSchema>;
+
+function startBrowserDownload(url: string) {
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = FREE_GUIDE_DOWNLOAD_FILENAME;
+  link.rel = "noopener noreferrer";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
 
 export function LeadMagnetForm() {
   const [isPending, startTransition] = useTransition();
@@ -66,20 +77,26 @@ export function LeadMagnetForm() {
 
   const onSubmit = handleSubmit((values) => {
     startTransition(async () => {
-      const result = await submitLeadMagnet(
-        values.email,
-        values.marketingConsent === true,
-        values.privacyConsent === true,
-      );
-      if (!result.ok) {
-        toast.error(result.message);
-        return;
+      try {
+        const result = await submitLeadMagnet(
+          values.email,
+          values.marketingConsent === true,
+          values.privacyConsent === true,
+        );
+        if (!result.ok) {
+          toast.error(result.message);
+          return;
+        }
+        if (result.downloadUrl) {
+          setDownloadUrl(result.downloadUrl);
+          startBrowserDownload(result.downloadUrl);
+        }
+        setDone(true);
+        toast.success(result.message);
+      } catch (error) {
+        console.error("submitLeadMagnet:", error);
+        toast.error("Nie udało się wysłać. Odśwież stronę i spróbuj ponownie.");
       }
-      if (result.downloadUrl) {
-        setDownloadUrl(result.downloadUrl);
-      }
-      setDone(true);
-      toast.success(result.message);
     });
   });
 
@@ -92,7 +109,11 @@ export function LeadMagnetForm() {
         <p className="mt-2 text-muted">{FREE_GUIDE_SUCCESS}</p>
         {downloadUrl ? (
           <Button asChild className="mt-5">
-            <a href={downloadUrl} target="_blank" rel="noopener noreferrer">
+            <a
+              href={downloadUrl}
+              download={FREE_GUIDE_DOWNLOAD_FILENAME}
+              rel="noopener noreferrer"
+            >
               {FREE_GUIDE_DOWNLOAD_LABEL}
             </a>
           </Button>

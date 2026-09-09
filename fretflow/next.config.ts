@@ -1,6 +1,19 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async headers() {
+    return [
+      {
+        source: "/products/gitarowy-reset.pdf",
+        headers: [
+          {
+            key: "Content-Disposition",
+            value: 'attachment; filename="Gitarowy-Reset.pdf"',
+          },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       {

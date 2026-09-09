@@ -74,3 +74,44 @@ export async function upsertBrevoContact(
     console.error("Brevo createContact network error:", error);
   }
 }
+
+/** Marks the contact so marketing mail stops (keeps the record). */
+export async function blacklistBrevoContact(email: string): Promise<void> {
+  const apiKey = process.env.BREVO_API_KEY?.trim();
+  if (!apiKey) return;
+
+  const listIdRaw = process.env.BREVO_LIST_ID?.trim();
+  const listId = listIdRaw ? Number(listIdRaw) : undefined;
+
+  const body: {
+    emailBlacklisted: boolean;
+    unlinkListIds?: number[];
+  } = { emailBlacklisted: true };
+  if (listId !== undefined && Number.isFinite(listId)) {
+    body.unlinkListIds = [listId];
+  }
+
+  try {
+    const response = await fetch(
+      `https://api.brevo.com/v3/contacts/${encodeURIComponent(email.trim().toLowerCase())}`,
+      {
+        method: "PUT",
+        headers: {
+          "api-key": apiKey,
+          accept: "application/json",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(body),
+      },
+    );
+    if (!response.ok && response.status !== 404) {
+      console.error(
+        "Brevo blacklist failed:",
+        response.status,
+        await response.text(),
+      );
+    }
+  } catch (error) {
+    console.error("Brevo blacklist network error:", error);
+  }
+}

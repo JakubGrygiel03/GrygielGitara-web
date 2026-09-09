@@ -145,7 +145,7 @@ export const FREE_GUIDE_CLOSING: string[] = [
 
 export const FREE_GUIDE_FORM_INTRO = [
   "Podaj swój e-mail, aby od razu pobrać e-book (101 stron).",
-  "Plik pobierzesz bezpośrednio ze strony, a kopię wyślę również na Twoją skrzynkę. W przyszłości podzielę się z Tobą kolejnymi przydatnymi materiałami i wiedzą – z wiadomości możesz zrezygnować w każdej chwili jednym kliknięciem.",
+  "Po wysłaniu formularza plik zacznie się pobierać automatycznie, a kopię wyślę też na Twoją skrzynkę. Z wiadomości możesz zrezygnować w każdej chwili jednym kliknięciem.",
 ] as const;
 
 export const FREE_GUIDE_CTA_LABEL = "Pobierz darmowy e-book";
@@ -156,7 +156,7 @@ export const FREE_GUIDE_DOWNLOAD_LABEL = `Pobierz PDF (${FREE_GUIDE_PAGE_COUNT} 
 export const FREE_GUIDE_COMING_SOON_CTA = "Już wkrótce dostępny";
 
 export const FREE_GUIDE_SUCCESS =
-  "Gotowe. Pobierz e-book poniżej — i zajrzyj na skrzynkę, gdybyś chciał mieć link pod ręką (czasem wpada do spamu).";
+  "Pobieranie powinno zacząć się od razu. Jeśli nic się nie dzieje — użyj przycisku poniżej. Kopia jest też na skrzynce (sprawdź spam).";
 
 export const FREE_GUIDE_VS_PAID =
   "Szukasz pełniejszego planu na pierwsze tygodnie gry (ok. 40 stron + wsparcie wideo)? W sklepie jest e-book";

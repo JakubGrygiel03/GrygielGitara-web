@@ -2,11 +2,16 @@ import { Resend } from "resend";
 
 import { resolveNotifyEmail } from "@/lib/admin-settings";
 import {
+  canAttachFreeGuidePdf,
   FREE_GUIDE_DOWNLOAD_FILENAME,
-  FREE_GUIDE_HREF,
+  getFreeGuidePdfFileUrl,
 } from "@/lib/free-guide";
 import { FREE_GUIDE_SHORT_TITLE } from "@/lib/free-guide-copy";
-import { getSiteUrl } from "@/lib/env";
+import { getRequestSiteUrl } from "@/lib/env";
+import {
+  unsubscribeApiPath,
+  unsubscribePagePath,
+} from "@/lib/newsletter-unsubscribe";
 import { lessonPackageLabel } from "@/lib/lesson-packages";
 import {
   bookingLocationLabels,
@@ -29,6 +34,8 @@ export async function sendEmail(input: {
   to: string;
   subject: string;
   html: string;
+  headers?: Record<string, string>;
+  attachments?: { path: string; filename: string }[];
 }): Promise<{ ok: boolean; message?: string }> {
   const resend = getResendClient();
   const from = process.env.RESEND_FROM_EMAIL;
@@ -41,6 +48,8 @@ export async function sendEmail(input: {
       to: input.to,
       subject: input.subject,
       html: input.html,
+      ...(input.headers ? { headers: input.headers } : {}),
+      ...(input.attachments?.length ? { attachments: input.attachments } : {}),
     });
     if (error) return { ok: false, message: error.message };
     return { ok: true };
@@ -184,28 +193,75 @@ export async function sendBookingEmails(input: BookingMailInput): Promise<void> 
 }
 
 /**
- * Lead-magnet delivery: link only. 37 MB must not go as an attachment
- * (Gmail rejects over 25 MB; Resend would also choke on the payload).
+ * Lead-magnet delivery. Attaches the PDF when it fits mailbox limits (~18 MB
+ * source). The current 37 MB file is delivered as an immediate on-site
+ * download plus a copy link in the e-mail.
  */
 export async function sendFreeGuideEmail(input: {
   to: string;
   downloadUrl: string;
 }): Promise<{ ok: boolean; message?: string }> {
-  const pageUrl = `${getSiteUrl()}${FREE_GUIDE_HREF}`;
+  const site = await getRequestSiteUrl();
+  const unsubPage = `${site}${unsubscribePagePath(input.to)}`;
+  const unsubApi = `${site}${unsubscribeApiPath(input.to)}`;
   const safeDownloadUrl = escapeHtmlAttr(input.downloadUrl);
+  const safeUnsub = escapeHtmlAttr(unsubPage);
+  const attach = await canAttachFreeGuidePdf();
+
+  const copyLine = attach
+    ? "Plik powinien pobrać się automatycznie na stronie po wpisaniu maila, ale dla wygody przesyłam go również tutaj w załączniku, żebyś zawsze miał go pod ręką."
+    : `Plik powinien pobrać się automatycznie na stronie po wpisaniu maila, ale dla wygody przesyłam go również tutaj, żebyś zawsze miał go pod ręką:<br/><br/><a href="${safeDownloadUrl}" style="display:inline-block;padding:12px 18px;background:#0369a1;color:#fff;text-decoration:none;border-radius:8px;font-weight:600;">Pobierz e-book „${FREE_GUIDE_SHORT_TITLE}”</a>`;
+
   const html = `
     <p>Cześć!</p>
-    <p>Dzięki za zainteresowanie. Twój darmowy e-book <strong>„${FREE_GUIDE_SHORT_TITLE}”</strong> jest gotowy do pobrania.</p>
-    <p><a href="${safeDownloadUrl}">Pobierz PDF (${FREE_GUIDE_DOWNLOAD_FILENAME}, 101 stron, ok. 37 MB)</a></p>
-    <p>Jeśli masz konto GrygielGitara na ten sam e-mail, PDF jest też w <strong>Konto → Zakupy</strong>.</p>
-    <p>Jeśli link wygaśnie albo plik się nie otworzy, wróć tutaj: <a href="${pageUrl}">${pageUrl}</a> — wystarczy ponownie podać e-mail.</p>
-    <p>Zapisując się po darmowy e-book, dołączyłeś/aś też do listy mailingowej GrygielGitara. Od czasu do czasu wyślę informacje o lekcjach, materiałach i ofertach. Wypiszesz się w każdej chwili — link będzie w wiadomościach albo napisz na Kontakt.</p>
-    <p>Miłej lektury i lekkiej gry,<br/>Jakub · GrygielGitara</p>
+    <p>Dziękuję bardzo za zainteresowanie moim materiałem.</p>
+    <p>Mam szczerą nadzieję, że wyciągniesz z tego e-booka jak najwięcej dla siebie i że pomoże Ci on w codziennej grze na gitarze.</p>
+    <p>${copyLine}</p>
+    <p>Życzę udanej lektury i powodzenia z instrumentem!</p>
+    <p>Pozdrawiam,<br/>Jakub Grygiel</p>
+    <hr style="border:none;border-top:1px solid #e2e8f0;margin:28px 0 16px;" />
+    <p style="font-size:12px;line-height:1.55;color:#64748b;">
+      Jeśli w przyszłości nie będziesz chciał otrzymywać ode mnie kolejnych wiadomości, w każdej chwili możesz się wypisać z listy, klikając link do rezygnacji znajdujący się na samym dole tej wiadomości.
+    </p>
+    <p style="font-size:12px;line-height:1.55;color:#64748b;">
+      <a href="${safeUnsub}" style="color:#0369a1;">Wypisz się z listy</a>
+    </p>
   `;
 
-  return sendEmail({
+  const headers = {
+    "List-Unsubscribe": `<${unsubApi}>`,
+    "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+  };
+
+  const attachments = attach
+    ? [
+        {
+          path: getFreeGuidePdfFileUrl(),
+          filename: FREE_GUIDE_DOWNLOAD_FILENAME,
+        },
+      ]
+    : undefined;
+
+  const mailed = await sendEmail({
     to: input.to,
-    subject: `Twój darmowy PDF „${FREE_GUIDE_SHORT_TITLE}” jest gotowy`,
+    subject: `Dziękuję za zainteresowanie – Twój e-book „${FREE_GUIDE_SHORT_TITLE}”`,
     html,
+    headers,
+    attachments,
   });
+
+  if (!mailed.ok && attachments) {
+    console.error(
+      "sendFreeGuideEmail attachment failed, retrying without:",
+      mailed.message,
+    );
+    return sendEmail({
+      to: input.to,
+      subject: `Dziękuję za zainteresowanie – Twój e-book „${FREE_GUIDE_SHORT_TITLE}”`,
+      html,
+      headers,
+    });
+  }
+
+  return mailed;
 }

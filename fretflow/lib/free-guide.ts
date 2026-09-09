@@ -27,26 +27,74 @@ function isLocalDev(): boolean {
   return process.env.VERCEL !== "1" && process.env.NODE_ENV !== "production";
 }
 
-/** Direct download URL. 37 MB — never attach to e-mail (Gmail limit is 25 MB). */
+/** Public file URL without ?download= (Resend fetches this for attachments). */
+export function getFreeGuidePdfFileUrl(): string {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  if (supabaseUrl) {
+    const origin = supabaseUrl.replace(/\/$/, "");
+    const objectPath = encodeURIComponent(FREE_GUIDE_STORAGE_OBJECT);
+    return `${origin}/storage/v1/object/public/${FREE_GUIDE_STORAGE_BUCKET}/${objectPath}`;
+  }
+
+  const explicit = process.env.FREE_GUIDE_PDF_URL?.trim();
+  if (explicit) return stripDownloadHint(explicit);
+
+  return `${getSiteUrl()}/products/${FREE_GUIDE_LOCAL_OBJECT}`;
+}
+
+/** Direct download URL. Prefer this in the browser so the file saves, not opens. */
 export function getFreeGuidePdfUrl(): string {
   const explicit = process.env.FREE_GUIDE_PDF_URL?.trim();
   if (explicit) return withDownloadHint(explicit);
 
   // Local: serve from public/products (gitignored 37 MB file). Production: Storage.
   if (isLocalDev()) {
-    return `${getSiteUrl()}/products/${FREE_GUIDE_LOCAL_OBJECT}`;
-  }
-
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
-  if (supabaseUrl) {
-    const origin = supabaseUrl.replace(/\/$/, "");
-    const objectPath = encodeURIComponent(FREE_GUIDE_STORAGE_OBJECT);
     return withDownloadHint(
-      `${origin}/storage/v1/object/public/${FREE_GUIDE_STORAGE_BUCKET}/${objectPath}`,
+      `${getSiteUrl()}/products/${FREE_GUIDE_LOCAL_OBJECT}`,
     );
   }
 
-  return `${getSiteUrl()}/products/${FREE_GUIDE_LOCAL_OBJECT}`;
+  return withDownloadHint(getFreeGuidePdfFileUrl());
+}
+
+/** Public HTTPS URL for e-mail buttons (not localhost). */
+export function getFreeGuideEmailDownloadUrl(): string {
+  return withDownloadHint(getFreeGuidePdfFileUrl());
+}
+
+/**
+ * Gmail rejects ~25 MB messages. After Base64, ~18 MB source is the safe ceiling.
+ * Current ebook is ~37 MB — attach only if a smaller file is uploaded later.
+ */
+export const FREE_GUIDE_ATTACH_MAX_BYTES = 18 * 1024 * 1024;
+
+export async function canAttachFreeGuidePdf(): Promise<boolean> {
+  const fileUrl = getFreeGuidePdfFileUrl();
+  if (!fileUrl.startsWith("https://") || fileUrl.includes("localhost")) {
+    return false;
+  }
+  try {
+    const response = await fetch(fileUrl, { method: "HEAD" });
+    const length = Number(response.headers.get("content-length") || 0);
+    return (
+      response.ok &&
+      Number.isFinite(length) &&
+      length > 0 &&
+      length <= FREE_GUIDE_ATTACH_MAX_BYTES
+    );
+  } catch {
+    return false;
+  }
+}
+
+function stripDownloadHint(url: string): string {
+  try {
+    const parsed = new URL(url);
+    parsed.searchParams.delete("download");
+    return parsed.toString();
+  } catch {
+    return url.replace(/([?&])download=[^&]*&?/g, "$1").replace(/[?&]$/, "");
+  }
 }
 
 function withDownloadHint(url: string): string {
