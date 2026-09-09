@@ -74,7 +74,7 @@ export default async function KontaktPage({ searchParams }: KontaktPageProps) {
           Darmowy PDF „{FREE_GUIDE_SHORT_TITLE}”{" "}
           {freeGuideOpen ? (
             <>
-              jest w{" "}
+              jest już do pobrania w{" "}
               <Link
                 href={FREE_GUIDE_HREF}
                 className="font-medium text-sky-700 underline-offset-2 hover:underline"

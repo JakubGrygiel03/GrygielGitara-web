@@ -34,6 +34,9 @@ yarn-error.log*
 .env*
 !.env.example
 
+# 37 MB free guide — host in Supabase Storage, not git
+/public/products/gitarowy-reset.pdf
+
 # vercel
 .vercel
 

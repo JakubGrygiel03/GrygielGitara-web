@@ -1,12 +1,26 @@
 import { z } from "zod";
 
-/** Optional — PDF delivery does not require marketing list signup. */
+/** Exact wording stored with the lead (audit trail). Keep in sync with the form. */
 export const MARKETING_CONSENT_LABEL =
-  "Chcę dostawać od GrygielGitara informacje o lekcjach i materiałach (mogę wypisać się w każdej chwili). PDF dostaniesz także bez tej zgody.";
+  "Zapisuję się na newsletter. Mogę wypisać się w każdej chwili.";
+
+export const PRIVACY_CONSENT_LABEL =
+  "Akceptuję Regulamin sklepu i Politykę prywatności.";
+
+export const MARKETING_CONSENT_REQUIRED =
+  "Pole wymagane do zaznaczenia.";
+
+export const PRIVACY_CONSENT_REQUIRED =
+  "Pole wymagane do zaznaczenia.";
 
 export const leadMagnetSchema = z.object({
   email: z.email("Podaj poprawny adres e-mail."),
-  marketingConsent: z.boolean(),
+  marketingConsent: z.boolean().refine((value) => value === true, {
+    message: MARKETING_CONSENT_REQUIRED,
+  }),
+  privacyConsent: z.boolean().refine((value) => value === true, {
+    message: PRIVACY_CONSENT_REQUIRED,
+  }),
   source: z
     .string()
     .trim()

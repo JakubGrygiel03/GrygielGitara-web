@@ -23,6 +23,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
       changeFrequency: "yearly" as const,
     },
+    {
+      path: "/polityka-prywatnosci",
+      priority: 0.3,
+      changeFrequency: "yearly" as const,
+    },
   ].map(({ path, priority, changeFrequency }) => ({
     url: `${SITE_CANONICAL_ORIGIN}${path}`,
     lastModified,

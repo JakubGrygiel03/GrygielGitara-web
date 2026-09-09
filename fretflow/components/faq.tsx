@@ -78,7 +78,7 @@ const lessonFaqs: FaqItem[] = [
 const platformFaqs: FaqItem[] = [
   {
     q: "Czym różni się darmowy PDF od płatnego e-booka?",
-    a: `Darmowy PDF „Gitarowy Reset” to praktyczny przewodnik: ściana akordów, biomechanika dłoni, pułapki sprzętu i nawyki na start. E-book „Start z gitarą bez stresu” (${START_EBOOK_PRICE}) to pełniejszy plan na pierwsze tygodnie — ok. 40 stron i wsparcie wideo.`,
+    a: `Darmowy PDF „Gitarowy Reset” jest już do pobrania: zostawiasz e-mail na stronie sklepu i dostajesz plik od razu (101 stron, ok. 37 MB). To praktyczny przewodnik: ściana akordów, biomechanika dłoni, pułapki sprzętu i nawyki na start. E-book „Start z gitarą bez stresu” (${START_EBOOK_PRICE}) to pełniejszy plan na pierwsze tygodnie — ok. 40 stron i wsparcie wideo.`,
   },
   {
     q: "Jak założyć konto i gdzie je znajdę?",

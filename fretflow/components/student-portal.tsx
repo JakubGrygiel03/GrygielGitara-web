@@ -206,7 +206,8 @@ export function StudentPortal({ data }: { data: StudentPortalData }) {
           <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-5">
             <p className="text-sm leading-relaxed text-muted">
               Nie masz jeszcze zakupionych materiałów. Po płatności w sklepie
-              e-booki pojawią się tutaj do pobrania (i na e-mailu).
+              e-booki pojawią się tutaj. Darmowy „Gitarowy Reset” też tu wpadnie,
+              gdy pobierzesz go na ten sam e-mail co konto.
             </p>
             <Button asChild size="sm" className="mt-3">
               <Link href="/sklep">Zobacz sklep</Link>

@@ -96,7 +96,9 @@ export async function loadShopCatalog(): Promise<{
   return {
     stripeReady,
     userId: user?.id ?? null,
-    items: products.map((product) => ({
+    items: products
+      .filter((product) => product.slug !== "gitarowy-reset")
+      .map((product) => ({
       id: product.id,
       slug: product.slug,
       title: product.title,

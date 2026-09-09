@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 
 import { LeadMagnetForm } from "@/components/lead-magnet-form";
 import { ShopEbookCover } from "@/components/shop-ebook-cover";
+import { ShopSyncedSidebar } from "@/components/shop-synced-sidebar";
 import { Button } from "@/components/ui/button";
 import {
   FREE_GUIDE_HREF,
@@ -23,8 +24,8 @@ import {
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: `${FREE_GUIDE_SHORT_TITLE} — darmowy PDF na start gitary`,
-  description: FREE_GUIDE_BLURB,
+  title: `${FREE_GUIDE_SHORT_TITLE} — darmowy PDF do pobrania`,
+  description: `Pobierz darmowy PDF „${FREE_GUIDE_SHORT_TITLE}”. ${FREE_GUIDE_BLURB}`,
   path: FREE_GUIDE_HREF,
 });
 
@@ -33,7 +34,7 @@ export default function GitarowyResetPage() {
 
   return (
     <div className="bg-surface">
-      <article className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
+      <article className="mx-auto w-full max-w-6xl px-4 pb-10 pt-4 sm:px-6 sm:pb-14 sm:pt-5">
         <Link
           href="/sklep"
           className="inline-flex items-center gap-2 text-sm font-medium text-sky-700 transition-colors hover:text-sky-900"
@@ -42,8 +43,8 @@ export default function GitarowyResetPage() {
           Wróć do sklepu
         </Link>
 
-        <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start lg:gap-14">
-          <div className="space-y-4 lg:sticky lg:top-24">
+        <div className="mt-3 grid gap-10 sm:mt-4 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start lg:gap-14">
+          <ShopSyncedSidebar>
             <ShopEbookCover
               slug={FREE_GUIDE_SLUG}
               title={FREE_GUIDE_SHORT_TITLE}
@@ -56,13 +57,13 @@ export default function GitarowyResetPage() {
                 0,00 zł
               </p>
               <p className="mt-1 text-sm font-semibold text-orange-800">
-                Zostaw e-mail i pobierz
+                Dostępny do pobrania
               </p>
               <div className="mt-4">
                 {open ? <LeadMagnetForm /> : <ComingSoonBlock />}
               </div>
             </div>
-          </div>
+          </ShopSyncedSidebar>
 
           <div className="space-y-8">
             <header className="space-y-3">
@@ -80,7 +81,7 @@ export default function GitarowyResetPage() {
                   0,00 zł
                 </p>
                 <p className="text-sm font-semibold text-orange-800">
-                  Zostaw e-mail i pobierz
+                  Dostępny do pobrania
                 </p>
               </div>
               <div className="rounded-2xl border border-orange-200 bg-white p-5 lg:hidden">
@@ -170,8 +171,8 @@ function ComingSoonBlock() {
         {FREE_GUIDE_COMING_SOON_CTA}
       </p>
       <p className="text-base leading-[1.65] text-slate-700">
-        Przygotowuję plik PDF. Jak tylko będzie gotowy, pobierzesz go stąd —
-        bez haczyków.
+        Formularz pobierania jest chwilowo wyłączony. Wróć tu za chwilę albo
+        umów lekcję próbną.
       </p>
       <div className="flex flex-col gap-3 sm:flex-row">
         <Button asChild>

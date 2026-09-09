@@ -52,8 +52,9 @@ export function MaterialsTeaser() {
                   {FREE_GUIDE_SHORT_TITLE}
                 </h3>
                 <p className={SECTION_BODY}>
-                  Prezent na start. Jak ominąć „ścianę akordów”, odciążyć dłonie
-                  i grać z satysfakcją od pierwszych minut — bez nudnej teorii.
+                  Prezent na start — 101 stron, już do pobrania. Jak ominąć
+                  „ścianę akordów”, odciążyć dłonie i grać z satysfakcją od
+                  pierwszych minut — bez nudnej teorii.
                 </p>
               </div>
               <div className="mt-auto pt-1">

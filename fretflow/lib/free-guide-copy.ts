@@ -7,6 +7,9 @@ export const FREE_GUIDE_SHORT_TITLE = "Gitarowy Reset";
 export const FREE_GUIDE_TITLE =
   "Gitarowy Reset — jak zacząć grać bez bólu dłoni, frustracji i rzucania instrumentu w kąt";
 
+export const FREE_GUIDE_PAGE_COUNT = 101;
+export const FREE_GUIDE_FILE_SIZE = "ok. 37 MB";
+
 /** Short blurb for cards / meta. */
 export const FREE_GUIDE_BLURB =
   "Praktyczny, darmowy PDF: jak ominąć „ścianę akordów”, odciążyć dłonie i zacząć grać z satysfakcją od pierwszych minut — bez nudnej teorii.";
@@ -14,7 +17,7 @@ export const FREE_GUIDE_BLURB =
 export const FREE_GUIDE_INTRO: string[] = [
   "Statystyki są brutalne: aż 90% osób, które kupują swoją pierwszą gitarę, porzuca marzenia o graniu w ciągu pierwszego roku, najczęściej już po pierwszych trzech miesiącach. Patrzysz potem na instrument stojący w kącie pokoju, na którym powoli osiada kurz, i wmawiasz sobie brak talentu, za grube palce czy brak słuchu.",
   "Prawda jest jednak zupełnie inna. Najczęściej po prostu zderzasz się ze „ścianą akordów” (na czele z bolesnym chwytem F-dur) albo Twoja gitara jest tak twarda, że walka z nią fizycznie rani dłonie i wywołuje ból.",
-  "Mój e-book „Gitarowy Reset” to nie kolejna książka z nudną teorią. To praktyczny, rzemieślniczy przewodnik oparty na fizjologii dłoni i biomechanice. Pokazuję w nim, jak oszukać układ nerwowy, ułatwić sobie grę i czerpać z niej czystą satysfakcję od pierwszych minut.",
+  "Mój e-book „Gitarowy Reset” (101 stron) to nie kolejna książka z nudną teorią. To praktyczny, rzemieślniczy przewodnik oparty na fizjologii dłoni i biomechanice. Pokazuję w nim, jak oszukać układ nerwowy, ułatwić sobie grę i czerpać z niej czystą satysfakcję od pierwszych minut.",
 ];
 
 export type FreeGuideTopic = {
@@ -140,16 +143,20 @@ export const FREE_GUIDE_CLOSING: string[] = [
   "Zasługujesz na to, by usłyszeć czystą muzykę płynącą spod Twoich własnych palców.",
 ];
 
-export const FREE_GUIDE_FORM_INTRO =
-  "Zostaw e-mail — PDF trafi na skrzynkę, żeby mieć go zawsze pod ręką. Bez nachalnych maili.";
+export const FREE_GUIDE_FORM_INTRO = [
+  "Podaj swój e-mail, aby od razu pobrać e-book (101 stron).",
+  "Plik pobierzesz bezpośrednio ze strony, a kopię wyślę również na Twoją skrzynkę. W przyszłości podzielę się z Tobą kolejnymi przydatnymi materiałami i wiedzą – z wiadomości możesz zrezygnować w każdej chwili jednym kliknięciem.",
+] as const;
 
-export const FREE_GUIDE_CTA_LABEL = "Chcę darmowy PDF";
+export const FREE_GUIDE_CTA_LABEL = "Pobierz darmowy e-book";
+
+export const FREE_GUIDE_DOWNLOAD_LABEL = `Pobierz PDF (${FREE_GUIDE_PAGE_COUNT} stron, ${FREE_GUIDE_FILE_SIZE})`;
 
 /** Shown in place of download while FREE_GUIDE_OPEN is false. */
 export const FREE_GUIDE_COMING_SOON_CTA = "Już wkrótce dostępny";
 
 export const FREE_GUIDE_SUCCESS =
-  "Dzięki. PDF wyślę na podany e-mail — warto zajrzeć też do spamu.";
+  "Gotowe. Pobierz e-book poniżej — i zajrzyj na skrzynkę, gdybyś chciał mieć link pod ręką (czasem wpada do spamu).";
 
 export const FREE_GUIDE_VS_PAID =
   "Szukasz pełniejszego planu na pierwsze tygodnie gry (ok. 40 stron + wsparcie wideo)? W sklepie jest e-book";

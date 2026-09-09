@@ -94,7 +94,7 @@ const SEO_FAQS: { q: string; a: string }[] = [
   },
   {
     q: "Co jest w sklepie GrygielGitara?",
-    a: `E-booki i pakiety cyfrowe: Setup i dbanie o gitarę w domu (${shopPriceShortZl("setup-gitary-w-domu")}), Start z gitarą bez stresu (${shopPriceShortZl("start-z-gitara-bez-stresu")}) oraz Start bez stresu + Feedback VIP (${shopPriceShortZl("start-bez-stresu-feedback-vip")}). Zakupy w koncie na stronie.`,
+    a: `Darmowy PDF „Gitarowy Reset” (zostaw e-mail i pobierz) oraz e-booki i pakiety cyfrowe: Setup i dbanie o gitarę w domu (${shopPriceShortZl("setup-gitary-w-domu")}), Start z gitarą bez stresu (${shopPriceShortZl("start-z-gitara-bez-stresu")}) oraz Start bez stresu + Feedback VIP (${shopPriceShortZl("start-bez-stresu-feedback-vip")}). Zakupy płatne w koncie na stronie.`,
   },
   {
     q: "Czy muszę brać lekcje, żeby kupić e-booka?",

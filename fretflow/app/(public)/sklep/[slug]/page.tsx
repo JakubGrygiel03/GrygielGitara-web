@@ -7,6 +7,7 @@ import { ShopEbookCover } from "@/components/shop-ebook-cover";
 import { ShopPrice } from "@/components/shop-price";
 import { ShopProductCta } from "@/components/shop-product-cta";
 import { ShopProductOfferBody } from "@/components/shop-product-offer";
+import { ShopSyncedSidebar } from "@/components/shop-synced-sidebar";
 import {
   getOwnedProductIds,
   getPublishedProductBySlug,
@@ -122,7 +123,7 @@ export default async function SklepProductPage({ params }: PageProps) {
 
   return (
     <div className="bg-surface">
-      <article className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
+      <article className="mx-auto w-full max-w-6xl px-4 pb-10 pt-4 sm:px-6 sm:pb-14 sm:pt-5">
         <Link
           href="/sklep"
           className="inline-flex items-center gap-2 text-sm font-medium text-sky-700 transition-colors hover:text-sky-900"
@@ -131,8 +132,8 @@ export default async function SklepProductPage({ params }: PageProps) {
           Wróć do sklepu
         </Link>
 
-        <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start lg:gap-14">
-          <div className="space-y-4 lg:sticky lg:top-24">
+        <div className="mt-3 grid gap-10 sm:mt-4 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start lg:gap-14">
+          <ShopSyncedSidebar>
             <ShopEbookCover
               slug={slug}
               title={title}
@@ -168,7 +169,7 @@ export default async function SklepProductPage({ params }: PageProps) {
                 loginNext={loginNext}
               />
             </div>
-          </div>
+          </ShopSyncedSidebar>
 
           <div className="space-y-8">
             <header className="space-y-3">

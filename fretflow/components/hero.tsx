@@ -72,7 +72,7 @@ export function Hero() {
               >
                 <Link href={FREE_GUIDE_HREF}>
                   {freeGuideOpen
-                    ? `Darmowy PDF: ${FREE_GUIDE_SHORT_TITLE}`
+                    ? `Pobierz ${FREE_GUIDE_SHORT_TITLE}`
                     : `Darmowy PDF · ${FREE_GUIDE_COMING_SOON_CTA}`}
                 </Link>
               </Button>

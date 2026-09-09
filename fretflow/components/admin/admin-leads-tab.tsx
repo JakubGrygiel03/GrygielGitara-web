@@ -41,7 +41,7 @@ export function AdminLeadsTab({ leads }: { leads: LeadRow[] }) {
             Lista e-mail ({leads.length})
           </h2>
           <p className="text-sm text-slate-600">
-            Osoby z darmowego PDF (opcjonalna zgoda marketingowa).
+            Osoby z darmowego PDF (zgoda na listę mailingową i oferty).
           </p>
         </div>
         <button

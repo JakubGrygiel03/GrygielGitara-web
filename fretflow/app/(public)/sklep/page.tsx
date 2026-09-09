@@ -16,7 +16,7 @@ import { formatPricePln, isStripeConfigured } from "@/lib/stripe";
 
 export const metadata: Metadata = pageMetadata({
   title: "Sklep e-booków gitarowych — Start, Setup, Feedback VIP",
-  description: `Darmowy PDF „${FREE_GUIDE_SHORT_TITLE}” oraz e-booki GrygielGitara: Setup (${shopPriceShortZl("setup-gitary-w-domu")}), Start bez stresu (${shopPriceShortZl("start-z-gitara-bez-stresu")}), Feedback VIP (${shopPriceShortZl("start-bez-stresu-feedback-vip")}).`,
+  description: `Darmowy PDF „${FREE_GUIDE_SHORT_TITLE}” jest już do pobrania oraz e-booki GrygielGitara: Setup (${shopPriceShortZl("setup-gitary-w-domu")}), Start bez stresu (${shopPriceShortZl("start-z-gitara-bez-stresu")}), Feedback VIP (${shopPriceShortZl("start-bez-stresu-feedback-vip")}).`,
   path: "/sklep",
 });
 
@@ -170,8 +170,8 @@ export default async function SklepPage({
                 Za darmo
               </h2>
               <p className="mt-1 max-w-xl text-sm text-slate-600">
-                Darmowy PDF „{FREE_GUIDE_SHORT_TITLE}” — zostaw e-mail i pobierz
-                bez płatności.
+                Darmowy PDF „{FREE_GUIDE_SHORT_TITLE}” jest już dostępny —
+                zostaw e-mail i pobierz bez płatności.
               </p>
             </div>
             <ul className="mt-5 grid gap-4 sm:mt-6 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">

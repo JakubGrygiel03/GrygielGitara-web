@@ -3,6 +3,7 @@
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getRequestSiteUrl, getSiteUrl } from "@/lib/env";
 import { sendEmail } from "@/lib/resend";
+import { grantFreeGuideToUserIfLead } from "@/lib/free-guide-entitlement";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { resolveStudentForAuthUser } from "@/lib/student-link";
@@ -39,6 +40,7 @@ export async function signInStudent(
       userId: data.user.id,
       email: data.user.email ?? email,
     });
+    await grantFreeGuideToUserIfLead(data.user.id, data.user.email ?? email);
 
     return { ok: true, message: "Zalogowano." };
   } catch (error) {
@@ -136,6 +138,7 @@ export async function registerStudent(
           userId: existingAuth.id,
           email,
         });
+        await grantFreeGuideToUserIfLead(existingAuth.id, email);
         return {
           ok: true,
           needsEmailConfirm: false,
@@ -184,6 +187,7 @@ export async function registerStudent(
 
     if (userId) {
       await resolveStudentForAuthUser({ userId, email });
+      await grantFreeGuideToUserIfLead(userId, email);
     }
 
     const mail = await sendEmail({

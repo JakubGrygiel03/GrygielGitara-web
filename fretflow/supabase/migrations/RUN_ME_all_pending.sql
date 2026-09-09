@@ -696,6 +696,68 @@ on conflict (slug) do update set
   coming_soon = excluded.coming_soon,
   early_bird_open = excluded.early_bird_open;
 
+-- Public bucket for 37 MB PDF „Gitarowy Reset” (download link, not git / e-mail)
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'free-guides',
+  'free-guides',
+  true,
+  52428800,
+  array['application/pdf']::text[]
+)
+on conflict (id) do update
+set
+  public = true,
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
+
+drop policy if exists "Public read free-guides" on storage.objects;
+create policy "Public read free-guides"
+on storage.objects
+for select
+to public
+using (bucket_id = 'free-guides');
+
+-- Catalog row so the free PDF can appear in Konto → Zakupy
+insert into public.products (
+  slug,
+  title,
+  short_description,
+  description,
+  price_grosze,
+  badge,
+  image_path,
+  file_path,
+  published,
+  coming_soon,
+  early_bird_open
+)
+values (
+  'gitarowy-reset',
+  'Gitarowy Reset',
+  'Darmowy PDF na start (101 stron): ściana akordów, dłonie, sprzęt i nawyki.',
+  'Nieodpłatny e-book. Po zostawieniu e-maila PDF jest na skrzynce i — gdy masz konto na ten sam adres — w Konto → Zakupy.',
+  0,
+  'PDF gratis',
+  '/images/shop/ebook-gitarowy-reset-cover.png',
+  'products/gitarowy-reset.pdf',
+  true,
+  false,
+  false
+)
+on conflict (slug) do update
+set
+  title = excluded.title,
+  short_description = excluded.short_description,
+  description = excluded.description,
+  price_grosze = excluded.price_grosze,
+  badge = excluded.badge,
+  image_path = excluded.image_path,
+  file_path = excluded.file_path,
+  published = true,
+  coming_soon = false,
+  early_bird_open = false;
+
 -- Odśwież cache PostgREST (API od razu widzi nowe kolumny)
 notify pgrst, 'reload schema';
 

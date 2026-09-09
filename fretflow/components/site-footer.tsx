@@ -48,7 +48,7 @@ export function SiteFooter() {
             href={FREE_GUIDE_HREF}
             className="inline-flex min-h-11 items-center hover:text-sky-600"
           >
-            {freeGuideOpen ? "Darmowy PDF" : "Darmowy PDF · wkrótce"}
+            {freeGuideOpen ? "Gitarowy Reset — pobierz" : "Darmowy PDF · wkrótce"}
           </Link>
           <Link
             href="/rezerwacja"
@@ -73,6 +73,12 @@ export function SiteFooter() {
             className="inline-flex min-h-11 items-center hover:text-sky-600"
           >
             Regulamin sklepu
+          </Link>
+          <Link
+            href="/polityka-prywatnosci"
+            className="inline-flex min-h-11 items-center hover:text-sky-600"
+          >
+            Polityka prywatności
           </Link>
         </div>
       </div>

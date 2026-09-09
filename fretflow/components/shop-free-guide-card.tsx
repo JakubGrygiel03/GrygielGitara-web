@@ -72,7 +72,7 @@ export function ShopFreeGuideCard({ className }: ShopFreeGuideCardProps) {
             0,00 zł
           </p>
           <p className="mt-0.5 text-sm font-semibold text-orange-800">
-            Zostaw e-mail i pobierz
+            {open ? "Dostępny od razu — zostaw e-mail i pobierz" : "Zostaw e-mail i pobierz"}
           </p>
         </div>
 

@@ -1,6 +1,7 @@
 "use server";
 
 import { getRequestSiteUrl } from "@/lib/env";
+import { FREE_GUIDE_SLUG } from "@/lib/free-guide";
 import type { ProductRow } from "@/lib/shop";
 import {
   digitalConsentCheckboxLabel,
@@ -90,6 +91,13 @@ export async function startProductCheckout(
     }
 
     const typed = product as ProductRow;
+    if (typed.slug === FREE_GUIDE_SLUG || typed.price_grosze <= 0) {
+      return {
+        ok: false,
+        message:
+          "Ten materiał jest darmowy — pobierz go ze strony Gitarowy Reset, bez płatności.",
+      };
+    }
     if (typed.coming_soon) {
       return { ok: false, message: "Ten produkt jest jeszcze niedostępny." };
     }

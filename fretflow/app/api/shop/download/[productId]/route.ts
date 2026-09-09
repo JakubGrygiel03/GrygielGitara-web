@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { NextResponse } from "next/server";
 
+import { getFreeGuidePdfUrl, FREE_GUIDE_SLUG } from "@/lib/free-guide";
 import { resolveProductFileAbsolute } from "@/lib/shop";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
@@ -47,6 +48,10 @@ export async function GET(_request: Request, context: RouteContext) {
   }
 
   const typed = product as ProductRow;
+
+  if (typed.slug === FREE_GUIDE_SLUG) {
+    return NextResponse.redirect(getFreeGuidePdfUrl());
+  }
 
   try {
     const abs = resolveProductFileAbsolute(typed.file_path);

@@ -6,7 +6,7 @@ import { SITE_EMAIL } from "@/lib/site-contact";
 export const metadata: Metadata = {
   title: "Regulamin sklepu",
   description:
-    "Regulamin sklepu GrygielGitara — jak kupujesz e-booki, jak dostajesz PDF i jakie masz prawa.",
+    "Regulamin sklepu GrygielGitara — zakupy e-booków, darmowy PDF „Gitarowy Reset”, zgody i Twoje prawa.",
 };
 
 export default function RegulaminSklepuPage() {
@@ -23,8 +23,10 @@ export default function RegulaminSklepuPage() {
             Regulamin sklepu internetowego GrygielGitara
           </h1>
           <p className="text-sm text-muted">
-            Ten regulamin obowiązuje, gdy kupujesz e-booki i inne treści cyfrowe
-            w sklepie na stronie grygielgitara.pl (oraz domenach powiązanych).
+            Ten regulamin obowiązuje, gdy korzystasz ze sklepu na stronie
+            grygielgitara.pl (oraz domenach powiązanych): kupujesz e-booki i
+            inne treści cyfrowe albo pobierasz darmowe materiały, w tym e-book
+            „Gitarowy Reset”.
           </p>
         </header>
 
@@ -168,13 +170,70 @@ export default function RegulaminSklepuPage() {
 
           <section className="space-y-2">
             <h2 className="text-lg font-semibold text-slate-900">
-              9. Postanowienia końcowe
+              9. Darmowy e-book „Gitarowy Reset”
+            </h2>
+            <p>
+              Na stronie sklepu udostępniam nieodpłatnie e-book PDF „Gitarowy
+              Reset”. To nie jest sprzedaż — nie płacisz ceny. W zamian za
+              dostęp do pliku podajesz adres e-mail, akceptujesz ten regulamin
+              oraz Politykę prywatności i wyrażasz zgodę na otrzymywanie
+              informacji handlowych oraz materiałów edukacyjnych (lekcje,
+              e-booki, oferty i promocje) na podany adres.
+            </p>
+            <p>
+              Link do pobrania ukazuję od razu na stronie po wysłaniu
+              formularza i wysyłam go na <strong>ten sam adres e-mail, który
+              wpisałeś/aś w formularzu</strong> (warto sprawdzić folder spam /
+              oferty). Plik ma 101 stron i ok. 37 MB, dlatego nie idzie jako
+              załącznik, tylko jako odnośnik do pobrania. Jeśli masz konto
+              GrygielGitara na ten sam e-mail, e-book pojawia się też w panelu
+              „Konto” → „Zakupy”.
+            </p>
+            <p>
+              Materiał jest na Twój użytek osobisty — bez dalszego
+              rozpowszechniania, tak jak w pkt 8. Zgodę na wiadomości możesz
+              wycofać w każdej chwili (link w mailu albo przez Kontakt).
+              Wycofanie zgody nie wpływa na to, że PDF już pobrałeś/aś, ale
+              kolejne wiadomości marketingowe nie będą wysyłane.
+            </p>
+            <p>
+              Nie zawieramy tu umowy sprzedaży, więc przepisy o 14-dniowym
+              odstąpieniu od umowy odpłatnej (pkt 6) nie dotyczą samego
+              darmowego PDF.
+            </p>
+          </section>
+
+          <section className="space-y-2">
+            <h2 className="text-lg font-semibold text-slate-900">
+              10. Dane osobowe
+            </h2>
+            <p>
+              Administratorem danych jest Jakub Grygiel (GrygielGitara). Adres
+              e-mail z formularza darmowego PDF przetwarzam, żeby wysłać plik
+              oraz — po Twojej zgodzie — prowadzić listę mailingową i wysyłać
+              oferty. Szczegóły (cele, podstawy prawne, odbiorcy, okres
+              przechowywania i Twoje prawa) są w{" "}
+              <Link
+                href="/polityka-prywatnosci"
+                className="font-medium text-sky-700 hover:underline"
+              >
+                Polityce prywatności
+              </Link>
+              .
+            </p>
+          </section>
+
+          <section className="space-y-2">
+            <h2 className="text-lg font-semibold text-slate-900">
+              11. Postanowienia końcowe
             </h2>
             <p>
               W sprawach nieuregulowanych w tym regulaminie stosuje się prawo
-              polskie, w szczególności ustawę o prawach konsumenta oraz
-              przepisy Kodeksu cywilnego. Regulamin może być aktualizowany — do
-              Twojego zakupu stosuje się wersja obowiązująca w chwili płatności.
+              polskie, w szczególności ustawę o prawach konsumenta, ustawę o
+              świadczeniu usług drogą elektroniczną, RODO oraz przepisy Kodeksu
+              cywilnego. Regulamin może być aktualizowany — do Twojego zakupu
+              stosuje się wersja obowiązująca w chwili płatności, a do darmowego
+              PDF wersja obowiązująca w chwili wysłania formularza.
             </p>
           </section>
         </div>
