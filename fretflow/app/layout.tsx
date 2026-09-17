@@ -4,6 +4,7 @@ import Script from "next/script";
 import { Toaster } from "sonner";
 
 import { AuthReturnCatcher } from "@/components/auth-return-catcher";
+import { PwaRegister } from "@/components/pwa-register";
 import { GOOGLE_ADS_ID } from "@/lib/gtag";
 import {
   SITE_CANONICAL_ORIGIN,
@@ -32,6 +33,14 @@ export const metadata: Metadata = {
   },
   description: SITE_DEFAULT_DESCRIPTION,
   applicationName: SITE_NAME,
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: SITE_NAME,
+  },
+  formatDetection: {
+    telephone: false,
+  },
   keywords: [
     "lekcje gitary Gdańsk",
     "nauka gry na gitarze",
@@ -82,6 +91,10 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#0EA5E9" },
+    { media: "(prefers-color-scheme: dark)", color: "#0EA5E9" },
+  ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -106,6 +119,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           `}
         </Script>
         <AuthReturnCatcher />
+        <PwaRegister />
         {children}
         <Toaster richColors position="top-center" closeButton />
       </body>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { HashLink } from "@/components/hash-link";
+import { PwaInstallButton } from "@/components/pwa-install-button";
 import { FREE_GUIDE_HREF, isFreeGuideOpen } from "@/lib/free-guide";
 
 export function SiteFooter() {
@@ -80,6 +81,7 @@ export function SiteFooter() {
           >
             Polityka prywatności
           </Link>
+          <PwaInstallButton />
         </div>
       </div>
     </footer>
