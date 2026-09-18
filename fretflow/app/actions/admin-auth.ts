@@ -5,27 +5,44 @@ import { cookies } from "next/headers";
 import {
   ADMIN_COOKIE,
   createAdminSessionToken,
+  getAdminEmail,
   getAdminPasswordDebug,
+  isAdminEmail,
   verifyAdminPassword,
 } from "@/lib/admin-auth";
 
 export type AdminAuthState = {
   ok: boolean;
   message: string;
+  /** Email is not the admin inbox — caller should try student login instead. */
+  notAdminEmail?: boolean;
 };
 
-export async function loginAdmin(password: string): Promise<AdminAuthState> {
+export async function loginAdmin(input: {
+  email: string;
+  password: string;
+}): Promise<AdminAuthState> {
   const debug = getAdminPasswordDebug();
+  const adminEmail = getAdminEmail();
 
-  if (!debug.configured) {
+  if (!debug.configured || !adminEmail) {
     return {
       ok: false,
-      message: "Ustaw ADMIN_PASSWORD w .env.local i zrestartuj serwer (npm run dev).",
+      message:
+        "Ustaw ADMIN_EMAIL i ADMIN_PASSWORD w .env.local (i Vercel) oraz zrestartuj serwer.",
     };
   }
 
-  if (!verifyAdminPassword(password)) {
-    const inputLen = password.trim().length;
+  if (!isAdminEmail(input.email)) {
+    return {
+      ok: false,
+      message: "",
+      notAdminEmail: true,
+    };
+  }
+
+  if (!verifyAdminPassword(input.password)) {
+    const inputLen = input.password.trim().length;
     return {
       ok: false,
       message:
@@ -49,7 +66,7 @@ export async function loginAdmin(password: string): Promise<AdminAuthState> {
     maxAge: 60 * 60 * 24 * 7,
   });
 
-  return { ok: true, message: "Zalogowano." };
+  return { ok: true, message: "Zalogowano do panelu." };
 }
 
 export async function logoutAdmin(): Promise<void> {

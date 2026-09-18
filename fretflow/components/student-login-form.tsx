@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
+import { loginAdmin } from "@/app/actions/admin-auth";
 import { signInStudent } from "@/app/actions/student-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -52,6 +53,18 @@ export function StudentLoginForm({
         onSubmit={(event) => {
           event.preventDefault();
           startTransition(async () => {
+            const adminResult = await loginAdmin({ email, password });
+            if (adminResult.ok) {
+              toast.success(adminResult.message);
+              router.push("/admin");
+              router.refresh();
+              return;
+            }
+            if (!adminResult.notAdminEmail) {
+              toast.error(adminResult.message);
+              return;
+            }
+
             const result = await signInStudent(email, password);
             if (!result.ok) {
               toast.error(result.message);

@@ -19,12 +19,17 @@ export function AdminLoginForm() {
       onSubmit={(event) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
+        const email = String(formData.get("email") ?? "");
         const password = String(formData.get("password") ?? "");
 
         startTransition(async () => {
-          const result = await loginAdmin(password);
+          const result = await loginAdmin({ email, password });
           if (!result.ok) {
-            toast.error(result.message);
+            toast.error(
+              result.notAdminEmail
+                ? "Nieprawidłowy e-mail lub hasło."
+                : result.message,
+            );
             return;
           }
           toast.success(result.message);
@@ -35,8 +40,19 @@ export function AdminLoginForm() {
       <div>
         <h1 className="text-xl font-bold text-slate-900">Panel admina</h1>
         <p className="mt-1 text-sm text-muted">
-          Podgląd wiadomości i rezerwacji GrygielGitara.
+          Zaloguj się e-mailem i hasłem admina (też działa z „Konto” w aplikacji).
         </p>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="admin-email">E-mail</Label>
+        <Input
+          id="admin-email"
+          name="email"
+          type="email"
+          autoComplete="username"
+          required
+        />
       </div>
 
       <div className="space-y-2">

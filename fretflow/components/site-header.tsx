@@ -191,7 +191,7 @@ export function SiteHeader() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md">
+      <header className="sticky top-0 z-50 bg-white/90 shadow-[0_8px_24px_-12px_rgb(15_23_42/0.18)] backdrop-blur-md supports-[backdrop-filter]:bg-white/80">
         <div className="relative z-[60] mx-auto flex h-[4.5rem] w-full max-w-6xl items-center px-4 sm:h-20 sm:px-6 lg:max-w-none lg:px-5 xl:px-8">
           <Link
             href="/"

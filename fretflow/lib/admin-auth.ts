@@ -12,10 +12,15 @@ function normalizeSecret(value: string): string {
     .replace(/^["']|["']$/g, "");
 }
 
+function normalizeEmail(value: string): string {
+  return value.replace(/^\uFEFF/, "").trim().toLowerCase();
+}
+
 function candidateEnvPaths(): string[] {
   const cwd = process.cwd();
   return [
     path.join(cwd, ".env.local"),
+    path.join(cwd, "..", ".env.local"),
     path.join(cwd, "fretflow", ".env.local"),
     path.join(cwd, "..", "fretflow", ".env.local"),
   ];
@@ -50,6 +55,43 @@ function getAdminPassword(): string | null {
   const raw = process.env.ADMIN_PASSWORD;
   if (!raw) return null;
   return normalizeSecret(raw) || null;
+}
+
+function readEmailFromEnvFile(): string | null {
+  if (process.env.NODE_ENV === "production") return null;
+
+  for (const envPath of candidateEnvPaths()) {
+    if (!existsSync(/* turbopackIgnore: true */ envPath)) continue;
+    try {
+      const text = readFileSync(
+        /* turbopackIgnore: true */ envPath,
+        "utf8",
+      );
+      const match = text.match(/^\s*ADMIN_EMAIL\s*=\s*(.*)$/m);
+      if (!match) continue;
+      const email = normalizeEmail(match[1] ?? "");
+      if (email) return email;
+    } catch {
+      // try next path
+    }
+  }
+  return null;
+}
+
+export function getAdminEmail(): string | null {
+  const fromFile = readEmailFromEnvFile();
+  if (fromFile) return fromFile;
+
+  const raw = process.env.ADMIN_EMAIL;
+  if (!raw) return null;
+  return normalizeEmail(raw) || null;
+}
+
+/** True when the given address is the configured admin inbox. */
+export function isAdminEmail(input: string): boolean {
+  const expected = getAdminEmail();
+  if (!expected) return false;
+  return normalizeEmail(input) === expected;
 }
 
 function digest(value: string): Buffer {

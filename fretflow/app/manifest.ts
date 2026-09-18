@@ -17,6 +17,21 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#0F172A",
     lang: "pl",
     categories: ["education", "music"],
+    shortcuts: [
+      {
+        name: "Panel",
+        short_name: "Panel",
+        description: "Panel administracyjny GrygielGitara",
+        url: "/admin",
+        icons: [{ src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" }],
+      },
+      {
+        name: "Konto",
+        short_name: "Konto",
+        url: "/moje-kursy/login",
+        icons: [{ src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" }],
+      },
+    ],
     icons: [
       {
         src: "/icons/icon-192.png",
