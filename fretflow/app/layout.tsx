@@ -91,9 +91,10 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  /* Dark slate chrome — professional, matches brand text, not accent blue. */
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#0EA5E9" },
-    { media: "(prefers-color-scheme: dark)", color: "#0EA5E9" },
+    { media: "(prefers-color-scheme: light)", color: "#0F172A" },
+    { media: "(prefers-color-scheme: dark)", color: "#0F172A" },
   ],
 };
 
