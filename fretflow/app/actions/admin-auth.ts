@@ -25,19 +25,20 @@ export async function loginAdmin(input: {
   const debug = getAdminPasswordDebug();
   const adminEmail = getAdminEmail();
 
-  if (!debug.configured || !adminEmail) {
-    return {
-      ok: false,
-      message:
-        "Ustaw ADMIN_EMAIL i ADMIN_PASSWORD w .env.local (i Vercel) oraz zrestartuj serwer.",
-    };
-  }
-
-  if (!isAdminEmail(input.email)) {
+  // Unknown inbox → fall through to student auth (don't block /moje-kursy login).
+  if (!adminEmail || !isAdminEmail(input.email)) {
     return {
       ok: false,
       message: "",
       notAdminEmail: true,
+    };
+  }
+
+  if (!debug.configured) {
+    return {
+      ok: false,
+      message:
+        "Ustaw ADMIN_PASSWORD w .env.local i na Vercel, potem zrestartuj / redeploy.",
     };
   }
 

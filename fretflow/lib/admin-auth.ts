@@ -82,7 +82,10 @@ export function getAdminEmail(): string | null {
   const fromFile = readEmailFromEnvFile();
   if (fromFile) return fromFile;
 
-  const raw = process.env.ADMIN_EMAIL;
+  const raw =
+    process.env.ADMIN_EMAIL?.trim() ||
+    process.env.CONTACT_TO_EMAIL?.trim() ||
+    "";
   if (!raw) return null;
   return normalizeEmail(raw) || null;
 }
