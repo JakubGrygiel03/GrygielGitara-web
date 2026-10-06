@@ -9,6 +9,7 @@ import {
 } from "@/lib/validations/contact";
 import { createClient } from "@/lib/supabase/server";
 import { sendContactEmails } from "@/lib/resend";
+import { assertSameOrigin, rateLimit } from "@/lib/security";
 
 export type ContactActionState = {
   ok: boolean;
@@ -41,6 +42,15 @@ async function resolveEarlyBirdOffer(
 export async function submitContactForm(
   values: ContactFormValues,
 ): Promise<ContactActionState> {
+  const origin = await assertSameOrigin();
+  if (!origin.ok) {
+    return { ok: false, message: origin.message };
+  }
+  const limited = await rateLimit("contact", 8);
+  if (!limited.ok) {
+    return { ok: false, message: limited.message };
+  }
+
   const parsed = contactFormSchema.safeParse(values);
 
   if (!parsed.success) {

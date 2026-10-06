@@ -1,3 +1,5 @@
+import { SITE_IMAGES } from "@/lib/media";
+
 export type ShopProductStatus = "coming_soon" | "available";
 
 export type ShopProduct = {
@@ -36,7 +38,7 @@ export const shopProducts: ShopProduct[] = [
     badge: "E-book",
     shortDescription:
       "Wymiana strun, czyszczenie i podstawowa regulacja — konkret lutniczy bez warsztatu. Kwota jak za kawę — bez długiego namysłu.",
-    image: "/images/shop/ebook-setup-cover.svg",
+    image: SITE_IMAGES.coverSetup,
     imageAlt: "Okładka e-booka Setup i dbanie o gitarę w domu",
     status: "available",
     earlyBirdOpen: true,
@@ -49,7 +51,7 @@ export const shopProducts: ShopProduct[] = [
     badge: "E-book",
     shortDescription:
       "Pierwsze tygodnie gry w jednym handbooku (ok. 40 stron + wideo): postawa, strojenie, melodie i plan 15 minut dziennie — gotowy plan zamiast chaosu w internecie.",
-    image: "/images/shop/ebook-start-cover.svg",
+    image: SITE_IMAGES.coverStart,
     imageAlt: "Okładka e-booka Start z gitarą bez stresu",
     status: "available",
     earlyBirdOpen: true,
@@ -62,7 +64,7 @@ export const shopProducts: ShopProduct[] = [
     badge: "Pakiet",
     shortDescription:
       "E-book „Start z gitarą bez stresu” plus moja analiza wideo Twojej postawy i ułożenia dłoni — personalny komentarz w przystępnej cenie.",
-    image: "/images/shop/ebook-start-cover.svg",
+    image: SITE_IMAGES.coverStart,
     imageAlt: "Pakiet Start bez stresu + Feedback VIP",
     status: "available",
     earlyBirdOpen: true,

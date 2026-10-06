@@ -10,6 +10,7 @@ import {
 import { grantFreeGuideToEmail, grantFreeGuideToUserId } from "@/lib/free-guide-entitlement";
 import { FREE_GUIDE_SUCCESS } from "@/lib/free-guide-copy";
 import { sendFreeGuideEmail } from "@/lib/resend";
+import { assertSameOrigin, rateLimit } from "@/lib/security";
 import {
   leadMagnetSchema,
   MARKETING_CONSENT_LABEL,
@@ -32,6 +33,15 @@ export async function submitLeadMagnet(
   marketingConsent: boolean,
   privacyConsent: boolean,
 ): Promise<LeadActionState> {
+  const origin = await assertSameOrigin();
+  if (!origin.ok) {
+    return { ok: false, message: origin.message };
+  }
+  const limited = await rateLimit("lead", 6);
+  if (!limited.ok) {
+    return { ok: false, message: limited.message };
+  }
+
   if (!isFreeGuideOpen()) {
     return {
       ok: false,

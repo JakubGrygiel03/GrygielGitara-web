@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
 
 import { Reveal } from "@/components/reveal";
+import { SiteImage } from "@/components/site-image";
 import { Button } from "@/components/ui/button";
 import { lessonPackages } from "@/lib/lesson-packages";
 import {
@@ -59,8 +59,8 @@ export function PricingSection() {
 
             <Reveal variant="scale" delay={100}>
               <div className="relative mx-auto aspect-[4/3] w-full max-w-md overflow-hidden rounded-2xl bg-sky-100 md:mx-0 md:max-w-none">
-                <Image
-                  src="/images/concert-classical.png"
+                <SiteImage
+                  asset="concert"
                   alt="Jakub Grygiel na scenie z gitarą klasyczną"
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"

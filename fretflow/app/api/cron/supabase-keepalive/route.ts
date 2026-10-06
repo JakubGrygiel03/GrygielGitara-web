@@ -7,10 +7,7 @@ function isAuthorized(request: NextRequest) {
   if (!secret) return false;
 
   const auth = request.headers.get("authorization");
-  if (auth === `Bearer ${secret}`) return true;
-
-  const query = request.nextUrl.searchParams.get("secret");
-  return query === secret;
+  return auth === `Bearer ${secret}`;
 }
 
 async function handle(request: NextRequest) {

@@ -10,6 +10,7 @@ import {
   isAdminEmail,
   verifyAdminPassword,
 } from "@/lib/admin-auth";
+import { rateLimit } from "@/lib/security";
 
 export type AdminAuthState = {
   ok: boolean;
@@ -32,6 +33,11 @@ export async function loginAdmin(input: {
       message: "",
       notAdminEmail: true,
     };
+  }
+
+  const limited = await rateLimit("admin-login", 8);
+  if (!limited.ok) {
+    return { ok: false, message: limited.message };
   }
 
   if (!debug.configured) {

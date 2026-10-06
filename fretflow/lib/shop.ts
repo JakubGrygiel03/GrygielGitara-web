@@ -2,6 +2,7 @@ import path from "node:path";
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { SITE_IMAGES } from "@/lib/media";
 import { staticEarlyBirdOpen } from "@/lib/shop-early-bird";
 import { staticCompareAtGrosze } from "@/lib/shop-products";
 import { formatPricePln, isStripeConfigured } from "@/lib/stripe";
@@ -28,8 +29,18 @@ export type ShopCatalogItem = {
 };
 
 export function resolveProductFileAbsolute(filePath: string): string {
-  const safe = filePath.replace(/^\/+/, "").replace(/\.\./g, "");
-  return path.join(process.cwd(), "public", safe);
+  const publicRoot = path.resolve(process.cwd(), "public");
+  const relative = filePath.replace(/^[/\\]+/, "").replace(/\\/g, "/");
+  if (!relative || relative.includes("..") || path.isAbsolute(relative)) {
+    throw new Error("Invalid product file path");
+  }
+  const absolute = path.resolve(publicRoot, relative);
+  const inside =
+    absolute === publicRoot || absolute.startsWith(publicRoot + path.sep);
+  if (!inside || !absolute.toLowerCase().endsWith(".pdf")) {
+    throw new Error("Invalid product file path");
+  }
+  return absolute;
 }
 
 export async function listPublishedProducts(): Promise<ProductRow[]> {
@@ -181,7 +192,7 @@ export async function loadOwnedPurchases(
         ? formatPricePln(product.price_grosze)
         : "Opłacone",
       badge: product?.badge ?? "E-book",
-      image: product?.image_path ?? "/images/shop/ebook-start-cover.svg",
+      image: product?.image_path ?? SITE_IMAGES.coverStart,
       imageAlt: `Okładka: ${title}`,
       purchasedAt: row.created_at as string,
     };

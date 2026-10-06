@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { SiteImage } from "@/components/site-image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -92,8 +92,8 @@ export function Hero() {
             className="hero-animate-item relative mx-auto mt-8 aspect-[4/5] w-full max-w-md overflow-hidden rounded-2xl sm:mt-10 md:hidden"
             style={{ animationDelay: "500ms" }}
           >
-            <Image
-              src="/images/jakub-portrait.png"
+            <SiteImage
+              asset="portrait"
               alt="Jakub Grygiel, nauczyciel gitary w Gdańsku"
               fill
               priority
@@ -107,8 +107,8 @@ export function Hero() {
           className="hero-animate-item relative hidden min-h-[22rem] md:block md:min-h-full"
           style={{ animationDelay: "220ms" }}
         >
-          <Image
-            src="/images/jakub-portrait.png"
+          <SiteImage
+            asset="portrait"
             alt=""
             fill
             priority

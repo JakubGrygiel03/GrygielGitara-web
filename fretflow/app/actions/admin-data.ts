@@ -59,6 +59,57 @@ export async function updateBookingStatus(
   }
 }
 
+/** Hard-delete one booking row (admin inbox cleanup). */
+export async function deleteBooking(
+  id: string,
+): Promise<{ ok: boolean; message: string }> {
+  if (!(await isAdminAuthenticated())) {
+    return { ok: false, message: "Brak autoryzacji." };
+  }
+
+  try {
+    const supabase = createAdminClient();
+    const { error } = await supabase.from("bookings").delete().eq("id", id);
+
+    if (error) {
+      console.error("deleteBooking failed:", error.message);
+      return { ok: false, message: "Nie udało się usunąć rezerwacji." };
+    }
+
+    return { ok: true, message: "Rezerwacja usunięta." };
+  } catch (error) {
+    console.error("deleteBooking error:", error);
+    return { ok: false, message: "Nie udało się usunąć rezerwacji." };
+  }
+}
+
+/** Hard-delete one contact message. */
+export async function deleteContactMessage(
+  id: string,
+): Promise<{ ok: boolean; message: string }> {
+  if (!(await isAdminAuthenticated())) {
+    return { ok: false, message: "Brak autoryzacji." };
+  }
+
+  try {
+    const supabase = createAdminClient();
+    const { error } = await supabase
+      .from("contact_messages")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      console.error("deleteContactMessage failed:", error.message);
+      return { ok: false, message: "Nie udało się usunąć wiadomości." };
+    }
+
+    return { ok: true, message: "Wiadomość usunięta." };
+  } catch (error) {
+    console.error("deleteContactMessage error:", error);
+    return { ok: false, message: "Nie udało się usunąć wiadomości." };
+  }
+}
+
 export async function updateBookingInterestPackage(
   id: string,
   interestPackage: (typeof lessonPackageIds)[number] | "",

@@ -1,6 +1,7 @@
 "use server";
 
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { isSafeHttpUrl } from "@/lib/security";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function createStudentPackage(input: {
@@ -74,8 +75,8 @@ export async function addStudentMaterial(input: {
   }
   const title = input.title.trim();
   const url = input.url.trim();
-  if (!input.studentId || title.length < 2 || !url.startsWith("http")) {
-    return { ok: false, message: "Podaj tytuł i pełny URL (https://…)." };
+  if (!input.studentId || title.length < 2 || !isSafeHttpUrl(url)) {
+    return { ok: false, message: "Podaj tytuł i bezpieczny URL (https://…)." };
   }
 
   try {

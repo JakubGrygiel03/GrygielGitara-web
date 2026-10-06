@@ -4,6 +4,7 @@ import { randomUUID } from "node:crypto";
 
 import { getAdminSettings } from "@/lib/admin-settings";
 import { sendBookingEmails } from "@/lib/resend";
+import { assertSameOrigin, rateLimit } from "@/lib/security";
 import { createClient } from "@/lib/supabase/server";
 import {
   bookingFormSchema,
@@ -19,6 +20,15 @@ export type BookingActionState = {
 export async function submitBookingForm(
   values: BookingFormValues,
 ): Promise<BookingActionState> {
+  const origin = await assertSameOrigin();
+  if (!origin.ok) {
+    return { ok: false, message: origin.message };
+  }
+  const limited = await rateLimit("booking", 8);
+  if (!limited.ok) {
+    return { ok: false, message: limited.message };
+  }
+
   const settings = await getAdminSettings();
   if (settings.bookingPaused) {
     return {

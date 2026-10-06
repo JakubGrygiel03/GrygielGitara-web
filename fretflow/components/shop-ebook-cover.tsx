@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { BookMarked } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { SHOP_COVER_BY_SLUG } from "@/lib/media";
 
 type CoverTheme = {
   stage: string;
@@ -11,11 +11,6 @@ type CoverTheme = {
 };
 
 /** Real cover art shown as the book face — stage background stays themed. */
-const COVER_IMAGES: Record<string, string> = {
-  "gitarowy-reset": "/images/shop/ebook-gitarowy-reset-cover.png",
-  "gitarowy-falstart": "/images/shop/ebook-gitarowy-reset-cover.png",
-};
-
 const THEMES: Record<string, CoverTheme> = {
   "start-z-gitara-bez-stresu": {
     stage: "from-sky-800 via-sky-900 to-slate-950",
@@ -82,7 +77,7 @@ export function ShopEbookCover({
   size = "card",
 }: ShopEbookCoverProps) {
   const theme = THEMES[slug] ?? DEFAULT_THEME;
-  const coverImage = COVER_IMAGES[slug];
+  const coverImage = SHOP_COVER_BY_SLUG[slug];
   const [line1, line2] = splitTitle(title);
   const isDetail = size === "detail";
 

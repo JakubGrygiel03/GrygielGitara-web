@@ -101,12 +101,17 @@ function digest(value: string): Buffer {
   return createHash("sha256").update(value, "utf8").digest();
 }
 
+function signAdminIssuedAt(password: string, issuedAt: string): string {
+  return createHmac("sha256", password)
+    .update(`grygielgitara-admin-v2:${issuedAt}`)
+    .digest("hex");
+}
+
 export function createAdminSessionToken(): string | null {
   const password = getAdminPassword();
   if (!password) return null;
-  return createHmac("sha256", password)
-    .update("grygielgitara-admin-v1")
-    .digest("hex");
+  const issuedAt = Date.now().toString();
+  return `${issuedAt}.${signAdminIssuedAt(password, issuedAt)}`;
 }
 
 export function verifyAdminPassword(input: string): boolean {
@@ -119,11 +124,27 @@ export function verifyAdminPassword(input: string): boolean {
 }
 
 export function verifyAdminSessionToken(token: string | undefined): boolean {
-  const expected = createAdminSessionToken();
-  if (!expected || !token) return false;
+  const password = getAdminPassword();
+  if (!password || !token) return false;
 
+  const [issuedAt, signature] = token.split(".");
+  if (issuedAt && signature) {
+    const age = Date.now() - Number(issuedAt);
+    if (!Number.isFinite(age) || age < 0 || age > 60 * 60 * 24 * 7) {
+      return false;
+    }
+    const expected = signAdminIssuedAt(password, issuedAt);
+    const a = Buffer.from(signature);
+    const b = Buffer.from(expected);
+    if (a.length !== b.length) return false;
+    return timingSafeEqual(a, b);
+  }
+
+  const legacy = createHmac("sha256", password)
+    .update("grygielgitara-admin-v1")
+    .digest("hex");
   const a = Buffer.from(token);
-  const b = Buffer.from(expected);
+  const b = Buffer.from(legacy);
   if (a.length !== b.length) return false;
   return timingSafeEqual(a, b);
 }

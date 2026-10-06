@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { Reveal } from "@/components/reveal";
+import { SiteImage } from "@/components/site-image";
 import {
   SECTION_BAND_B,
   SECTION_BODY,
@@ -51,8 +51,8 @@ export function ForumMusicumBand() {
           <Reveal variant="up" delay={40}>
             <figure className="space-y-2">
               <div className="relative aspect-video overflow-hidden rounded-2xl bg-sky-50">
-                <Image
-                  src="/images/forum-musicum.png"
+                <SiteImage
+                  asset="forumMusicum"
                   alt="The Medievals — Forum Musicum, Narodowe Forum Muzyki"
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"

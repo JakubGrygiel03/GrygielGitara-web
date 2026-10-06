@@ -13,6 +13,7 @@ import {
 } from "@/components/admin/admin-cms-sidebar";
 import { AdminCalendarTab } from "@/components/admin/admin-calendar-tab";
 import { AdminLeadsTab } from "@/components/admin/admin-leads-tab";
+import { AdminMediaTab } from "@/components/admin/admin-media-tab";
 import { AdminOverviewTab } from "@/components/admin/admin-overview-tab";
 import { AdminRequestsTab } from "@/components/admin/admin-requests-tab";
 import { AdminServiceTab } from "@/components/admin/admin-service-tab";
@@ -45,6 +46,7 @@ const TAB_TITLES: Record<CmsTab, string> = {
   service: "Serwis",
   leads: "Lista e-mail",
   settings: "Ustawienia",
+  media: "Zdjęcia",
 };
 
 export function AdminDashboard({ data }: AdminDashboardProps) {
@@ -222,6 +224,8 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
           {tab === "settings" ? (
             <AdminSettingsTab settings={settings} />
           ) : null}
+
+          {tab === "media" ? <AdminMediaTab /> : null}
         </div>
       </div>
     </div>

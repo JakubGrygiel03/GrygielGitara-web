@@ -7,6 +7,8 @@ import { toast } from "sonner";
 
 import {
   convertBookingToStudent,
+  deleteBooking,
+  deleteContactMessage,
   markContactRead,
   updateBookingInterestPackage,
   updateBookingStatus,
@@ -71,7 +73,8 @@ export function AdminRequestsTab({
             : "wiadomosci";
   const [sub, setSub] = useState<Sub>(defaultSub);
   const [readOpen, setReadOpen] = useState(false);
-  const [handledOpen, setHandledOpen] = useState(false);
+  // Open archive by default when inbox is empty — otherwise “dogadane” look “gone”.
+  const [handledOpen, setHandledOpen] = useState(pendingBookings.length === 0);
 
   return (
     <section className="space-y-5">
@@ -110,7 +113,12 @@ export function AdminRequestsTab({
         <div className="space-y-4">
           {pendingBookings.length === 0 ? (
             <p className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-center text-sm text-slate-600">
-              Brak nowych próśb. Jak ktoś wypełni /rezerwacja — pojawi się tutaj.
+              Brak nowych próśb „do ogarnięcia”. Dogadane / załatwione są niżej w{" "}
+              <strong>Archiwum rezerwacji</strong>
+              {handledBookings.length > 0
+                ? ` (${handledBookings.length})`
+                : ""}
+              .
             </p>
           ) : (
             <ul className="space-y-3">
@@ -133,13 +141,31 @@ export function AdminRequestsTab({
                       router.refresh();
                     });
                   }}
+                  onDelete={() => {
+                    if (
+                      !window.confirm(
+                        `Usunąć zgłoszenie „${booking.student_name}”? Tej operacji nie cofniesz.`,
+                      )
+                    ) {
+                      return;
+                    }
+                    startTransition(async () => {
+                      const result = await deleteBooking(booking.id);
+                      if (!result.ok) {
+                        toast.error(result.message);
+                        return;
+                      }
+                      toast.success(result.message);
+                      router.refresh();
+                    });
+                  }}
                 />
               ))}
             </ul>
           )}
 
           <Collapsible
-            title={`Archiwum rezerwacji (${handledBookings.length})`}
+            title={`Archiwum — dogadane / załatwione (${handledBookings.length})`}
             open={handledOpen}
             onToggle={() => setHandledOpen((v) => !v)}
           >
@@ -164,6 +190,24 @@ export function AdminRequestsTab({
                           return;
                         }
                         toast.success("Zapisane.");
+                        router.refresh();
+                      });
+                    }}
+                    onDelete={() => {
+                      if (
+                        !window.confirm(
+                          `Usunąć zgłoszenie „${booking.student_name}”? Tej operacji nie cofniesz.`,
+                        )
+                      ) {
+                        return;
+                      }
+                      startTransition(async () => {
+                        const result = await deleteBooking(booking.id);
+                        if (!result.ok) {
+                          toast.error(result.message);
+                          return;
+                        }
+                        toast.success(result.message);
                         router.refresh();
                       });
                     }}
@@ -295,6 +339,24 @@ export function AdminRequestsTab({
                       router.refresh();
                     });
                   }}
+                  onDelete={() => {
+                    if (
+                      !window.confirm(
+                        `Usunąć wiadomość od „${contact.sender_name}”? Tej operacji nie cofniesz.`,
+                      )
+                    ) {
+                      return;
+                    }
+                    startTransition(async () => {
+                      const result = await deleteContactMessage(contact.id);
+                      if (!result.ok) {
+                        toast.error(result.message);
+                        return;
+                      }
+                      toast.success(result.message);
+                      router.refresh();
+                    });
+                  }}
                 />
               ))}
             </ul>
@@ -309,7 +371,30 @@ export function AdminRequestsTab({
               <p className="text-sm text-slate-600">Pusto.</p>
             ) : (
               read.map((contact) => (
-                <ContactCard key={contact.id} contact={contact} readOnly />
+                <ContactCard
+                  key={contact.id}
+                  contact={contact}
+                  readOnly
+                  isPending={isPending}
+                  onDelete={() => {
+                    if (
+                      !window.confirm(
+                        `Usunąć wiadomość od „${contact.sender_name}”? Tej operacji nie cofniesz.`,
+                      )
+                    ) {
+                      return;
+                    }
+                    startTransition(async () => {
+                      const result = await deleteContactMessage(contact.id);
+                      if (!result.ok) {
+                        toast.error(result.message);
+                        return;
+                      }
+                      toast.success(result.message);
+                      router.refresh();
+                    });
+                  }}
+                />
               ))
             )}
           </Collapsible>
@@ -389,11 +474,13 @@ function BookingCard({
   isPending,
   muted,
   onStatusChange,
+  onDelete,
 }: {
   booking: BookingRow;
   isPending?: boolean;
   muted?: boolean;
   onStatusChange: (status: BookingRow["status"]) => void;
+  onDelete: () => void;
 }) {
   const router = useRouter();
   const [pendingLocal, startLocal] = useTransition();
@@ -509,6 +596,16 @@ function BookingCard({
             ? " + pakiet"
             : ""}
         </Button>
+        <Button
+          type="button"
+          size="sm"
+          variant="secondary"
+          disabled={busy}
+          onClick={onDelete}
+          className="border-rose-200 text-rose-700 hover:bg-rose-50"
+        >
+          Usuń zgłoszenie
+        </Button>
         {!muted ? (
           <p className="text-xs text-slate-600 sm:max-w-sm">
             Przepisuje dane do „Uczniowie”, przy pakiecie 4 lekcji zakłada
@@ -528,11 +625,13 @@ function BookingCard({
 function ContactCard({
   contact,
   onRead,
+  onDelete,
   isPending,
   readOnly,
 }: {
   contact: ContactRow;
   onRead?: () => void;
+  onDelete?: () => void;
   isPending?: boolean;
   readOnly?: boolean;
 }) {
@@ -556,17 +655,31 @@ function ContactCard({
             {contactTopicLabels[contact.topic] ?? contact.topic}
           </p>
         </div>
-        {!readOnly && onRead ? (
-          <Button
-            type="button"
-            variant="secondary"
-            size="sm"
-            disabled={isPending}
-            onClick={onRead}
-          >
-            Oznacz jako przeczytane
-          </Button>
-        ) : null}
+        <div className="flex flex-wrap gap-2">
+          {!readOnly && onRead ? (
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              disabled={isPending}
+              onClick={onRead}
+            >
+              Oznacz jako przeczytane
+            </Button>
+          ) : null}
+          {onDelete ? (
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              disabled={isPending}
+              onClick={onDelete}
+              className="border-rose-200 text-rose-700 hover:bg-rose-50"
+            >
+              Usuń
+            </Button>
+          ) : null}
+        </div>
       </div>
       <p className="mt-3 whitespace-pre-wrap text-sm text-slate-700">
         {contact.message}

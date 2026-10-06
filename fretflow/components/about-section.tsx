@@ -1,6 +1,5 @@
-import Image from "next/image";
-
 import { Reveal } from "@/components/reveal";
+import { SiteImage } from "@/components/site-image";
 import {
   SECTION_BAND_A,
   SECTION_BODY,
@@ -97,8 +96,8 @@ export function AboutSection() {
 
           <Reveal variant="blur" delay={120} className="md:sticky md:top-28">
             <figure className="relative mx-auto aspect-[3/4] w-full max-w-sm overflow-hidden rounded-2xl bg-sky-50 md:max-w-none md:justify-self-end">
-              <Image
-                src="/images/medievals-portrait.png"
+              <SiteImage
+                asset="medievals"
                 alt="Jakub Grygiel z instrumentem historycznym, The Medievals"
                 fill
                 sizes="(max-width: 768px) 100vw, 40vw"

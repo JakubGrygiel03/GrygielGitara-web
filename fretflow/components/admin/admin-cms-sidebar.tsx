@@ -6,6 +6,7 @@ import {
   BookOpen,
   CalendarDays,
   ExternalLink,
+  Images,
   LayoutDashboard,
   Mail,
   Menu,
@@ -28,7 +29,8 @@ export type CmsTab =
   | "shop"
   | "service"
   | "leads"
-  | "settings";
+  | "settings"
+  | "media";
 
 type NavItem = {
   id: CmsTab;
@@ -120,6 +122,11 @@ export function AdminCmsSidebar({
           id: "settings",
           label: "Ustawienia",
           icon: <Settings className="size-4" aria-hidden />,
+        },
+        {
+          id: "media",
+          label: "Zdjęcia",
+          icon: <Images className="size-4" aria-hidden />,
         },
       ],
     },

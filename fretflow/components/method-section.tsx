@@ -1,6 +1,5 @@
-import Image from "next/image";
-
 import { Reveal } from "@/components/reveal";
+import { SiteImage } from "@/components/site-image";
 import {
   SECTION_BAND_A,
   SECTION_BODY,
@@ -42,8 +41,8 @@ function MethodImage({ className }: { className?: string }) {
         className,
       )}
     >
-      <Image
-        src="/images/jakub-casual.png"
+      <SiteImage
+        asset="casual"
         alt="Jakub Grygiel, bezstresowe podejście do nauki gitary"
         fill
         sizes="(max-width: 1024px) 100vw, 40vw"

@@ -7,10 +7,8 @@ import { grantFreeGuideToUserIfLead } from "@/lib/free-guide-entitlement";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { resolveStudentForAuthUser } from "@/lib/student-link";
-import {
-  generateTempPassword,
-  isValidPassword,
-} from "@/lib/temp-password";
+import { generateTempPassword, isValidPassword } from "@/lib/temp-password";
+import { rateLimit } from "@/lib/security";
 
 export async function signInStudent(
   emailRaw: string,
@@ -20,6 +18,9 @@ export async function signInStudent(
   if (!email.includes("@") || !password) {
     return { ok: false, message: "Podaj e-mail i hasło." };
   }
+
+  const limited = await rateLimit("student-login", 12);
+  if (!limited.ok) return limited;
 
   try {
     const supabase = await createClient();
@@ -71,6 +72,9 @@ export async function registerStudent(
   if (password !== passwordConfirm) {
     return { ok: false, message: "Hasła nie są takie same." };
   }
+
+  const limited = await rateLimit("student-register", 6);
+  if (!limited.ok) return limited;
 
   try {
     const admin = createAdminClient();

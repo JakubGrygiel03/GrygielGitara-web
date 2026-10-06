@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { lessonPackages } from "@/lib/lesson-packages";
 import { shopPriceShortZl, shopProducts } from "@/lib/shop-products";
-import { SITE_EMAIL, SITE_PHONE_E164 } from "@/lib/site-contact";
+import { SITE_IMAGES } from "@/lib/media";
 
 /** Prefer www — apex redirects there in Vercel. */
 export const SITE_CANONICAL_ORIGIN = "https://www.grygielgitara.pl";
@@ -21,13 +21,13 @@ export const SITE_DEFAULT_DESCRIPTION =
   "Muzyka ma dawać wolność, ujście dla emocji i radość — nie stres, nudną teorię ani szkolny rygor. Dlatego GrygielGitara to inna ścieżka: indywidualne lekcje gitary w Gdańsku (dojazd / okolice Forum) i online, na utworach które naprawdę chcesz grać, z praktyką zamiast egzaminacyjnego strachu. Na stronie umówisz lekcję próbną (z gwarancją pierwszej lekcji), znajdziesz sklep z e-bookami — start gry bez stresu, setup i dbanie o gitarę w domu, pakiet Feedback VIP — oraz materiały od Jakuba Grygiela, muzyka i technika instrumentów.";
 
 /** Absolute OG/Twitter image path (served from /public). */
-export const SITE_OG_IMAGE_PATH = "/images/jakub-portrait.png";
+export const SITE_OG_IMAGE_PATH = SITE_IMAGES.portrait;
 
 /** Square brand mark for favicon / Organization.logo (readable at small sizes). */
-export const SITE_LOGO_PATH = "/images/logo-grygielgitara-square.png";
+export const SITE_LOGO_PATH = SITE_IMAGES.logoSquare;
 
 /** Full wordmark asset. */
-export const SITE_WORDMARK_PATH = "/images/logo-grygielgitara.png";
+export const SITE_WORDMARK_PATH = SITE_IMAGES.wordmark;
 
 export function absoluteUrl(path = "/"): string {
   const base = SITE_CANONICAL_ORIGIN.replace(/\/$/, "");
